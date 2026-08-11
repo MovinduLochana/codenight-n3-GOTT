@@ -1,0 +1,45 @@
+{
+  "collections": [
+    "arrays_and_slices",
+    "maps",
+    "range",
+    "slicing_and_append"
+  ],
+  "control_flow": [
+    "for",
+    "if_else_and_init_stmts",
+    "switch"
+  ],
+  "errors_and_concurrency": [
+    "capstone",
+    "channels",
+    "err_as_value",
+    "goroutines"
+  ],
+  "function": [
+    "closures",
+    "defer",
+    "func",
+    "var_func"
+  ],
+  "fundamentals": [
+    "basic_types",
+    "constants",
+    "fmt_prints",
+    "iota_enums",
+    "operators",
+    "short_dec",
+    "str_fmt",
+    "type_conv",
+    "vars",
+    "zero"
+  ],
+  "struct_and_interfaces": [
+    "capstone",
+    "interfaces",
+    "methods",
+    "pointers",
+    "structs",
+    "struct_embedding"
+  ]
+}

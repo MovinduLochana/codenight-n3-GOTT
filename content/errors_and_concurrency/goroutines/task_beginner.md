@@ -1,0 +1,3 @@
+> Launch 3 goroutines (with IDs `0`, `1`, `2`), each appending its ID to the shared `ids` slice. The `sync.WaitGroup` and `sync.Mutex` are already wired up for you — you only need to write the `go func(id int) { ... }(i)` call that locks the mutex, appends `id`, and calls `wg.Done()`.
+>
+> **Expected behavior:** after `wg.Wait()`, `ids` contains `0`, `1`, and `2` in some order (goroutine order isn't guaranteed).
