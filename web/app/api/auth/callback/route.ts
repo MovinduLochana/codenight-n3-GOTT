@@ -1,0 +1,78 @@
+import { type NextRequest, NextResponse } from "next/server";
+import { createSession } from "@/lib/session";
+
+const AUTH_API_BASE =
+  process.env.AUTH_API_BASE ?? "https://accounts.sliitmozilla.org/api";
+const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const code = searchParams.get("code");
+
+  if (!code) {
+    return NextResponse.redirect(
+      `${APP_URL}/login?error=missing_code`
+    );
+  }
+
+  // Exchange code for tokens
+  let accessToken: string;
+  let refreshTokenFromServer: string | undefined;
+
+  try {
+    const tokenRes = await fetch(
+      `${AUTH_API_BASE}/token?code=${encodeURIComponent(code)}`,
+      { method: "POST" }
+    );
+
+    if (tokenRes.status === 401) {
+      return NextResponse.redirect(`${APP_URL}/login?error=expired_code`);
+    }
+    if (!tokenRes.ok) {
+      return NextResponse.redirect(`${APP_URL}/login?error=token_exchange_failed`);
+    }
+
+    const tokenBody = await tokenRes.json() as { data?: { token?: string } };
+    const token = tokenBody?.data?.token;
+    if (!token) {
+      return NextResponse.redirect(`${APP_URL}/login?error=no_token`);
+    }
+
+    accessToken = token;
+
+    const setCookie = tokenRes.headers.get("set-cookie");
+    if (setCookie) {
+      const match = setCookie.match(/refreshToken=([^;]+)/);
+      if (match) refreshTokenFromServer = match[1];
+    }
+  } catch {
+    return NextResponse.redirect(`${APP_URL}/login?error=network_error`);
+  }
+
+  // Fetch user ID from /session
+  let userId: string;
+  try {
+    const sessionRes = await fetch(`${AUTH_API_BASE}/session`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (!sessionRes.ok) {
+      return NextResponse.redirect(`${APP_URL}/login?error=session_fetch_failed`);
+    }
+
+    const sessionBody = await sessionRes.json() as { data?: { id?: string } };
+    const id = sessionBody?.data?.id;
+    if (!id) {
+      return NextResponse.redirect(`${APP_URL}/login?error=no_user_id`);
+    }
+
+    userId = id;
+  } catch {
+    return NextResponse.redirect(`${APP_URL}/login?error=network_error`);
+  }
+
+  await createSession(userId, accessToken, refreshTokenFromServer);
+
+  return NextResponse.redirect(`${APP_URL}/`);
+}
