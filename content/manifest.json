@@ -1,45 +1,940 @@
 {
-  "collections": [
-    "arrays_and_slices",
-    "maps",
-    "range",
-    "slicing_and_append"
-  ],
-  "control_flow": [
-    "for",
-    "if_else_and_init_stmts",
-    "switch"
-  ],
-  "errors_and_concurrency": [
-    "capstone",
-    "channels",
-    "err_as_value",
-    "goroutines"
-  ],
-  "function": [
-    "closures",
-    "defer",
-    "func",
-    "var_func"
-  ],
-  "fundamentals": [
-    "basic_types",
-    "constants",
-    "fmt_prints",
-    "iota_enums",
-    "operators",
-    "short_dec",
-    "str_fmt",
-    "type_conv",
-    "vars",
-    "zero"
-  ],
-  "struct_and_interfaces": [
-    "capstone",
-    "interfaces",
-    "methods",
-    "pointers",
-    "structs",
-    "struct_embedding"
+  "title": "Go Language Course Exercises",
+  "categories": [
+    {
+      "id": "fundamentals",
+      "title": "Fundamentals",
+      "topics": [
+        {
+          "id": "vars",
+          "title": "Variables",
+          "content_path": "content/fundamentals/vars/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_vars_1",
+              "title": "Variables (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/vars/1.go",
+              "test_path": "exercises/fundamentals/vars/1_test.go",
+              "doc_path": "content/fundamentals/vars/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_vars_2",
+              "title": "Variables (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/vars/2.go",
+              "test_path": "exercises/fundamentals/vars/2_test.go",
+              "doc_path": "content/fundamentals/vars/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_vars_3",
+              "title": "Variables (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/vars/3.go",
+              "test_path": "exercises/fundamentals/vars/3_test.go",
+              "doc_path": "content/fundamentals/vars/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "short_dec",
+          "title": "Short Declarations",
+          "content_path": "content/fundamentals/short_dec/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_short_dec_1",
+              "title": "Short Declarations (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/short_dec/1.go",
+              "test_path": "exercises/fundamentals/short_dec/1_test.go",
+              "doc_path": "content/fundamentals/short_dec/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_short_dec_2",
+              "title": "Short Declarations (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/short_dec/2.go",
+              "test_path": "exercises/fundamentals/short_dec/2_test.go",
+              "doc_path": "content/fundamentals/short_dec/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_short_dec_3",
+              "title": "Short Declarations (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/short_dec/3.go",
+              "test_path": "exercises/fundamentals/short_dec/3_test.go",
+              "doc_path": "content/fundamentals/short_dec/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "type_conv",
+          "title": "Type Conversions",
+          "content_path": "content/fundamentals/type_conv/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_type_conv_1",
+              "title": "Type Conversions (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/type_conv/1.go",
+              "test_path": "exercises/fundamentals/type_conv/1_test.go",
+              "doc_path": "content/fundamentals/type_conv/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_type_conv_2",
+              "title": "Type Conversions (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/type_conv/2.go",
+              "test_path": "exercises/fundamentals/type_conv/2_test.go",
+              "doc_path": "content/fundamentals/type_conv/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_type_conv_3",
+              "title": "Type Conversions (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/type_conv/3.go",
+              "test_path": "exercises/fundamentals/type_conv/3_test.go",
+              "doc_path": "content/fundamentals/type_conv/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "constants",
+          "title": "Constants",
+          "content_path": "content/fundamentals/constants/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_constants_1",
+              "title": "Constants (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/constants/1.go",
+              "test_path": "exercises/fundamentals/constants/1_test.go",
+              "doc_path": "content/fundamentals/constants/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_constants_2",
+              "title": "Constants (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/constants/2.go",
+              "test_path": "exercises/fundamentals/constants/2_test.go",
+              "doc_path": "content/fundamentals/constants/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_constants_3",
+              "title": "Constants (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/constants/3.go",
+              "test_path": "exercises/fundamentals/constants/3_test.go",
+              "doc_path": "content/fundamentals/constants/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "zero",
+          "title": "Zero Values",
+          "content_path": "content/fundamentals/zero/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_zero_1",
+              "title": "Zero Values (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/zero/1.go",
+              "test_path": "exercises/fundamentals/zero/1_test.go",
+              "doc_path": "content/fundamentals/zero/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_zero_2",
+              "title": "Zero Values (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/zero/2.go",
+              "test_path": "exercises/fundamentals/zero/2_test.go",
+              "doc_path": "content/fundamentals/zero/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_zero_3",
+              "title": "Zero Values (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/zero/3.go",
+              "test_path": "exercises/fundamentals/zero/3_test.go",
+              "doc_path": "content/fundamentals/zero/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "basic_types",
+          "title": "Basic Types",
+          "content_path": "content/fundamentals/basic_types/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_basic_types_1",
+              "title": "Basic Types (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/basic_types/1.go",
+              "test_path": "exercises/fundamentals/basic_types/1_test.go",
+              "doc_path": "content/fundamentals/basic_types/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_basic_types_2",
+              "title": "Basic Types (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/basic_types/2.go",
+              "test_path": "exercises/fundamentals/basic_types/2_test.go",
+              "doc_path": "content/fundamentals/basic_types/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_basic_types_3",
+              "title": "Basic Types (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/basic_types/3.go",
+              "test_path": "exercises/fundamentals/basic_types/3_test.go",
+              "doc_path": "content/fundamentals/basic_types/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "fmt_prints",
+          "title": "Fmt Prints",
+          "content_path": "content/fundamentals/fmt_prints/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_fmt_prints_1",
+              "title": "Fmt Prints (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/fmt_prints/1.go",
+              "test_path": "exercises/fundamentals/fmt_prints/1_test.go",
+              "doc_path": "content/fundamentals/fmt_prints/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_fmt_prints_2",
+              "title": "Fmt Prints (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/fmt_prints/2.go",
+              "test_path": "exercises/fundamentals/fmt_prints/2_test.go",
+              "doc_path": "content/fundamentals/fmt_prints/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_fmt_prints_3",
+              "title": "Fmt Prints (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/fmt_prints/3.go",
+              "test_path": "exercises/fundamentals/fmt_prints/3_test.go",
+              "doc_path": "content/fundamentals/fmt_prints/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "str_fmt",
+          "title": "String Formatting",
+          "content_path": "content/fundamentals/str_fmt/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_str_fmt_1",
+              "title": "String Formatting (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/str_fmt/1.go",
+              "test_path": "exercises/fundamentals/str_fmt/1_test.go",
+              "doc_path": "content/fundamentals/str_fmt/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_str_fmt_2",
+              "title": "String Formatting (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/str_fmt/2.go",
+              "test_path": "exercises/fundamentals/str_fmt/2_test.go",
+              "doc_path": "content/fundamentals/str_fmt/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_str_fmt_3",
+              "title": "String Formatting (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/str_fmt/3.go",
+              "test_path": "exercises/fundamentals/str_fmt/3_test.go",
+              "doc_path": "content/fundamentals/str_fmt/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "operators",
+          "title": "Operators",
+          "content_path": "content/fundamentals/operators/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_operators_1",
+              "title": "Operators (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/operators/1.go",
+              "test_path": "exercises/fundamentals/operators/1_test.go",
+              "doc_path": "content/fundamentals/operators/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_operators_2",
+              "title": "Operators (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/operators/2.go",
+              "test_path": "exercises/fundamentals/operators/2_test.go",
+              "doc_path": "content/fundamentals/operators/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_operators_3",
+              "title": "Operators (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/operators/3.go",
+              "test_path": "exercises/fundamentals/operators/3_test.go",
+              "doc_path": "content/fundamentals/operators/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "iota_enums",
+          "title": "Iota & Enums",
+          "content_path": "content/fundamentals/iota_enums/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_iota_enums_1",
+              "title": "Iota & Enums (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/iota_enums/1.go",
+              "test_path": "exercises/fundamentals/iota_enums/1_test.go",
+              "doc_path": "content/fundamentals/iota_enums/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_iota_enums_2",
+              "title": "Iota & Enums (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/iota_enums/2.go",
+              "test_path": "exercises/fundamentals/iota_enums/2_test.go",
+              "doc_path": "content/fundamentals/iota_enums/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_iota_enums_3",
+              "title": "Iota & Enums (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/iota_enums/3.go",
+              "test_path": "exercises/fundamentals/iota_enums/3_test.go",
+              "doc_path": "content/fundamentals/iota_enums/task_advanced.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "control_flow",
+      "title": "Control Flow",
+      "topics": [
+        {
+          "id": "if_else_and_init_stmts",
+          "title": "If Else & Init Statements",
+          "content_path": "content/control_flow/if_else_and_init_stmts/content.md",
+          "exercises": [
+            {
+              "id": "control_flow_if_else_1",
+              "title": "If Else & Init Statements (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/control_flow/if_else_and_init_stmts/1.go",
+              "test_path": "exercises/control_flow/if_else_and_init_stmts/1_test.go",
+              "doc_path": "content/control_flow/if_else_and_init_stmts/task_beginner.md"
+            },
+            {
+              "id": "control_flow_if_else_2",
+              "title": "If Else & Init Statements (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/control_flow/if_else_and_init_stmts/2.go",
+              "test_path": "exercises/control_flow/if_else_and_init_stmts/2_test.go",
+              "doc_path": "content/control_flow/if_else_and_init_stmts/task_intermediate.md"
+            },
+            {
+              "id": "control_flow_if_else_3",
+              "title": "If Else & Init Statements (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/control_flow/if_else_and_init_stmts/3.go",
+              "test_path": "exercises/control_flow/if_else_and_init_stmts/3_test.go",
+              "doc_path": "content/control_flow/if_else_and_init_stmts/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "for",
+          "title": "For Loops",
+          "content_path": "content/control_flow/for/content.md",
+          "exercises": [
+            {
+              "id": "control_flow_for_1",
+              "title": "For Loops (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/control_flow/for/1.go",
+              "test_path": "exercises/control_flow/for/1_test.go",
+              "doc_path": "content/control_flow/for/task_beginner.md"
+            },
+            {
+              "id": "control_flow_for_2",
+              "title": "For Loops (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/control_flow/for/2.go",
+              "test_path": "exercises/control_flow/for/2_test.go",
+              "doc_path": "content/control_flow/for/task_intermediate.md"
+            },
+            {
+              "id": "control_flow_for_3",
+              "title": "For Loops (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/control_flow/for/3.go",
+              "test_path": "exercises/control_flow/for/3_test.go",
+              "doc_path": "content/control_flow/for/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "switch",
+          "title": "Switch Statements",
+          "content_path": "content/control_flow/switch/content.md",
+          "exercises": [
+            {
+              "id": "control_flow_switch_1",
+              "title": "Switch Statements (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/control_flow/switch/1.go",
+              "test_path": "exercises/control_flow/switch/1_test.go",
+              "doc_path": "content/control_flow/switch/task_beginner.md"
+            },
+            {
+              "id": "control_flow_switch_2",
+              "title": "Switch Statements (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/control_flow/switch/2.go",
+              "test_path": "exercises/control_flow/switch/2_test.go",
+              "doc_path": "content/control_flow/switch/task_intermediate.md"
+            },
+            {
+              "id": "control_flow_switch_3",
+              "title": "Switch Statements (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/control_flow/switch/3.go",
+              "test_path": "exercises/control_flow/switch/3_test.go",
+              "doc_path": "content/control_flow/switch/task_advanced.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "collections",
+      "title": "Collections",
+      "topics": [
+        {
+          "id": "arrays_and_slices",
+          "title": "Arrays & Slices",
+          "content_path": "content/collections/arrays_and_slices/content.md",
+          "exercises": [
+            {
+              "id": "collections_arrays_slices_1",
+              "title": "Arrays & Slices (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/collections/arrays_and_slices/1.go",
+              "test_path": "exercises/collections/arrays_and_slices/1_test.go",
+              "doc_path": "content/collections/arrays_and_slices/task_beginner.md"
+            },
+            {
+              "id": "collections_arrays_slices_2",
+              "title": "Arrays & Slices (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/collections/arrays_and_slices/2.go",
+              "test_path": "exercises/collections/arrays_and_slices/2_test.go",
+              "doc_path": "content/collections/arrays_and_slices/task_intermediate.md"
+            },
+            {
+              "id": "collections_arrays_slices_3",
+              "title": "Arrays & Slices (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/collections/arrays_and_slices/3.go",
+              "test_path": "exercises/collections/arrays_and_slices/3_test.go",
+              "doc_path": "content/collections/arrays_and_slices/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "maps",
+          "title": "Maps",
+          "content_path": "content/collections/maps/content.md",
+          "exercises": [
+            {
+              "id": "collections_maps_1",
+              "title": "Word Count",
+              "level": "beginner",
+              "file_path": "exercises/collections/maps/1.go",
+              "test_path": "exercises/collections/maps/1_test.go",
+              "doc_path": "content/collections/maps/task_beginner.md"
+            },
+            {
+              "id": "collections_maps_2",
+              "title": "Merge Counts",
+              "level": "intermediate",
+              "file_path": "exercises/collections/maps/2.go",
+              "test_path": "exercises/collections/maps/2_test.go",
+              "doc_path": "content/collections/maps/task_intermediate.md"
+            },
+            {
+              "id": "collections_maps_3",
+              "title": "Invert Map",
+              "level": "advanced",
+              "file_path": "exercises/collections/maps/3.go",
+              "test_path": "exercises/collections/maps/3_test.go",
+              "doc_path": "content/collections/maps/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "slicing_and_append",
+          "title": "Slicing & Append",
+          "content_path": "content/collections/slicing_and_append/content.md",
+          "exercises": [
+            {
+              "id": "collections_slicing_append_1",
+              "title": "Slicing & Append (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/collections/slicing_and_append/1.go",
+              "test_path": "exercises/collections/slicing_and_append/1_test.go",
+              "doc_path": "content/collections/slicing_and_append/task_beginner.md"
+            },
+            {
+              "id": "collections_slicing_append_2",
+              "title": "Slicing & Append (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/collections/slicing_and_append/2.go",
+              "test_path": "exercises/collections/slicing_and_append/2_test.go",
+              "doc_path": "content/collections/slicing_and_append/task_intermediate.md"
+            },
+            {
+              "id": "collections_slicing_append_3",
+              "title": "Slicing & Append (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/collections/slicing_and_append/3.go",
+              "test_path": "exercises/collections/slicing_and_append/3_test.go",
+              "doc_path": "content/collections/slicing_and_append/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "range",
+          "title": "Range Loops",
+          "content_path": "content/collections/range/content.md",
+          "exercises": [
+            {
+              "id": "collections_range_1",
+              "title": "Range Loops (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/collections/range/1.go",
+              "test_path": "exercises/collections/range/1_test.go",
+              "doc_path": "content/collections/range/task_beginner.md"
+            },
+            {
+              "id": "collections_range_2",
+              "title": "Range Loops (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/collections/range/2.go",
+              "test_path": "exercises/collections/range/2_test.go",
+              "doc_path": "content/collections/range/task_intermediate.md"
+            },
+            {
+              "id": "collections_range_3",
+              "title": "Range Loops (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/collections/range/3.go",
+              "test_path": "exercises/collections/range/3_test.go",
+              "doc_path": "content/collections/range/task_advanced.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "functions",
+      "title": "Functions",
+      "topics": [
+        {
+          "id": "func",
+          "title": "Functions Basics",
+          "content_path": "content/function/func/content.md",
+          "exercises": [
+            {
+              "id": "functions_func_1",
+              "title": "Functions Basics (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/functions/func/1.go",
+              "test_path": "exercises/functions/func/1_test.go",
+              "doc_path": "content/function/func/task_beginner.md"
+            },
+            {
+              "id": "functions_func_2",
+              "title": "Functions Basics (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/functions/func/2.go",
+              "test_path": "exercises/functions/func/2_test.go",
+              "doc_path": "content/function/func/task_intermediate.md"
+            },
+            {
+              "id": "functions_func_3",
+              "title": "Functions Basics (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/functions/func/3.go",
+              "test_path": "exercises/functions/func/3_test.go",
+              "doc_path": "content/function/func/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "var_func",
+          "title": "Variadic Functions",
+          "content_path": "content/function/var_func/content.md",
+          "exercises": [
+            {
+              "id": "functions_var_func_1",
+              "title": "Variadic Functions (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/functions/var_func/1.go",
+              "test_path": "exercises/functions/var_func/1_test.go",
+              "doc_path": "content/function/var_func/task_beginner.md"
+            },
+            {
+              "id": "functions_var_func_2",
+              "title": "Variadic Functions (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/functions/var_func/2.go",
+              "test_path": "exercises/functions/var_func/2_test.go",
+              "doc_path": "content/function/var_func/task_intermediate.md"
+            },
+            {
+              "id": "functions_var_func_3",
+              "title": "Variadic Functions (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/functions/var_func/3.go",
+              "test_path": "exercises/functions/var_func/3_test.go",
+              "doc_path": "content/function/var_func/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "closures",
+          "title": "Closures",
+          "content_path": "content/function/closures/content.md",
+          "exercises": [
+            {
+              "id": "functions_closures_1",
+              "title": "Closures (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/functions/closures/1.go",
+              "test_path": "exercises/functions/closures/1_test.go",
+              "doc_path": "content/function/closures/task_beginner.md"
+            },
+            {
+              "id": "functions_closures_2",
+              "title": "Closures (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/functions/closures/2.go",
+              "test_path": "exercises/functions/closures/2_test.go",
+              "doc_path": "content/function/closures/task_intermediate.md"
+            },
+            {
+              "id": "functions_closures_3",
+              "title": "Closures (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/functions/closures/3.go",
+              "test_path": "exercises/functions/closures/3_test.go",
+              "doc_path": "content/function/closures/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "defer",
+          "title": "Defer Statement",
+          "content_path": "content/function/defer/content.md",
+          "exercises": [
+            {
+              "id": "functions_defer_1",
+              "title": "Defer (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/functions/defer/1.go",
+              "test_path": "exercises/functions/defer/1_test.go",
+              "doc_path": "content/function/defer/task_beginner.md"
+            },
+            {
+              "id": "functions_defer_2",
+              "title": "Defer (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/functions/defer/2.go",
+              "test_path": "exercises/functions/defer/2_test.go",
+              "doc_path": "content/function/defer/task_intermediate.md"
+            },
+            {
+              "id": "functions_defer_3",
+              "title": "Defer (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/functions/defer/3.go",
+              "test_path": "exercises/functions/defer/3_test.go",
+              "doc_path": "content/function/defer/task_advanced.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "structs_and_interfaces",
+      "title": "Structs & Interfaces",
+      "topics": [
+        {
+          "id": "structs",
+          "title": "Structs",
+          "content_path": "content/struct_and_interfaces/structs/content.md",
+          "exercises": [
+            {
+              "id": "structs_structs_1",
+              "title": "Structs (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/structs_and_interfaces/structs/1.go",
+              "test_path": "exercises/structs_and_interfaces/structs/1_test.go",
+              "doc_path": "content/struct_and_interfaces/structs/task_beginner.md"
+            },
+            {
+              "id": "structs_structs_2",
+              "title": "Structs (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/structs_and_interfaces/structs/2.go",
+              "test_path": "exercises/structs_and_interfaces/structs/2_test.go",
+              "doc_path": "content/struct_and_interfaces/structs/task_intermediate.md"
+            },
+            {
+              "id": "structs_structs_3",
+              "title": "Structs (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/structs_and_interfaces/structs/3.go",
+              "test_path": "exercises/structs_and_interfaces/structs/3_test.go",
+              "doc_path": "content/struct_and_interfaces/structs/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "pointers",
+          "title": "Pointers",
+          "content_path": "content/struct_and_interfaces/pointers/content.md",
+          "exercises": [
+            {
+              "id": "structs_pointers_1",
+              "title": "Pointers (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/structs_and_interfaces/pointers/1.go",
+              "test_path": "exercises/structs_and_interfaces/pointers/1_test.go",
+              "doc_path": "content/struct_and_interfaces/pointers/task_beginner.md"
+            },
+            {
+              "id": "structs_pointers_2",
+              "title": "Pointers (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/structs_and_interfaces/pointers/2.go",
+              "test_path": "exercises/structs_and_interfaces/pointers/2_test.go",
+              "doc_path": "content/struct_and_interfaces/pointers/task_intermediate.md"
+            },
+            {
+              "id": "structs_pointers_3",
+              "title": "Pointers (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/structs_and_interfaces/pointers/3.go",
+              "test_path": "exercises/structs_and_interfaces/pointers/3_test.go",
+              "doc_path": "content/struct_and_interfaces/pointers/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "methods",
+          "title": "Methods",
+          "content_path": "content/struct_and_interfaces/methods/content.md",
+          "exercises": [
+            {
+              "id": "structs_methods_1",
+              "title": "Methods (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/structs_and_interfaces/methods/1.go",
+              "test_path": "exercises/structs_and_interfaces/methods/1_test.go",
+              "doc_path": "content/struct_and_interfaces/methods/task_beginner.md"
+            },
+            {
+              "id": "structs_methods_2",
+              "title": "Methods (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/structs_and_interfaces/methods/2.go",
+              "test_path": "exercises/structs_and_interfaces/methods/2_test.go",
+              "doc_path": "content/struct_and_interfaces/methods/task_intermediate.md"
+            },
+            {
+              "id": "structs_methods_3",
+              "title": "Methods (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/structs_and_interfaces/methods/3.go",
+              "test_path": "exercises/structs_and_interfaces/methods/3_test.go",
+              "doc_path": "content/struct_and_interfaces/methods/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "struct_embedding",
+          "title": "Struct Embedding",
+          "content_path": "content/struct_and_interfaces/struct_embedding/content.md",
+          "exercises": [
+            {
+              "id": "structs_embedding_1",
+              "title": "Struct Embedding (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/structs_and_interfaces/struct_embedding/1.go",
+              "test_path": "exercises/structs_and_interfaces/struct_embedding/1_test.go",
+              "doc_path": "content/struct_and_interfaces/struct_embedding/task_beginner.md"
+            },
+            {
+              "id": "structs_embedding_2",
+              "title": "Struct Embedding (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/structs_and_interfaces/struct_embedding/2.go",
+              "test_path": "exercises/structs_and_interfaces/struct_embedding/2_test.go",
+              "doc_path": "content/struct_and_interfaces/struct_embedding/task_intermediate.md"
+            },
+            {
+              "id": "structs_embedding_3",
+              "title": "Struct Embedding (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/structs_and_interfaces/struct_embedding/3.go",
+              "test_path": "exercises/structs_and_interfaces/struct_embedding/3_test.go",
+              "doc_path": "content/struct_and_interfaces/struct_embedding/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "interfaces",
+          "title": "Interfaces",
+          "content_path": "content/struct_and_interfaces/interfaces/content.md",
+          "exercises": [
+            {
+              "id": "structs_interfaces_1",
+              "title": "Interfaces (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/structs_and_interfaces/interfaces/1.go",
+              "test_path": "exercises/structs_and_interfaces/interfaces/1_test.go",
+              "doc_path": "content/struct_and_interfaces/interfaces/task_beginner.md"
+            },
+            {
+              "id": "structs_interfaces_2",
+              "title": "Interfaces (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/structs_and_interfaces/interfaces/2.go",
+              "test_path": "exercises/structs_and_interfaces/interfaces/2_test.go",
+              "doc_path": "content/struct_and_interfaces/interfaces/task_intermediate.md"
+            },
+            {
+              "id": "structs_interfaces_3",
+              "title": "Interfaces (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/structs_and_interfaces/interfaces/3.go",
+              "test_path": "exercises/structs_and_interfaces/interfaces/3_test.go",
+              "doc_path": "content/struct_and_interfaces/interfaces/task_advanced.md"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "errors_and_concurrency",
+      "title": "Errors & Concurrency",
+      "topics": [
+        {
+          "id": "err_as_value",
+          "title": "Errors as Values",
+          "content_path": "content/errors_and_concurrency/err_as_value/content.md",
+          "exercises": [
+            {
+              "id": "err_concurrency_err_1",
+              "title": "Errors as Values (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/errors_and concurrency/err_as_value/1.go",
+              "test_path": "exercises/errors_and concurrency/err_as_value/1_test.go",
+              "doc_path": "content/errors_and_concurrency/err_as_value/task_beginner.md"
+            },
+            {
+              "id": "err_concurrency_err_2",
+              "title": "Errors as Values (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/errors_and concurrency/err_as_value/2.go",
+              "test_path": "exercises/errors_and concurrency/err_as_value/2_test.go",
+              "doc_path": "content/errors_and_concurrency/err_as_value/task_intermediate.md"
+            },
+            {
+              "id": "err_concurrency_err_3",
+              "title": "Errors as Values (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/errors_and concurrency/err_as_value/3.go",
+              "test_path": "exercises/errors_and concurrency/err_as_value/3_test.go",
+              "doc_path": "content/errors_and_concurrency/err_as_value/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "goroutines",
+          "title": "Goroutines",
+          "content_path": "content/errors_and_concurrency/goroutines/content.md",
+          "exercises": [
+            {
+              "id": "err_concurrency_goroutines_1",
+              "title": "Goroutines (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/errors_and concurrency/goroutines/1.go",
+              "test_path": "exercises/errors_and concurrency/goroutines/1_test.go",
+              "doc_path": "content/errors_and_concurrency/goroutines/task_beginner.md"
+            },
+            {
+              "id": "err_concurrency_goroutines_2",
+              "title": "Goroutines (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/errors_and concurrency/goroutines/2.go",
+              "test_path": "exercises/errors_and concurrency/goroutines/2_test.go",
+              "doc_path": "content/errors_and_concurrency/goroutines/task_intermediate.md"
+            },
+            {
+              "id": "err_concurrency_goroutines_3",
+              "title": "Goroutines (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/errors_and concurrency/goroutines/3.go",
+              "test_path": "exercises/errors_and concurrency/goroutines/3_test.go",
+              "doc_path": "content/errors_and_concurrency/goroutines/task_advanced.md"
+            }
+          ]
+        },
+        {
+          "id": "channels",
+          "title": "Channels",
+          "content_path": "content/errors_and_concurrency/channels/content.md",
+          "exercises": [
+            {
+              "id": "err_concurrency_channels_1",
+              "title": "Channels (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/errors_and concurrency/channels/1.go",
+              "test_path": "exercises/errors_and concurrency/channels/1_test.go",
+              "doc_path": "content/errors_and_concurrency/channels/task_beginner.md"
+            },
+            {
+              "id": "err_concurrency_channels_2",
+              "title": "Channels (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/errors_and concurrency/channels/2.go",
+              "test_path": "exercises/errors_and concurrency/channels/2_test.go",
+              "doc_path": "content/errors_and_concurrency/channels/task_intermediate.md"
+            },
+            {
+              "id": "err_concurrency_channels_3",
+              "title": "Channels (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/errors_and concurrency/channels/3.go",
+              "test_path": "exercises/errors_and concurrency/channels/3_test.go",
+              "doc_path": "content/errors_and_concurrency/channels/task_advanced.md"
+            }
+          ]
+        }
+      ]
+    }
   ]
 }
