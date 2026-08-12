@@ -1,8 +1,18 @@
-import { integer, text, boolean, pgTable } from "drizzle-orm/pg-core";
+import { integer, text, boolean, pgTable, timestamp } from "drizzle-orm/pg-core";
 
-// just copied fomnr dcos
 export const todo = pgTable("todo", {
   id: integer("id").primaryKey(),
   text: text("text").notNull(),
   done: boolean("done").default(false).notNull(),
+});
+
+export const sessions = pgTable("sessions", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().unique(), 
+  accessToken: text("access_token").notNull(),
+  refreshToken: text("refresh_token"),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  lastLoginAt: timestamp("last_login_at").defaultNow().notNull(), 
+  loggedOutAt: timestamp("logged_out_at"),                        
 });
