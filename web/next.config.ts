@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   experimental: {
     turbopackRustReactCompiler: true,
     useOffline: true,
-  }
+  },
 };
 
 export default nextConfig;
