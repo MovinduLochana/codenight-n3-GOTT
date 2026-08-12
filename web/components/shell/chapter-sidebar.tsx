@@ -4,11 +4,13 @@ import {
   BookOpenIcon,
   CodeIcon,
   LayoutGridIcon,
+  LogOutIcon,
   UsersIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { logout } from "@/app/actions/auth";
 import type { Category } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
@@ -117,6 +119,21 @@ export function ChapterSidebar({ categories }: { categories: Category[] }) {
             </div>
           );
         })}
+      </div>
+
+      <div className="border-t border-border p-2">
+        <form action={logout}>
+          <button
+            type="submit"
+            className={cn(
+              navItemClass,
+              "justify-center bg-red-600 text-white transition-colors hover:bg-red-700",
+            )}
+          >
+            <LogOutIcon className="size-3.5" />
+            Logout
+          </button>
+        </form>
       </div>
     </aside>
   );

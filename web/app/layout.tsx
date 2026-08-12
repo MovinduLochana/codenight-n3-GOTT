@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CodeNight n3 — Learn Go",
+  title: "CodeNight N3 - Go Session",
   description:
     "A hands-on Go workshop by the Mozilla Campus Club of SLIIT: six chapters, thirty-one lessons, three tasks each.",
 };

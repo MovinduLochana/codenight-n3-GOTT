@@ -1,6 +1,7 @@
 "use client";
 
-import { BellIcon, TerminalIcon } from "lucide-react";
+import { BellIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -17,12 +18,17 @@ export function TopBar({ categories }: { categories: Category[] }) {
   );
 
   return (
-    <header className="flex h-14 shrink-0 items-center gap-6 border-b border-border bg-sidebar px-4">
-      <Link href="/learn" className="flex items-center gap-2">
-        <TerminalIcon className="size-4 text-primary" />
-        <span className="font-heading text-sm font-semibold tracking-widest uppercase">
-          CodeNight
-        </span>
+    <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4">
+      <Link href="/learn" className="flex items-center">
+        <Image
+          src="/assets/logo.svg"
+          alt="CodeNight"
+          width={89}
+          height={44}
+          priority
+          unoptimized
+          className="h-11 w-auto"
+        />
       </Link>
 
       <nav className="hidden items-center gap-1 md:flex">
