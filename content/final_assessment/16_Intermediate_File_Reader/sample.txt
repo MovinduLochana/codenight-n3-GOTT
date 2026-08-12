@@ -1,0 +1,3 @@
+Go is fun.
+Testing is good.
+Keep coding.
