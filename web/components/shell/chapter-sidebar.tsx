@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import type { Chapter } from "@/lib/content";
+import type { Category } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 const navItemClass =
@@ -20,9 +20,9 @@ const comingSoon = [
   { label: "Community", icon: UsersIcon },
 ];
 
-export function ChapterSidebar({ chapters }: { chapters: Chapter[] }) {
+export function ChapterSidebar({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
-  const activeChapter = pathname.split("/")[2];
+  const activeCategory = pathname.split("/")[2];
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-e border-border bg-sidebar md:flex">
@@ -71,13 +71,13 @@ export function ChapterSidebar({ chapters }: { chapters: Chapter[] }) {
           Chapters
         </p>
 
-        {chapters.map((chapter) => {
-          const open = activeChapter === chapter.slug;
+        {categories.map((category) => {
+          const open = activeCategory === category.id;
 
           return (
-            <div key={chapter.slug} className="mb-1">
+            <div key={category.id} className="mb-1">
               <Link
-                href={`/learn/${chapter.slug}/${chapter.lessons[0]?.slug}`}
+                href={`/learn/${category.id}/${category.topics[0]?.id}`}
                 className={cn(
                   "flex items-baseline gap-2 px-3 py-1.5 text-xs transition-colors",
                   open
@@ -86,18 +86,18 @@ export function ChapterSidebar({ chapters }: { chapters: Chapter[] }) {
                 )}
               >
                 <span className="font-mono text-[0.625rem] text-primary">
-                  {String(chapter.number).padStart(2, "0")}
+                  {String(category.number).padStart(2, "0")}
                 </span>
-                <span className="truncate font-medium">{chapter.title}</span>
+                <span className="truncate font-medium">{category.title}</span>
               </Link>
 
               {open ? (
                 <ul className="ms-[1.375rem] border-s border-border">
-                  {chapter.lessons.map((lesson) => {
-                    const href = `/learn/${chapter.slug}/${lesson.slug}`;
+                  {category.topics.map((topic) => {
+                    const href = `/learn/${category.id}/${topic.id}`;
 
                     return (
-                      <li key={lesson.slug}>
+                      <li key={topic.id}>
                         <Link
                           href={href}
                           className={cn(
@@ -107,7 +107,7 @@ export function ChapterSidebar({ chapters }: { chapters: Chapter[] }) {
                               : "border-transparent text-muted-foreground hover:border-border hover:text-foreground",
                           )}
                         >
-                          <span className="truncate">{lesson.title}</span>
+                          <span className="truncate">{topic.title}</span>
                         </Link>
                       </li>
                     );

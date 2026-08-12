@@ -4,16 +4,16 @@ import { BellIcon, TerminalIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import type { Chapter } from "@/lib/content";
+import type { Category } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 const linkClass =
   "border-b-2 px-3 py-1.5 text-xs font-semibold tracking-widest uppercase transition-colors";
 
-export function TopBar({ chapters }: { chapters: Chapter[] }) {
+export function TopBar({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
-  const active = chapters.find(
-    (chapter) => chapter.slug === pathname.split("/")[2],
+  const active = categories.find(
+    (category) => category.id === pathname.split("/")[2],
   );
 
   return (

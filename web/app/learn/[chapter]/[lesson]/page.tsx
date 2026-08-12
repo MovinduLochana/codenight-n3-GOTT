@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
 
-import { chapters, getChapter, lessonTitle, readLesson } from "@/lib/content";
+import { categories, getCategory, getTopic, readRepoFile } from "@/lib/content";
 import { renderMarkdown } from "@/lib/markdown";
 
 export function generateStaticParams() {
-  return chapters.flatMap((chapter) =>
-    chapter.lessons.map((lesson) => ({
-      chapter: chapter.slug,
-      lesson: lesson.slug,
+  return categories.flatMap((category) =>
+    category.topics.map((topic) => ({
+      chapter: category.id,
+      lesson: topic.id,
     })),
   );
 }
@@ -17,11 +17,14 @@ export default async function LessonPage({
 }: {
   params: Promise<{ chapter: string; lesson: string }>;
 }) {
-  const { chapter: chapterSlug, lesson: lessonSlug } = await params;
+  const { chapter: categoryId, lesson: topicId } = await params;
 
-  const chapter = getChapter(chapterSlug);
-  const markdown = readLesson(chapterSlug, lessonSlug);
-  if (!chapter || markdown === null) notFound();
+  const category = getCategory(categoryId);
+  const topic = getTopic(categoryId, topicId);
+  if (!category || !topic) notFound();
+
+  const markdown = readRepoFile(topic.contentPath);
+  if (markdown === null) notFound();
 
   const html = await renderMarkdown(markdown);
 
@@ -29,11 +32,12 @@ export default async function LessonPage({
     <main className="min-h-0 flex-1 overflow-y-auto">
       <div className="mx-auto max-w-3xl px-6 py-10">
         <p className="text-[0.625rem] font-semibold tracking-widest text-primary uppercase">
-          Chapter {chapter.number} · {chapter.title}
+          Chapter {category.number} · {category.title}
         </p>
         <h1 className="font-heading mt-2 mb-8 text-3xl font-semibold">
-          {lessonTitle(lessonSlug)}
+          {topic.title}
         </h1>
+
         <article
           className="prose prose-invert max-w-none prose-pre:border prose-pre:border-border prose-pre:bg-card"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: our own markdown
