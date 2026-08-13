@@ -1,21 +1,17 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { createSession,getSession, deleteSession } from "@/lib/session";
 import { cookies } from "next/headers";
-
+import { type NextRequest, NextResponse } from "next/server";
+import { createSession, deleteSession, getSession } from "@/lib/session";
 
 const AUTH_API_BASE =
   process.env.AUTH_API_BASE ?? "https://accounts.sliitmozilla.org/api";
-const APP_URL =
-  process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
 
   if (!code) {
-    return NextResponse.redirect(
-      `${APP_URL}/login?error=missing_code`
-    );
+    return NextResponse.redirect(`${APP_URL}/login?error=missing_code`);
   }
 
   // Exchange code for tokens
@@ -25,17 +21,19 @@ export async function GET(request: NextRequest) {
   try {
     const tokenRes = await fetch(
       `${AUTH_API_BASE}/token?code=${encodeURIComponent(code)}`,
-      { method: "POST" }
+      { method: "POST" },
     );
 
     if (tokenRes.status === 401) {
       return NextResponse.redirect(`${APP_URL}/login?error=expired_code`);
     }
     if (!tokenRes.ok) {
-      return NextResponse.redirect(`${APP_URL}/login?error=token_exchange_failed`);
+      return NextResponse.redirect(
+        `${APP_URL}/login?error=token_exchange_failed`,
+      );
     }
 
-    const tokenBody = await tokenRes.json() as { data?: { token?: string } };
+    const tokenBody = (await tokenRes.json()) as { data?: { token?: string } };
     const token = tokenBody?.data?.token;
     if (!token) {
       return NextResponse.redirect(`${APP_URL}/login?error=no_token`);
@@ -60,10 +58,12 @@ export async function GET(request: NextRequest) {
     });
 
     if (!sessionRes.ok) {
-      return NextResponse.redirect(`${APP_URL}/login?error=session_fetch_failed`);
+      return NextResponse.redirect(
+        `${APP_URL}/login?error=session_fetch_failed`,
+      );
     }
 
-    const sessionBody = await sessionRes.json() as { data?: { id?: string } };
+    const sessionBody = (await sessionRes.json()) as { data?: { id?: string } };
     const id = sessionBody?.data?.id;
     if (!id) {
       return NextResponse.redirect(`${APP_URL}/login?error=no_user_id`);
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.redirect(`${APP_URL}/`);
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   const cookieStore = cookies();
   const refreshToken = (await cookieStore).get("refreshToken")?.value;
   const session = await getSession();
@@ -89,7 +89,9 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(session?.accessToken ? { Authorization: `Bearer ${session.accessToken}` } : {}),
+        ...(session?.accessToken
+          ? { Authorization: `Bearer ${session.accessToken}` }
+          : {}),
         ...(refreshToken ? { Cookie: `refreshToken=${refreshToken}` } : {}),
       },
     });
@@ -98,6 +100,6 @@ export async function POST(request: NextRequest) {
   }
   await deleteSession();
   const response = NextResponse.redirect(`${APP_URL}/login`);
-  response.cookies.delete("refreshToken",);
+  response.cookies.delete("refreshToken");
   return response;
 }

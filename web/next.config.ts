@@ -6,11 +6,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
 
-  experimental: {
-    turbopackRustReactCompiler: true,
-    useOffline: true,
-  },
-  allowedDevOrigins:['192.168.1.104']
+  // experimental: {
+  //   turbopackRustReactCompiler: true,
+  //   useOffline: true,
+  // }
 };
 
 export default nextConfig;
