@@ -1,8 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { z } from "zod";
-import { createSession, deleteSession } from "@/lib/session";
+import { createSession, deleteSession, getSession } from "@/lib/session";
 
 const AUTH_API_BASE = process.env.AUTH_API_BASE ?? "https://accounts.sliitmozilla.org/api";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -98,11 +99,22 @@ export async function initiateOAuthFlow(): Promise<never> {
   redirect(authorizeUrl);
 }
 export async function logout(): Promise<never> {
-  try {
-    await fetch(`${AUTH_API_BASE}/logout`, { method: "POST" });
-  } catch {
-  }
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get("refreshToken")?.value;
+  const session = await getSession();
 
+  try {
+    await fetch(`${AUTH_API_BASE}/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(session?.accessToken ? { Authorization: `Bearer ${session.accessToken}` } : {}),
+        ...(refreshToken ? { Cookie: `refreshToken=${refreshToken}` } : {}),
+      },
+    });
+  } catch (error) {
+    console.error("Error logout request:", error);
+  }
   await deleteSession();
   redirect("/login");
 }

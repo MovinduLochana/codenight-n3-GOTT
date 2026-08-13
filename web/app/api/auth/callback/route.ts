@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { createSession } from "@/lib/session";
+import { createSession,getSession, deleteSession } from "@/lib/session";
+import { cookies } from "next/headers";
+
 
 const AUTH_API_BASE =
   process.env.AUTH_API_BASE ?? "https://accounts.sliitmozilla.org/api";
@@ -75,4 +77,27 @@ export async function GET(request: NextRequest) {
   await createSession(userId, accessToken, refreshTokenFromServer);
 
   return NextResponse.redirect(`${APP_URL}/`);
+}
+
+export async function POST(request: NextRequest) {
+  const cookieStore = cookies();
+  const refreshToken = (await cookieStore).get("refreshToken")?.value;
+  const session = await getSession();
+
+  try {
+    await fetch(`${AUTH_API_BASE}/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(session?.accessToken ? { Authorization: `Bearer ${session.accessToken}` } : {}),
+        ...(refreshToken ? { Cookie: `refreshToken=${refreshToken}` } : {}),
+      },
+    });
+  } catch (error) {
+    console.error("Error during logout request:", error);
+  }
+  await deleteSession();
+  const response = NextResponse.redirect(`${APP_URL}/login`);
+  response.cookies.delete("refreshToken",);
+  return response;
 }
