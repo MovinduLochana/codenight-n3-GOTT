@@ -15,6 +15,7 @@ import {
   QuestionnaireSubmit,
   QuestionnaireTitle,
 } from "@/components/ui/questionnaire";
+import { Spinner } from "@/components/ui/spinner";
 import type { PublicQuiz } from "@/lib/content";
 
 type Result = { passed: boolean; score: number; total: number };
@@ -138,7 +139,11 @@ export function ChapterQuiz({
         <QuestionnaireActions>
           <QuestionnairePrevious />
           <QuestionnaireNext />
-          <QuestionnaireSubmit disabled={submitting} />
+
+          <QuestionnaireSubmit disabled={submitting}>
+            { submitting && <Spinner className="size-4" /> }
+            Submit
+          </QuestionnaireSubmit>
         </QuestionnaireActions>
       </Questionnaire>
 
