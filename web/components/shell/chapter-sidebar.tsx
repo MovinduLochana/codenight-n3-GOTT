@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 import type { AssessmentExercise } from "@/lib/assessment";
 import type { Category } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 const navItemClass =
   "flex w-full items-center gap-2.5 px-3 py-2 text-xs font-semibold tracking-widest uppercase transition-colors";
@@ -142,7 +144,7 @@ export function ChapterSidebar({
                   </Link>
 
                   {open ? (
-                    <ul className="ms-[1.375rem] border-s border-border">
+                    <ul className="ms-5.5 border-s border-border">
                       {category.topics.map((topic) => {
                         const href = `/learn/${category.id}/${topic.id}`;
 

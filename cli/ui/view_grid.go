@@ -1,0 +1,95 @@
+package ui
+
+import (
+	"fmt"
+
+	"github.com/charmbracelet/lipgloss"
+
+	"github.com/Mozilla-Campus-Club-of-SLIIT/codenight-n3-GO/manifest"
+)
+
+func renderCard(ex manifest.Exercise, isFocused bool, isPassed bool, isFailed bool) string {
+	var style lipgloss.Style
+	statusSymbol := "[ ]"
+
+	if isPassed {
+		statusSymbol = "[✓]"
+		style = CardPassedStyle
+	} else if isFailed {
+		statusSymbol = "[✗]"
+		style = CardFailedStyle
+	} else {
+		style = CardPendingStyle
+	}
+
+	if isFocused {
+		style = CardFocusedStyle
+	}
+
+	catShort := ex.CategoryTitle
+	if len(catShort) > 13 {
+		catShort = catShort[:12] + "…"
+	}
+	topShort := ex.TopicTitle
+	if len(topShort) > 13 {
+		topShort = topShort[:12] + "…"
+	}
+
+	numStr := fmt.Sprintf("%d", ex.Index+1)
+	content := fmt.Sprintf("%s %s\n%s\n%s", catShort, numStr, topShort, statusSymbol)
+	return style.Render(content)
+}
+
+func (m Model) RenderLeftGrid(panelHeight int) string {
+	if len(m.Exercises) == 0 {
+		return LeftPanelStyle.Height(panelHeight).Render("No exercises found.")
+	}
+
+	pageSize := m.GridCols * m.GridRows
+	if pageSize <= 0 {
+		pageSize = 12
+	}
+
+	currentPage := m.FocusedIdx / pageSize
+	totalPages := (len(m.Exercises) + pageSize - 1) / pageSize
+	startIdx := currentPage * pageSize
+	endIdx := startIdx + pageSize
+	if endIdx > len(m.Exercises) {
+		endIdx = len(m.Exercises)
+	}
+
+	pageExercises := m.Exercises[startIdx:endIdx]
+
+	var rows []string
+	var currentRowCards []string
+
+	for i, ex := range pageExercises {
+		actualIdx := startIdx + i
+		isFocused := actualIdx == m.FocusedIdx
+		isPassed := m.Progress.Passed[ex.ID]
+		isFailed := !isPassed && m.TestOutput != "" && isFocused
+
+		cardStr := renderCard(ex, isFocused, isPassed, isFailed)
+		currentRowCards = append(currentRowCards, cardStr)
+
+		if len(currentRowCards) == m.GridCols || i == len(pageExercises)-1 {
+			rowStr := lipgloss.JoinHorizontal(lipgloss.Top, currentRowCards...)
+			rows = append(rows, rowStr)
+			currentRowCards = nil
+		}
+	}
+
+	gridStr := lipgloss.JoinVertical(lipgloss.Left, rows...)
+
+	// Pagination Footer inside Left Panel
+	pagStr := fmt.Sprintf("\n  ← Page %d of %d →  ", currentPage+1, totalPages)
+	pagStyled := lipgloss.NewStyle().Foreground(lipgloss.Color("244")).Render(pagStr)
+
+	fullLeftContent := lipgloss.JoinVertical(lipgloss.Left, gridStr, pagStyled)
+	
+	style := LeftPanelStyle
+	if panelHeight > 0 {
+		style = style.Height(panelHeight)
+	}
+	return style.Render(fullLeftContent)
+}
