@@ -1,16 +1,12 @@
 "use client";
 
-import {
-  BookOpenIcon,
-  CodeIcon,
-  LayoutGridIcon,
-  LogOutIcon,
-  UsersIcon,
-} from "lucide-react";
+import { BookOpenIcon, CodeIcon, LogOutIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { logout } from "@/app/actions/auth";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { Category } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
@@ -24,22 +20,12 @@ const comingSoon = [
 
 export function ChapterSidebar({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
-  const activeCategory = pathname.split("/")[2];
+  const pathParts = pathname.split("/");
+  const activeCategory = pathParts[1] === "learn" ? pathParts[2] : undefined;
 
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-e border-border bg-sidebar md:flex">
       <nav className="flex flex-col gap-0.5 p-2">
-        <button
-          type="button"
-          className={cn(
-            navItemClass,
-            "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-          )}
-        >
-          <LayoutGridIcon className="size-3.5" />
-          Overview
-        </button>
-
         <Link
           href="/learn"
           className={cn(
@@ -54,17 +40,24 @@ export function ChapterSidebar({ categories }: { categories: Category[] }) {
         </Link>
 
         {comingSoon.map((item) => (
-          <button
+          <div
             key={item.label}
-            type="button"
             className={cn(
               navItemClass,
-              "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+              "text-muted-foreground/60 cursor-not-allowed justify-between",
             )}
           >
-            <item.icon className="size-3.5" />
-            {item.label}
-          </button>
+            <span className="flex items-center gap-2.5">
+              <item.icon className="size-3.5" />
+              {item.label}
+            </span>
+            <Badge
+              variant="outline"
+              className="text-[0.55rem] lowercase opacity-60"
+            >
+              soon
+            </Badge>
+          </div>
         ))}
       </nav>
 
@@ -80,10 +73,11 @@ export function ChapterSidebar({ categories }: { categories: Category[] }) {
             <div key={category.id} className="mb-1">
               <Link
                 href={`/learn/${category.id}/${category.topics[0]?.id}`}
+                prefetch={true}
                 className={cn(
                   "flex items-baseline gap-2 px-3 py-1.5 text-xs transition-colors",
                   open
-                    ? "text-foreground"
+                    ? "text-foreground font-semibold"
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
@@ -102,10 +96,11 @@ export function ChapterSidebar({ categories }: { categories: Category[] }) {
                       <li key={topic.id}>
                         <Link
                           href={href}
+                          prefetch={false}
                           className={cn(
                             "-ms-px flex border-s-2 py-1.5 ps-3 pe-2 text-xs transition-colors",
                             pathname === href
-                              ? "border-primary text-foreground"
+                              ? "border-primary text-foreground font-medium"
                               : "border-transparent text-muted-foreground hover:border-border hover:text-foreground",
                           )}
                         >
@@ -123,16 +118,14 @@ export function ChapterSidebar({ categories }: { categories: Category[] }) {
 
       <div className="border-t border-border p-2">
         <form action={logout}>
-          <button
+          <Button
             type="submit"
-            className={cn(
-              navItemClass,
-              "justify-center bg-red-600 text-white transition-colors hover:bg-red-700",
-            )}
+            variant="destructive"
+            className="w-full justify-center gap-2 font-mono text-xs font-semibold tracking-wider uppercase"
           >
             <LogOutIcon className="size-3.5" />
             Logout
-          </button>
+          </Button>
         </form>
       </div>
     </aside>

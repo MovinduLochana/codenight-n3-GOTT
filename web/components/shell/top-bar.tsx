@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import type { Category } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
@@ -13,9 +15,9 @@ const linkClass =
 
 export function TopBar({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
-  const active = categories.find(
-    (category) => category.id === pathname.split("/")[2],
-  );
+  const pathParts = pathname.split("/");
+  const activeChapterId = pathParts[1] === "learn" ? pathParts[2] : undefined;
+  const active = categories.find((category) => category.id === activeChapterId);
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4">
@@ -32,16 +34,6 @@ export function TopBar({ categories }: { categories: Category[] }) {
       </Link>
 
       <nav className="hidden items-center gap-1 md:flex">
-        <button
-          type="button"
-          className={cn(
-            linkClass,
-            "border-transparent text-muted-foreground hover:text-foreground",
-          )}
-        >
-          Dashboard
-        </button>
-
         <Link
           href="/learn"
           className={cn(
@@ -53,30 +45,22 @@ export function TopBar({ categories }: { categories: Category[] }) {
         >
           Curriculum
         </Link>
-
-        <button
-          type="button"
-          className={cn(
-            linkClass,
-            "border-transparent text-muted-foreground hover:text-foreground",
-          )}
-        >
-          Resources
-        </button>
       </nav>
 
       <div className="ms-auto flex items-center gap-4">
         {active ? (
-          <span className="hidden text-xs tracking-wide text-muted-foreground uppercase lg:inline">
+          <Badge variant="secondary" className="hidden lg:inline-flex">
             Chapter {active.number}: {active.title}
-          </span>
+          </Badge>
         ) : null}
 
-        <BellIcon className="size-4 text-muted-foreground" />
+        <BellIcon className="size-4 text-muted-foreground transition-colors hover:text-foreground cursor-pointer" />
 
-        <div className="flex size-8 items-center justify-center border border-border bg-muted text-[0.625rem] font-semibold tracking-wide uppercase">
-          n3
-        </div>
+        <Avatar size="sm">
+          <AvatarFallback className="font-mono text-xs font-bold text-primary">
+            N3
+          </AvatarFallback>
+        </Avatar>
       </div>
     </header>
   );

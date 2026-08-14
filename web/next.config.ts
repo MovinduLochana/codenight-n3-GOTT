@@ -6,10 +6,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
 
-  // experimental: {
-  //   turbopackRustReactCompiler: true,
-  //   useOffline: true,
-  // }
+  experimental: {
+    turbopackRustReactCompiler: true,
+    useOffline: true,
+  },
 };
 
 export default nextConfig;

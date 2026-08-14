@@ -1,46 +1,51 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-// Routes that require authentication — protect everything except these public paths
+// Public paths that do not require authentication
 const PUBLIC_PATHS = new Set(["/login", "/api/auth/callback"]);
 
-// Paths that auth users should be redirected away from (e.g., login)
+// Paths that authenticated users should be redirected away from
 const AUTH_ONLY_PATHS = new Set(["/login"]);
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip Next.js internals and static assets
+  // Skip static files, Next.js internal routes, and public assets
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/favicon") ||
+    pathname.startsWith("/assets") ||
     pathname.match(/\.(png|jpg|jpeg|svg|ico|webp|css|js|woff2?)$/)
   ) {
     return NextResponse.next();
   }
 
   const sessionCookie = request.cookies.get("sliit_session")?.value;
-  const isAuthenticated = !!sessionCookie; // middleware does a presence check; full verification happens in server components
+  const isAuthenticated = Boolean(sessionCookie);
 
-  // Redirect unauthenticated users trying to access protected routes
-  if (!isAuthenticated && !PUBLIC_PATHS.has(pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+  // Handle root "/" directly at proxy layer to avoid 307 redirect hops
+  if (pathname === "/") {
+    const targetUrl = request.nextUrl.clone();
+    targetUrl.pathname = isAuthenticated ? "/learn" : "/login";
+    return NextResponse.redirect(targetUrl);
   }
 
-  // Redirect authenticated users away from the login page
+  // Redirect unauthenticated users away from protected routes to /login
+  if (!isAuthenticated && !PUBLIC_PATHS.has(pathname)) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // Redirect authenticated users away from /login to /learn
   if (isAuthenticated && AUTH_ONLY_PATHS.has(pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
+    const learnUrl = request.nextUrl.clone();
+    learnUrl.pathname = "/learn";
+    return NextResponse.redirect(learnUrl);
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    // Match all paths except Next.js internals
-    "/((?!_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

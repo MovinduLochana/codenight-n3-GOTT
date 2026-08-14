@@ -5,12 +5,15 @@ import { redirect } from "next/navigation";
 
 import { deleteSession, getSession } from "@/lib/session";
 
-const AUTH_API_BASE = process.env.AUTH_API_BASE ?? "https://accounts.sliitmozilla.org/api";
+const AUTH_API_BASE =
+  process.env.AUTH_API_BASE ?? "https://accounts.sliitmozilla.org/api";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 export async function initiateOAuthFlow(): Promise<never> {
   const callbackUrl = `${APP_URL}/api/auth/callback`;
-  const authorizeUrl = `${AUTH_API_BASE}/authorize?redirect=${encodeURIComponent(callbackUrl)}`;
+  const authorizeUrl = `${AUTH_API_BASE}/authorize?redirect=${encodeURIComponent(
+    callbackUrl,
+  )}`;
   redirect(authorizeUrl);
 }
 
@@ -31,8 +34,9 @@ export async function logout(): Promise<never> {
       },
     });
   } catch (error) {
-    console.error("Error logout request:", error);
+    console.error("Logout request error:", error);
   }
+
   await deleteSession();
   redirect("/login");
 }

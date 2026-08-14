@@ -76,12 +76,12 @@ export async function GET(request: NextRequest) {
 
   await createSession(userId, accessToken, refreshTokenFromServer);
 
-  return NextResponse.redirect(`${APP_URL}/`);
+  return NextResponse.redirect(`${APP_URL}/learn`);
 }
 
 export async function POST() {
-  const cookieStore = cookies();
-  const refreshToken = (await cookieStore).get("refreshToken")?.value;
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get("refreshToken")?.value;
   const session = await getSession();
 
   try {
@@ -98,6 +98,7 @@ export async function POST() {
   } catch (error) {
     console.error("Error during logout request:", error);
   }
+
   await deleteSession();
   const response = NextResponse.redirect(`${APP_URL}/login`);
   response.cookies.delete("refreshToken");
