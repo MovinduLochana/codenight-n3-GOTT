@@ -1,211 +1,99 @@
 {
   "questions": [
     {
-      "id": "if_else_and_init_stmts_q1",
-      "prompt": "Are curly braces required for a single-line `if` body in Go?",
+      "id": "control_flow_q1",
+      "prompt": "Does a Go switch case fall through by default?",
       "choices": [
         {
           "id": "a",
-          "text": "No, they're optional for a single statement"
+          "text": "Yes"
         },
         {
           "id": "b",
-          "text": "Yes, they're mandatory even for one line"
+          "text": "No"
         },
         {
           "id": "c",
-          "text": "Only required in `else` branches"
-        },
-        {
-          "id": "d",
-          "text": "Only required for if-init statements"
+          "text": "Only with the case keyword"
         }
       ],
       "correct": "b"
     },
     {
-      "id": "if_else_and_init_stmts_q2",
-      "prompt": "What does an if-init statement like `if err := doSomething(); err != nil { ... }` allow?",
+      "id": "control_flow_q2",
+      "prompt": "Predict the output: `for i := 0; i < 3; i++ { if i == 1 { continue } fmt.Print(i) }`",
       "choices": [
         {
           "id": "a",
-          "text": "Declaring a package-level variable"
+          "text": "012"
         },
         {
           "id": "b",
-          "text": "Running a short statement before the condition, scoped to the if/else block"
+          "text": "02"
         },
         {
           "id": "c",
-          "text": "Skipping the condition check entirely"
-        },
-        {
-          "id": "d",
-          "text": "Running the block's code twice"
+          "text": "0"
         }
       ],
       "correct": "b"
     },
     {
-      "id": "if_else_and_init_stmts_q3",
-      "prompt": "What happens to a variable declared in an if-init statement after the if/else chain ends?",
+      "id": "control_flow_q3",
+      "prompt": "What are the three clauses in a classic `for` loop called?",
       "choices": [
         {
           "id": "a",
-          "text": "It becomes a package-level variable"
+          "text": "start; stop; step"
         },
         {
           "id": "b",
-          "text": "It goes out of scope and disappears"
+          "text": "init; condition; post"
         },
         {
           "id": "c",
-          "text": "It retains its value for the rest of the function"
-        },
-        {
-          "id": "d",
-          "text": "It becomes nil but stays accessible"
+          "text": "setup; check; update"
         }
       ],
       "correct": "b"
     },
     {
-      "id": "for_q1",
-      "prompt": "How many looping keywords does Go have?",
+      "id": "control_flow_q4",
+      "prompt": "Is while a keyword in Go?",
       "choices": [
         {
           "id": "a",
-          "text": "Three: for, while, do-while"
+          "text": "Yes, Go has while and for"
         },
         {
           "id": "b",
-          "text": "One: for"
+          "text": "No - for covers it"
         },
         {
           "id": "c",
-          "text": "Two: for and while"
-        },
-        {
-          "id": "d",
-          "text": "Four, including loop"
+          "text": "Yes, while is an alias for for"
         }
       ],
       "correct": "b"
     },
     {
-      "id": "for_q2",
-      "prompt": "How do you write a \"while\"-style loop in Go?",
+      "id": "control_flow_q5",
+      "prompt": "What keyword exits a loop early?",
       "choices": [
         {
           "id": "a",
-          "text": "Using the `while` keyword"
-        },
-        {
-          "id": "b",
-          "text": "Using `for` with just a condition, no init or post statement"
-        },
-        {
-          "id": "c",
-          "text": "Using `for` with three semicolons"
-        },
-        {
-          "id": "d",
-          "text": "It's not possible in Go"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "for_q3",
-      "prompt": "What does `continue` do inside a `for` loop?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Exits the loop entirely"
-        },
-        {
-          "id": "b",
-          "text": "Skips to the next iteration"
-        },
-        {
-          "id": "c",
-          "text": "Pauses the loop indefinitely"
-        },
-        {
-          "id": "d",
-          "text": "Restarts the loop from the beginning"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "switch_q1",
-      "prompt": "Does a Go `switch` statement fall through to the next case by default?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Yes, like C or Java"
-        },
-        {
-          "id": "b",
-          "text": "No, only the matching case runs"
-        },
-        {
-          "id": "c",
-          "text": "Only if you add `break`"
-        },
-        {
-          "id": "d",
-          "text": "Only for the last case in the list"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "switch_q2",
-      "prompt": "How can you write a `switch` without an expression, as a replacement for a long if/else-if chain?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "It's not possible"
-        },
-        {
-          "id": "b",
-          "text": "By omitting the expression and writing boolean conditions in each case"
-        },
-        {
-          "id": "c",
-          "text": "By using `fallthrough` on every case"
-        },
-        {
-          "id": "d",
-          "text": "By using a `for` loop instead"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "switch_q3",
-      "prompt": "Which keyword do you use if you explicitly want C-style fallthrough behavior?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "continue"
-        },
-        {
-          "id": "b",
           "text": "break"
         },
         {
-          "id": "c",
-          "text": "fallthrough"
+          "id": "b",
+          "text": "exit"
         },
         {
-          "id": "d",
-          "text": "default"
+          "id": "c",
+          "text": "stop"
         }
       ],
-      "correct": "c"
+      "correct": "a"
     }
   ]
 }

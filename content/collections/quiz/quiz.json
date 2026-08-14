@@ -1,280 +1,95 @@
 {
   "questions": [
     {
-      "id": "arrays_and_slices_q1",
-      "prompt": "What's true about an array's size in Go?",
+      "id": "collections_q1",
+      "prompt": "What's the zero value of an uninitialized map[string]int?",
       "choices": [
         {
           "id": "a",
-          "text": "It can grow dynamically like a slice"
+          "text": "An empty map"
         },
         {
           "id": "b",
-          "text": "It's fixed and baked into the type \u2014 [5]int and [10]int are different types"
+          "text": "nil"
         },
         {
           "id": "c",
-          "text": "It's always determined at runtime"
-        },
-        {
-          "id": "d",
-          "text": "It's the same thing as a slice's capacity"
+          "text": " A map that panics on read"
         }
       ],
       "correct": "b"
     },
     {
-      "id": "arrays_and_slices_q2",
-      "prompt": "What does `len(s)` return for a slice?",
+      "id": "collections_q2",
+      "prompt": " What does the \"comma ok\" idiom check?",
       "choices": [
         {
           "id": "a",
-          "text": "The capacity before a reallocation is needed"
+          "text": "Whether the map has any elements"
         },
         {
           "id": "b",
-          "text": "The number of elements currently in the slice"
+          "text": "Whether a key exists in the map"
         },
         {
           "id": "c",
-          "text": "The size of the underlying array"
-        },
-        {
-          "id": "d",
-          "text": "Always the same value as `cap(s)`"
+          "text": "Whether the value is the zero value"
         }
       ],
       "correct": "b"
     },
     {
-      "id": "arrays_and_slices_q3",
-      "prompt": "According to this lesson, which should you reach for when in doubt: array or slice?",
+      "id": "collections_q3",
+      "prompt": "Predict the output: `s := []int{1, 2, 3}; s = append(s, 4); fmt.Println(s)`",
       "choices": [
         {
           "id": "a",
-          "text": "Array, because it's fixed and safer"
+          "text": "3"
         },
         {
           "id": "b",
-          "text": "Slice \u2014 you'll almost never declare a fixed-size array in application code"
+          "text": "4"
         },
         {
           "id": "c",
-          "text": "It doesn't matter, they're interchangeable"
-        },
-        {
-          "id": "d",
-          "text": "Always use both together"
+          "text": "5"
         }
       ],
       "correct": "b"
     },
     {
-      "id": "maps_q1",
-      "prompt": "What does the \"comma ok\" idiom (`value, ok := m[key]`) let you check?",
+      "id": "collections_q4",
+      "prompt": "True/False: iterating a Go map always visits keys in insertion order.",
       "choices": [
         {
           "id": "a",
-          "text": "Whether the map is nil"
+          "text": "True"
         },
         {
           "id": "b",
-          "text": "Whether a key actually exists, as opposed to being absent and returning the zero value"
-        },
-        {
-          "id": "c",
-          "text": "How many keys are in the map"
-        },
-        {
-          "id": "d",
-          "text": "Whether the map is safe for concurrent use"
+          "text": "False"
         }
       ],
       "correct": "b"
     },
     {
-      "id": "maps_q2",
-      "prompt": "What happens if you write to a `nil` map (declared with `var` but never `make`'d)?",
+      "id": "collections_q5",
+      "prompt": "What function grows a slice?",
       "choices": [
         {
           "id": "a",
-          "text": "It works fine and creates the map automatically"
+          "text": "grow"
         },
         {
           "id": "b",
-          "text": "It's a compile-time error"
+          "text": "extend"
         },
         {
           "id": "c",
-          "text": "It causes a runtime panic"
-        },
-        {
-          "id": "d",
-          "text": "It silently does nothing"
+          "text": "append"
         }
       ],
       "correct": "c"
-    },
-    {
-      "id": "maps_q3",
-      "prompt": "Can a `nil` map be read safely, per this lesson?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "No, reading also panics"
-        },
-        {
-          "id": "b",
-          "text": "Yes, reading is safe \u2014 only writing panics"
-        },
-        {
-          "id": "c",
-          "text": "Only if the map is empty"
-        },
-        {
-          "id": "d",
-          "text": "Only after calling `delete` on it"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "slicing_and_append_q1",
-      "prompt": "What does `nums[1:3]` give you?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "A copy of the elements at indices 1 through 3, inclusive"
-        },
-        {
-          "id": "b",
-          "text": "A sub-slice from index 1 up to (not including) index 3"
-        },
-        {
-          "id": "c",
-          "text": "A new array with all elements except indices 1 and 3"
-        },
-        {
-          "id": "d",
-          "text": "Only the elements at indices 1 and 3"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "slicing_and_append_q2",
-      "prompt": "What is the gotcha with a sub-slice created via slicing, per this lesson?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "It always creates an independent copy"
-        },
-        {
-          "id": "b",
-          "text": "It shares the same underlying array as the original, so modifying one can modify the other"
-        },
-        {
-          "id": "c",
-          "text": "It can never be modified"
-        },
-        {
-          "id": "d",
-          "text": "It loses type information"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "slicing_and_append_q3",
-      "prompt": "How do you get an independent copy of a slice that doesn't share the underlying array?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Slice it again with `slice[low:high]`"
-        },
-        {
-          "id": "b",
-          "text": "Use the `copy()` function"
-        },
-        {
-          "id": "c",
-          "text": "Reassign it with `=`"
-        },
-        {
-          "id": "d",
-          "text": "It's not possible in Go"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "range_q1",
-      "prompt": "What does `for i, v := range nums` give you on each iteration?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Only the value"
-        },
-        {
-          "id": "b",
-          "text": "The index and the value"
-        },
-        {
-          "id": "c",
-          "text": "Only the index"
-        },
-        {
-          "id": "d",
-          "text": "The key and value, as if ranging over a map"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "range_q2",
-      "prompt": "How do you discard the index when ranging over a slice but only need the value?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Use `_` in place of the index variable"
-        },
-        {
-          "id": "b",
-          "text": "It's discarded automatically, no syntax needed"
-        },
-        {
-          "id": "c",
-          "text": "Use the keyword `skip`"
-        },
-        {
-          "id": "d",
-          "text": "Range only supports index-only iteration"
-        }
-      ],
-      "correct": "a"
-    },
-    {
-      "id": "range_q3",
-      "prompt": "What does this lesson say about map iteration order with `range`?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "It's always alphabetical by key"
-        },
-        {
-          "id": "b",
-          "text": "It's randomized on purpose \u2014 never rely on it"
-        },
-        {
-          "id": "c",
-          "text": "It matches insertion order"
-        },
-        {
-          "id": "d",
-          "text": "It's sorted numerically by value"
-        }
-      ],
-      "correct": "b"
     }
   ]
 }

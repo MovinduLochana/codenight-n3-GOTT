@@ -2,276 +2,91 @@
   "questions": [
     {
       "id": "func_q1",
-      "prompt": "What can Go functions do that's used for the (result, error) pattern?",
+      "prompt": "What does ... in a parameter list mean?",
       "choices": [
         {
           "id": "a",
-          "text": "Throw exceptions"
+          "text": "The loop continues forever"
         },
         {
           "id": "b",
-          "text": "Return more than one value"
+          "text": "The parameter is variadic - it accepts any number of arguments"
         },
         {
           "id": "c",
-          "text": "Only return a single value"
-        },
-        {
-          "id": "d",
-          "text": "Return void"
+          "text": "The function is private"
         }
       ],
       "correct": "b"
     },
     {
       "id": "func_q2",
-      "prompt": "What is Go's core idiom for error handling, per this lesson?",
+      "prompt": " Predict the output: `defer fmt.Println(\"A\") fmt.Println(\"B\")`",
       "choices": [
         {
           "id": "a",
-          "text": "Throwing and catching exceptions"
+          "text": "A B"
         },
         {
           "id": "b",
-          "text": "Returning `(value, error)` from functions instead of throwing"
+          "text": "B A"
         },
         {
           "id": "c",
-          "text": "Using goroutines for every error"
-        },
-        {
-          "id": "d",
-          "text": "Using `panic` for all errors"
+          "text": "A"
         }
       ],
       "correct": "b"
     },
     {
       "id": "func_q3",
-      "prompt": "When should callers typically check the error returned from a function call?",
+      "prompt": "What is a closure?",
       "choices": [
         {
           "id": "a",
-          "text": "Never, only if the value looks wrong"
+          "text": "A function that captures variables from the scope it was created in"
         },
         {
           "id": "b",
-          "text": "Immediately after the call"
+          "text": "A function with no return value"
         },
         {
           "id": "c",
-          "text": "Only after the program crashes"
-        },
-        {
-          "id": "d",
-          "text": "At the very end of the program"
+          "text": "A private method"
         }
       ],
-      "correct": "b"
+      "correct": "a"
     },
     {
-      "id": "var_func_q1",
-      "prompt": "What is a variadic function, per this lesson?",
+      "id": "func_q4",
+      "prompt": "How many values can a Go function return?",
       "choices": [
         {
           "id": "a",
-          "text": "A function with no parameters"
+          "text": "Exactly one"
         },
         {
           "id": "b",
-          "text": "A function that accepts a variable number of arguments of the same type"
+          "text": "At most two"
         },
         {
           "id": "c",
-          "text": "A function that returns multiple values"
-        },
-        {
-          "id": "d",
-          "text": "A function that can be called without parentheses"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "var_func_q2",
-      "prompt": "Inside a variadic function, how does the variadic parameter behave?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Like a fixed-size array"
-        },
-        {
-          "id": "b",
-          "text": "Like a regular slice of that type"
-        },
-        {
-          "id": "c",
-          "text": "Like a map"
-        },
-        {
-          "id": "d",
-          "text": "As a separate variable for each argument"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "var_func_q3",
-      "prompt": "Where must a variadic parameter appear in a function's signature?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "First"
-        },
-        {
-          "id": "b",
-          "text": "Anywhere"
-        },
-        {
-          "id": "c",
-          "text": "Last, and a function can only have one"
-        },
-        {
-          "id": "d",
-          "text": "It must be the only parameter"
+          "text": "As many as declared - commonly (value, error)"
         }
       ],
       "correct": "c"
     },
     {
-      "id": "closures_q1",
-      "prompt": "What is a closure, per this lesson?",
+      "id": "func_q5",
+      "prompt": "True/False: defer statements run in the order they were declared (FIFO).",
       "choices": [
         {
           "id": "a",
-          "text": "A function that can only run once"
+          "text": "True"
         },
         {
           "id": "b",
-          "text": "A function that captures and remembers variables from the scope it was created in"
-        },
-        {
-          "id": "c",
-          "text": "A function with no return value"
-        },
-        {
-          "id": "d",
-          "text": "A function that can't access variables outside itself"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "closures_q2",
-      "prompt": "In the `makeCounter` example, what happens each time `makeCounter()` is called?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "It reuses the same `count` variable across all counters"
-        },
-        {
-          "id": "b",
-          "text": "It creates a brand new `count` variable, so counters don't interfere with each other"
-        },
-        {
-          "id": "c",
-          "text": "It resets a global counter to 0"
-        },
-        {
-          "id": "d",
-          "text": "It throws an error if called twice"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "closures_q3",
-      "prompt": "What does this lesson say closures let Go achieve, that other languages need classes for?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Faster loops"
-        },
-        {
-          "id": "b",
-          "text": "Stateful function generators, middleware, and callback handlers"
-        },
-        {
-          "id": "c",
-          "text": "Automatic memory management"
-        },
-        {
-          "id": "d",
-          "text": "Type conversion"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "defer_q1",
-      "prompt": "When does a deferred function call actually run?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Immediately, when `defer` is called"
-        },
-        {
-          "id": "b",
-          "text": "Right before the enclosing function returns"
-        },
-        {
-          "id": "c",
-          "text": "Only if the function panics"
-        },
-        {
-          "id": "d",
-          "text": "At a random point during execution"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "defer_q2",
-      "prompt": "What order do multiple `defer` calls run in?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "FIFO \u2014 first deferred, first executed"
-        },
-        {
-          "id": "b",
-          "text": "LIFO \u2014 last deferred, first executed"
-        },
-        {
-          "id": "c",
-          "text": "Alphabetical order"
-        },
-        {
-          "id": "d",
-          "text": "Random order"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "defer_q3",
-      "prompt": "What is `defer` most often used for, per this lesson?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Starting goroutines"
-        },
-        {
-          "id": "b",
-          "text": "Cleanup, like closing a file or releasing a lock"
-        },
-        {
-          "id": "c",
-          "text": "Declaring variables"
-        },
-        {
-          "id": "d",
-          "text": "Formatting output"
+          "text": "False"
         }
       ],
       "correct": "b"
