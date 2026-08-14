@@ -1,9 +1,7 @@
 "use client";
 
-import { RotateCcwIcon } from "lucide-react";
 import { useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import {
   Questionnaire,
   QuestionnaireActions,
@@ -17,54 +15,80 @@ import {
   QuestionnaireSubmit,
   QuestionnaireTitle,
 } from "@/components/ui/questionnaire";
-import type { Quiz } from "@/lib/content";
+import type { PublicQuiz } from "@/lib/content";
 
-export function ChapterQuiz({ quiz }: { quiz: Quiz }) {
-  const [attempt, setAttempt] = useState(0);
-  const [score, setScore] = useState<number | null>(null);
+type Result = { passed: boolean; score: number; total: number };
+
+export function ChapterQuiz({
+  categoryId,
+  quiz,
+  completedResult,
+}: {
+  categoryId: string;
+  quiz: PublicQuiz;
+  completedResult: Result | null;
+}) {
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState<Result | null>(completedResult);
+  const [error, setError] = useState<string | null>(null);
 
   if (quiz.questions.length === 0) return null;
 
-  const total = quiz.questions.length;
-
-  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const correct = quiz.questions.filter(
-      (question) => formData.get(question.id) === question.correct,
-    ).length;
-    setScore(correct);
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const formData = new FormData(event.currentTarget);
+      const answers: Record<string, string> = {};
+      for (const question of quiz.questions) {
+        const answer = formData.get(question.id);
+        if (typeof answer === "string") answers[question.id] = answer;
+      }
+
+      const response = await fetch(`/api/quiz/${categoryId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers }),
+      });
+
+      const body = (await response.json().catch(() => null)) as
+        | (Result & { error?: string })
+        | { error: string }
+        | null;
+
+      if (!response.ok) {
+        setError(
+          body?.error ?? "Something went wrong submitting your answers.",
+        );
+        return;
+      }
+
+      setResult(body as Result);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
-  function retake() {
-    setScore(null);
-    setAttempt((value) => value + 1);
-  }
-
-  if (score !== null) {
+  if (result !== null) {
     return (
-      <div className="flex flex-col items-start gap-4 border border-border bg-card p-6">
-        <div>
-          <p className="font-heading text-2xl font-semibold">
-            {score} / {total}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {score === total
-              ? "Perfect score — you've got this chapter down."
-              : "Review the lessons in this chapter and give it another shot."}
-          </p>
-        </div>
-        <Button variant="outline" size="sm" onClick={retake}>
-          <RotateCcwIcon />
-          Retake
-        </Button>
+      <div className="flex flex-col items-start gap-1 border border-border bg-card p-6">
+        <p className="font-heading text-2xl font-semibold">
+          {result.score} / {result.total}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {result.passed
+            ? "Perfect score — you've got this chapter down."
+            : "You've already completed this quiz. Review the lessons above whenever you're ready."}
+        </p>
       </div>
     );
   }
 
   return (
     <div className="border border-border bg-card p-6">
-      <Questionnaire key={attempt} onSubmit={handleSubmit}>
+      <Questionnaire onSubmit={handleSubmit}>
         <QuestionnaireProgress />
 
         {quiz.questions.map((question) => (
@@ -84,9 +108,11 @@ export function ChapterQuiz({ quiz }: { quiz: Quiz }) {
         <QuestionnaireActions>
           <QuestionnairePrevious />
           <QuestionnaireNext />
-          <QuestionnaireSubmit />
+          <QuestionnaireSubmit disabled={submitting} />
         </QuestionnaireActions>
       </Questionnaire>
+
+      {error ? <p className="mt-4 text-sm text-destructive">{error}</p> : null}
     </div>
   );
 }

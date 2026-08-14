@@ -1,9 +1,8 @@
 import "server-only";
-
 import { and, eq, isNull } from "drizzle-orm";
 import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
-import { cache } from "react";
+import { connection } from "next/server";
 import { db } from "@/db/drizzle";
 import { sessions } from "@/db/schema";
 
@@ -76,7 +75,6 @@ export async function createSession(
     });
   }
 
-  // Set encrypted session cookie
   const encrypted = await encryptSessionId(sessionId);
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, encrypted, {
@@ -88,7 +86,9 @@ export async function createSession(
   });
 }
 
-export const getSession = cache(async () => {
+export async function getSession() {
+  await connection();
+
   const cookieStore = await cookies();
   const cookie = cookieStore.get(SESSION_COOKIE)?.value;
   if (!cookie) return null;
