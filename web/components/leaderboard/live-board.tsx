@@ -1,11 +1,13 @@
 "use client";
 
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import type { LeaderboardEntry } from "@/lib/leaderboard";
 import { cn } from "@/lib/utils";
 
 const POLL_INTERVAL_MS = 3000;
+const PAGE_SIZE = 10;
 
 export function LiveLeaderboard({
   initialEntries,
@@ -15,6 +17,7 @@ export function LiveLeaderboard({
   currentUserId: string | null;
 }) {
   const [entries, setEntries] = useState(initialEntries);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     let cancelled = false;
@@ -26,7 +29,6 @@ export function LiveLeaderboard({
         const body = (await response.json()) as { entries: LeaderboardEntry[] };
         if (!cancelled) setEntries(body.entries);
       } catch {
-        // Transient network hiccup — the next tick will retry.
       }
     }
 
@@ -47,46 +49,52 @@ export function LiveLeaderboard({
   }
 
   const [first, second, third, ...rest] = entries;
-  const podium: { entry: LeaderboardEntry; rank: 1 | 2 | 3 }[] = [
-    second && { entry: second, rank: 2 as const },
-    first && { entry: first, rank: 1 as const },
-    third && { entry: third, rank: 3 as const },
-  ].filter((slot): slot is { entry: LeaderboardEntry; rank: 1 | 2 | 3 } =>
-    Boolean(slot),
-  );
+  const podiumSlots: { entry: LeaderboardEntry | null; rank: 1 | 2 | 3 }[] = [
+    { entry: second ?? null, rank: 2 },
+    { entry: first ?? null, rank: 1 },
+    { entry: third ?? null, rank: 3 },
+  ];
+
+  const totalPages = Math.max(1, Math.ceil(rest.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageStart = (currentPage - 1) * PAGE_SIZE;
+  const pageEntries = rest.slice(pageStart, pageStart + PAGE_SIZE);
 
   return (
     <>
-      {podium.length > 0 ? (
-        <div className="mt-10 grid grid-cols-3 items-end gap-3">
-          {[0, 1, 2].map((slot) => {
-            const item = podium[slot];
-            return item ? (
-              <PodiumCard
-                key={item.entry.userId}
-                entry={item.entry}
-                rank={item.rank}
-                isCurrentUser={item.entry.userId === currentUserId}
-              />
-            ) : (
-              <div key={slot} />
-            );
-          })}
-        </div>
-      ) : null}
+      <div className="mt-10 grid grid-cols-3 items-end gap-3">
+        {podiumSlots.map((slot) => (
+          <PodiumCard
+            key={slot.rank}
+            entry={slot.entry}
+            rank={slot.rank}
+            isCurrentUser={slot.entry?.userId === currentUserId}
+          />
+        ))}
+      </div>
 
       {rest.length > 0 ? (
-        <ul className="mt-8 flex flex-col gap-2">
-          {rest.map((entry, index) => (
-            <li key={entry.userId}>
-              <RankRow
-                rank={index + 4}
-                entry={entry}
-                isCurrentUser={entry.userId === currentUserId}
-              />
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="mt-8 flex flex-col gap-2">
+            {pageEntries.map((entry, index) => (
+              <li key={entry.userId}>
+                <RankRow
+                  rank={pageStart + index + 4}
+                  entry={entry}
+                  isCurrentUser={entry.userId === currentUserId}
+                />
+              </li>
+            ))}
+          </ul>
+
+          {totalPages > 1 ? (
+            <Pagination
+              page={currentPage}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
+          ) : null}
+        </>
       ) : null}
     </>
   );
@@ -97,7 +105,7 @@ function PodiumCard({
   rank,
   isCurrentUser,
 }: {
-  entry: LeaderboardEntry;
+  entry: LeaderboardEntry | null;
   rank: 1 | 2 | 3;
   isCurrentUser: boolean;
 }) {
@@ -107,6 +115,7 @@ function PodiumCard({
         "flex flex-col items-center border bg-card px-3 pb-5 text-center",
         rank === 1 ? "min-h-[220px] pt-10" : "min-h-[176px] pt-6",
         rank === 1 ? "border-primary/50" : "border-border",
+        !entry && "border-dashed opacity-60",
         isCurrentUser &&
           "ring-2 ring-primary/40 ring-offset-2 ring-offset-background",
       )}
@@ -122,10 +131,10 @@ function PodiumCard({
         {rank}
       </div>
       <p className="mt-3 w-full truncate text-sm font-medium">
-        {entry.displayName}
+        {entry ? entry.displayName : "—"}
       </p>
       <p className="mt-1 font-heading text-xl font-semibold text-primary">
-        {entry.score}
+        {entry ? entry.score : "—"}
       </p>
       <p className="text-[0.625rem] tracking-widest text-muted-foreground uppercase">
         points
@@ -160,6 +169,56 @@ function RankRow({
           pts
         </span>
       </span>
+    </div>
+  );
+}
+
+function Pagination({
+  page,
+  totalPages,
+  onPageChange,
+}: {
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}) {
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  return (
+    <div className="mt-6 flex items-center justify-center gap-2">
+      <button
+        type="button"
+        onClick={() => onPageChange(Math.max(1, page - 1))}
+        disabled={page === 1}
+        className="flex size-7 items-center justify-center border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+      >
+        <ChevronLeftIcon className="size-3.5" />
+      </button>
+
+      {pages.map((p) => (
+        <button
+          key={p}
+          type="button"
+          onClick={() => onPageChange(p)}
+          className={cn(
+            "flex size-7 items-center justify-center text-xs font-semibold transition-colors",
+            p === page
+              ? "bg-primary text-primary-foreground"
+              : "border border-border text-muted-foreground hover:border-primary/40 hover:text-foreground",
+          )}
+        >
+          {p}
+        </button>
+      ))}
+
+      <button
+        type="button"
+        onClick={() => onPageChange(Math.min(totalPages, page + 1))}
+        disabled={page === totalPages}
+        className="flex size-7 items-center justify-center border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+      >
+        <ChevronRightIcon className="size-3.5" />
+      </button>
     </div>
   );
 }

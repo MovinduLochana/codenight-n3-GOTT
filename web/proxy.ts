@@ -1,7 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 // Public paths that do not require authentication
-const PUBLIC_PATHS = new Set(["/login", "/api/auth/callback"]);
+const PUBLIC_PATHS = new Set([
+  "/login",
+  "/api/auth/callback",
+  "/leaderboard",
+  "/api/leaderboard",
+]);
 
 // Paths that authenticated users should be redirected away from
 const AUTH_ONLY_PATHS = new Set(["/login"]);
