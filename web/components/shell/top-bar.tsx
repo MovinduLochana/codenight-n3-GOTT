@@ -8,10 +8,6 @@ import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Category } from "@/lib/content";
-import { cn } from "@/lib/utils";
-
-const linkClass =
-  "border-b-2 px-3 py-1.5 text-xs font-semibold tracking-widest uppercase transition-colors";
 
 export function TopBar({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
@@ -32,20 +28,6 @@ export function TopBar({ categories }: { categories: Category[] }) {
           className="h-11 w-auto"
         />
       </Link>
-
-      <nav className="hidden items-center gap-1 md:flex">
-        <Link
-          href="/learn"
-          className={cn(
-            linkClass,
-            pathname.startsWith("/learn")
-              ? "border-primary text-foreground"
-              : "border-transparent text-muted-foreground hover:text-foreground",
-          )}
-        >
-          Curriculum
-        </Link>
-      </nav>
 
       <div className="ms-auto flex items-center gap-4">
         {active ? (

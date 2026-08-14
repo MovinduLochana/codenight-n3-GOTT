@@ -1,6 +1,12 @@
 "use client";
 
-import { BookOpenIcon, CodeIcon, LogOutIcon, UsersIcon } from "lucide-react";
+import {
+  BookOpenIcon,
+  CodeIcon,
+  ListChecksIcon,
+  LogOutIcon,
+  UsersIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -109,6 +115,21 @@ export function ChapterSidebar({ categories }: { categories: Category[] }) {
                       </li>
                     );
                   })}
+
+                  <li>
+                    <Link
+                      href={`/learn/${category.id}/quiz`}
+                      className={cn(
+                        "-ms-px flex items-center gap-1.5 border-s-2 py-1.5 ps-3 pe-2 text-xs transition-colors",
+                        pathname === `/learn/${category.id}/quiz`
+                          ? "border-primary text-foreground"
+                          : "border-transparent text-muted-foreground hover:border-border hover:text-foreground",
+                      )}
+                    >
+                      <ListChecksIcon className="size-3" />
+                      <span className="truncate">Chapter Quiz</span>
+                    </Link>
+                  </li>
                 </ul>
               ) : null}
             </div>

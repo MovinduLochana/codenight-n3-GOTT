@@ -1,7 +1,15 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SuspenseLoader } from "@/components/common/suspense-loader";
-import { categories, getCategory, getTopic, readRepoFile } from "@/lib/content";
+import { LessonNav } from "@/components/lesson/lesson-nav";
+import {
+  categories,
+  getAdjacentTopics,
+  getCategory,
+  getTopic,
+  readRepoFile,
+} from "@/lib/content";
+
 import { renderMarkdown } from "@/lib/markdown";
 
 export function generateStaticParams() {
@@ -13,20 +21,17 @@ export function generateStaticParams() {
   );
 }
 
-export default async function LessonPage({
+export default function LessonPage({
   params,
 }: {
   params: Promise<{ chapter: string; lesson: string }>;
 }) {
-
   return (
     <main className="min-h-0 flex-1 overflow-y-auto">
       <div className="mx-auto max-w-3xl px-6 py-10">
-
         <Suspense fallback={<SuspenseLoader />}>
           <LessonContent paramsPromise={params} />
         </Suspense>
-
       </div>
     </main>
   );
@@ -41,13 +46,15 @@ async function LessonContent({
 
   const category = getCategory(categoryId);
   const topic = getTopic(categoryId, topicId);
-  
+
   if (!category || !topic) notFound();
 
   const markdown = readRepoFile(topic.contentPath);
   if (markdown === null) notFound();
 
   const html = await renderMarkdown(markdown);
+
+  const { previous, next } = getAdjacentTopics(categoryId, topicId);
 
   return (
     <div>
@@ -63,6 +70,7 @@ async function LessonContent({
         // biome-ignore lint/security/noDangerouslySetInnerHtml: our own markdown
         dangerouslySetInnerHTML={{ __html: html }}
       />
+      <LessonNav categoryId={categoryId} previous={previous} next={next} />
     </div>
   );
 }

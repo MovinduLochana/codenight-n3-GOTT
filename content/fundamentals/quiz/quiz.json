@@ -1,0 +1,694 @@
+{
+  "questions": [
+    {
+      "id": "vars_q1",
+      "prompt": "Which keyword is used to explicitly declare a variable in Go?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "let"
+        },
+        {
+          "id": "b",
+          "text": "var"
+        },
+        {
+          "id": "c",
+          "text": "def"
+        },
+        {
+          "id": "d",
+          "text": "dim"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "vars_q2",
+      "prompt": "What type does Go infer for `var year = 2009`?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "string"
+        },
+        {
+          "id": "b",
+          "text": "float64"
+        },
+        {
+          "id": "c",
+          "text": "int"
+        },
+        {
+          "id": "d",
+          "text": "It stays untyped"
+        }
+      ],
+      "correct": "c"
+    },
+    {
+      "id": "vars_q3",
+      "prompt": "Which of these is unique to `var` compared to `:=`?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "It can infer a type from the assigned value"
+        },
+        {
+          "id": "b",
+          "text": "It can declare variables at the package level, outside any function"
+        },
+        {
+          "id": "c",
+          "text": "It can only be used inside functions"
+        },
+        {
+          "id": "d",
+          "text": "It cannot declare multiple variables on one line"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "short_dec_q1",
+      "prompt": "What does the `:=` operator do in Go?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Declares and initializes a variable, inferring its type"
+        },
+        {
+          "id": "b",
+          "text": "Declares a variable without giving it a value"
+        },
+        {
+          "id": "c",
+          "text": "Only reassigns an already-existing variable"
+        },
+        {
+          "id": "d",
+          "text": "Explicitly specifies the variable's type"
+        }
+      ],
+      "correct": "a"
+    },
+    {
+      "id": "short_dec_q2",
+      "prompt": "Where can `:=` be used, according to this lesson?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Only at the package level"
+        },
+        {
+          "id": "b",
+          "text": "Both inside functions and at the package level"
+        },
+        {
+          "id": "c",
+          "text": "Only inside functions"
+        },
+        {
+          "id": "d",
+          "text": "Only inside struct definitions"
+        }
+      ],
+      "correct": "c"
+    },
+    {
+      "id": "short_dec_q3",
+      "prompt": "What is required on the left-hand side for `:=` to be valid?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "All variables must already exist"
+        },
+        {
+          "id": "b",
+          "text": "At least one variable must be new"
+        },
+        {
+          "id": "c",
+          "text": "Types must be written explicitly"
+        },
+        {
+          "id": "d",
+          "text": "It must be combined with the `var` keyword"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "type_conv_q1",
+      "prompt": "How does Go handle conversion between related numeric types like `int` and `float64`?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Automatically, whenever it's needed"
+        },
+        {
+          "id": "b",
+          "text": "Never automatically \u2014 every conversion must be explicit"
+        },
+        {
+          "id": "c",
+          "text": "Only automatically inside loops"
+        },
+        {
+          "id": "d",
+          "text": "Only automatically when using `fmt`"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "type_conv_q2",
+      "prompt": "What happens when you divide two `int`s in Go, e.g. `7 / 2`?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "It returns 3.5"
+        },
+        {
+          "id": "b",
+          "text": "It returns 3, silently dropping the decimal part"
+        },
+        {
+          "id": "c",
+          "text": "It causes a compile error"
+        },
+        {
+          "id": "d",
+          "text": "It rounds to the nearest int, 4"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "type_conv_q3",
+      "prompt": "What is Go's type conversion syntax, like `float64(x)`, actually doing?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Calling a runtime function"
+        },
+        {
+          "id": "b",
+          "text": "A compiler-level cast that only works between compatible types"
+        },
+        {
+          "id": "c",
+          "text": "Converting between any two types, including string to int"
+        },
+        {
+          "id": "d",
+          "text": "A mathematical operator"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "constants_q1",
+      "prompt": "Which keyword declares a constant in Go?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "let"
+        },
+        {
+          "id": "b",
+          "text": "const"
+        },
+        {
+          "id": "c",
+          "text": "final"
+        },
+        {
+          "id": "d",
+          "text": "fixed"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "constants_q2",
+      "prompt": "What happens if you try to reassign a constant?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "A runtime panic occurs"
+        },
+        {
+          "id": "b",
+          "text": "It silently keeps its original value"
+        },
+        {
+          "id": "c",
+          "text": "It's a compile-time error"
+        },
+        {
+          "id": "d",
+          "text": "It's allowed but produces a warning"
+        }
+      ],
+      "correct": "c"
+    },
+    {
+      "id": "constants_q3",
+      "prompt": "How can you declare several related constants together?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Using a `const` block"
+        },
+        {
+          "id": "b",
+          "text": "Using an array literal"
+        },
+        {
+          "id": "c",
+          "text": "They must each be declared in separate files"
+        },
+        {
+          "id": "d",
+          "text": "Using a `var` block"
+        }
+      ],
+      "correct": "a"
+    },
+    {
+      "id": "zero_q1",
+      "prompt": "What does Go do with an `int` variable that's declared but never given a value?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Leaves it as garbage memory"
+        },
+        {
+          "id": "b",
+          "text": "Automatically sets it to its zero value, `0`"
+        },
+        {
+          "id": "c",
+          "text": "Causes a compile error"
+        },
+        {
+          "id": "d",
+          "text": "Leaves it undefined until first used"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "zero_q2",
+      "prompt": "What is the zero value of a `string` in Go?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "\"0\""
+        },
+        {
+          "id": "b",
+          "text": "nil"
+        },
+        {
+          "id": "c",
+          "text": "\"\" (empty string)"
+        },
+        {
+          "id": "d",
+          "text": "It is undefined"
+        }
+      ],
+      "correct": "c"
+    },
+    {
+      "id": "zero_q3",
+      "prompt": "What is the zero value for pointers, slices, and maps?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "\"\""
+        },
+        {
+          "id": "c",
+          "text": "false"
+        },
+        {
+          "id": "d",
+          "text": "nil"
+        }
+      ],
+      "correct": "d"
+    },
+    {
+      "id": "basic_types_q1",
+      "prompt": "Which four types does this lesson say cover almost everything you need to get started?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "int, float64, string, bool"
+        },
+        {
+          "id": "b",
+          "text": "int8, int64, uint, float32"
+        },
+        {
+          "id": "c",
+          "text": "byte, rune, complex64, error"
+        },
+        {
+          "id": "d",
+          "text": "int, double, char, boolean"
+        }
+      ],
+      "correct": "a"
+    },
+    {
+      "id": "basic_types_q2",
+      "prompt": "What does it mean that Go is \"statically typed\", per this lesson?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "A variable's type can change at runtime"
+        },
+        {
+          "id": "b",
+          "text": "Once declared with a type, a variable can never hold a value of a different type"
+        },
+        {
+          "id": "c",
+          "text": "All variables must be constants"
+        },
+        {
+          "id": "d",
+          "text": "Types are only inferred inside functions"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "basic_types_q3",
+      "prompt": "What does this lesson say the more specific numeric types like `int8`, `int64`, `uint`, and `float32` are for?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Formatting output with `fmt`"
+        },
+        {
+          "id": "b",
+          "text": "Precise control over memory or range"
+        },
+        {
+          "id": "c",
+          "text": "Implementing interfaces"
+        },
+        {
+          "id": "d",
+          "text": "Declaring constants"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "fmt_prints_q1",
+      "prompt": "What does `fmt.Println` do automatically, per this lesson?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Nothing extra \u2014 it prints values exactly as given"
+        },
+        {
+          "id": "b",
+          "text": "Adds spaces between arguments and a trailing newline"
+        },
+        {
+          "id": "c",
+          "text": "Adds quotes around every string"
+        },
+        {
+          "id": "d",
+          "text": "Rounds floats to 2 decimal places"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "fmt_prints_q2",
+      "prompt": "What's the difference between `Printf` and `Sprintf`?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "`Sprintf` returns a string instead of printing it"
+        },
+        {
+          "id": "b",
+          "text": "`Printf` returns a string; `Sprintf` prints it"
+        },
+        {
+          "id": "c",
+          "text": "They behave identically in every way"
+        },
+        {
+          "id": "d",
+          "text": "`Sprintf` doesn't support format verbs"
+        }
+      ],
+      "correct": "a"
+    },
+    {
+      "id": "fmt_prints_q3",
+      "prompt": "Which verb prints the Go type of a value?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "%v"
+        },
+        {
+          "id": "b",
+          "text": "%d"
+        },
+        {
+          "id": "c",
+          "text": "%T"
+        },
+        {
+          "id": "d",
+          "text": "%s"
+        }
+      ],
+      "correct": "c"
+    },
+    {
+      "id": "str_fmt_q1",
+      "prompt": "What does this lesson primarily focus on?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Introducing a brand new Go keyword"
+        },
+        {
+          "id": "b",
+          "text": "Combining previously learned concepts to build formatted strings with `Sprintf`"
+        },
+        {
+          "id": "c",
+          "text": "Explaining goroutines"
+        },
+        {
+          "id": "d",
+          "text": "Explaining struct embedding"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "str_fmt_q2",
+      "prompt": "In `fmt.Sprintf(\"Item: %s, Qty: %d, Price: $%.2f\", item, qty, price)`, what does `%.2f` do?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Formats a string"
+        },
+        {
+          "id": "b",
+          "text": "Formats an integer"
+        },
+        {
+          "id": "c",
+          "text": "Formats a float, rounded to 2 decimal places"
+        },
+        {
+          "id": "d",
+          "text": "Formats a boolean"
+        }
+      ],
+      "correct": "c"
+    },
+    {
+      "id": "str_fmt_q3",
+      "prompt": "What does `Sprintf` actually do?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Prints directly to the screen"
+        },
+        {
+          "id": "b",
+          "text": "Returns a formatted string without printing it"
+        },
+        {
+          "id": "c",
+          "text": "Prints and also returns the string"
+        },
+        {
+          "id": "d",
+          "text": "Writes the formatted output to a file"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "operators_q1",
+      "prompt": "What does the `%` operator do in Go?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Calculates a percentage"
+        },
+        {
+          "id": "b",
+          "text": "Modulo \u2014 the remainder after division"
+        },
+        {
+          "id": "c",
+          "text": "Multiplication"
+        },
+        {
+          "id": "d",
+          "text": "Type conversion"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "operators_q2",
+      "prompt": "What do comparison operators like `==` and `<` always return?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "An int"
+        },
+        {
+          "id": "b",
+          "text": "A bool"
+        },
+        {
+          "id": "c",
+          "text": "A string"
+        },
+        {
+          "id": "d",
+          "text": "Nothing \u2014 they're statements, not expressions"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "operators_q3",
+      "prompt": "What happens with integer division like `7 / 2` in Go, per this lesson?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "It returns 3.5"
+        },
+        {
+          "id": "b",
+          "text": "It truncates, dropping the decimal part entirely"
+        },
+        {
+          "id": "c",
+          "text": "It causes a compile error"
+        },
+        {
+          "id": "d",
+          "text": "It rounds to the nearest int"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "iota_enums_q1",
+      "prompt": "Does Go have a built-in `enum` keyword?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Yes, called `enum`"
+        },
+        {
+          "id": "b",
+          "text": "No \u2014 it uses `iota` inside a `const` block instead"
+        },
+        {
+          "id": "c",
+          "text": "Yes, called `type`"
+        },
+        {
+          "id": "d",
+          "text": "No, and Go has no alternative for numbered constants"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "iota_enums_q2",
+      "prompt": "What value does `iota` start at, and how does it change?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Starts at 1 and increments by 2"
+        },
+        {
+          "id": "b",
+          "text": "Starts at 0 and increments by one for every line in the const block"
+        },
+        {
+          "id": "c",
+          "text": "Starts at 0 and stays 0 unless reset manually"
+        },
+        {
+          "id": "d",
+          "text": "Starts at -1 and increments by one"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "iota_enums_q3",
+      "prompt": "What happens to `iota` at the start of a new `const` block?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "It continues counting from the previous block"
+        },
+        {
+          "id": "b",
+          "text": "It resets to 0"
+        },
+        {
+          "id": "c",
+          "text": "It resets to 1"
+        },
+        {
+          "id": "d",
+          "text": "It becomes undefined"
+        }
+      ],
+      "correct": "b"
+    }
+  ]
+}
