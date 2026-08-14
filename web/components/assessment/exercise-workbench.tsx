@@ -1,6 +1,6 @@
 "use client";
 
-import Editor from "@monaco-editor/react";
+import Editor, { type Monaco } from "@monaco-editor/react";
 import {
   CheckIcon,
   FileTextIcon,
@@ -14,6 +14,34 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type Result = { passed: boolean; output: string };
+
+const MONACO_THEME = "codenight-dark";
+
+function defineMonacoTheme(monaco: Monaco) {
+  monaco.editor.defineTheme(MONACO_THEME, {
+    base: "vs-dark",
+    inherit: true,
+    rules: [],
+    colors: {
+      "editor.background": "#0c0e19",
+      "editor.foreground": "#ededed",
+      "editorCursor.foreground": "#40fd51",
+      "editor.lineHighlightBackground": "#11141f",
+      "editor.selectionBackground": "#40fd5133",
+      "editorLineNumber.foreground": "#4b5468",
+      "editorLineNumber.activeForeground": "#40fd51",
+      "editorIndentGuide.background": "#1a1e2e",
+      "editorIndentGuide.activeBackground": "#2a2f45",
+      "editorWidget.background": "#0c0e19",
+      "editorWidget.border": "#1a1e2e",
+      "editorSuggestWidget.background": "#0c0e19",
+      "editorSuggestWidget.border": "#1a1e2e",
+      "editorSuggestWidget.selectedBackground": "#40fd511a",
+      "scrollbarSlider.background": "#40fd5122",
+      "scrollbarSlider.hoverBackground": "#40fd5140",
+    },
+  });
+}
 
 export function ExerciseWorkbench({
   exerciseId,
@@ -113,7 +141,8 @@ export function ExerciseWorkbench({
           <Editor
             height="100%"
             language="go"
-            theme="vs-dark"
+            theme={MONACO_THEME}
+            beforeMount={defineMonacoTheme}
             value={code}
             onChange={(value) => setCode(value ?? "")}
             options={{

@@ -134,7 +134,7 @@ export function ChapterQuiz({
         </p>
         <p className="text-sm text-muted-foreground">
           {result.passed
-            ? "Perfect score — you've got this chapter down."
+            ? "Perfect score. You've got this chapter down."
             : "You've already completed this quiz. Review the lessons above whenever you're ready."}
         </p>
       </div>
@@ -187,7 +187,7 @@ export function ChapterQuiz({
           <QuestionnaireNext />
 
           <QuestionnaireSubmit disabled={submitting}>
-            { submitting && <Spinner className="size-4" /> }
+            {submitting && <Spinner className="size-4" />}
             Submit
           </QuestionnaireSubmit>
         </QuestionnaireActions>

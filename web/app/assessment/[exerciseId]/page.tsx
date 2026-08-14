@@ -68,7 +68,7 @@ async function AssessmentExercisePageContent({
           Final Assessment · {exercise.level}
         </p>
         <h1 className="font-heading mt-1 mb-6 text-2xl font-semibold">
-          {String(exercise.number).padStart(2, "0")} — {exercise.title}
+          {String(exercise.number).padStart(2, "0")} · {exercise.title}
         </h1>
 
         <ExerciseWorkbench

@@ -28,8 +28,7 @@ export function LiveLeaderboard({
         if (!response.ok || cancelled) return;
         const body = (await response.json()) as { entries: LeaderboardEntry[] };
         if (!cancelled) setEntries(body.entries);
-      } catch {
-      }
+      } catch {}
     }
 
     const id = setInterval(poll, POLL_INTERVAL_MS);
@@ -42,7 +41,7 @@ export function LiveLeaderboard({
   if (entries.length === 0) {
     return (
       <div className="mt-8 border border-border bg-card p-8 text-center text-sm text-muted-foreground">
-        No one's on the board yet — complete a chapter quiz or an exercise to
+        No one's on the board yet. Complete a chapter quiz or an exercise to
         appear here.
       </div>
     );
@@ -131,10 +130,10 @@ function PodiumCard({
         {rank}
       </div>
       <p className="mt-3 w-full truncate text-sm font-medium">
-        {entry ? entry.displayName : "—"}
+        {entry ? entry.displayName : "--"}
       </p>
       <p className="mt-1 font-heading text-xl font-semibold text-primary">
-        {entry ? entry.score : "—"}
+        {entry ? entry.score : "--"}
       </p>
       <p className="text-[0.625rem] tracking-widest text-muted-foreground uppercase">
         points
