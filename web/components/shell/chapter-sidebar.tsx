@@ -11,6 +11,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { logout } from "@/actions/auth";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { AssessmentExercise } from "@/lib/assessment";
 import type { Category } from "@/lib/content";
 import { cn } from "@/lib/utils";

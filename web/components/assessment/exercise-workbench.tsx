@@ -65,7 +65,7 @@ export function ExerciseWorkbench({
   }
 
   return (
-    <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[300px_1fr]">
+    <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[380px_1fr]">
       <div className="min-w-0 lg:max-h-full lg:overflow-y-auto lg:pe-2">
         <div className="border border-border bg-card p-5">
           <p className="flex items-center gap-1.5 text-[0.625rem] font-semibold tracking-widest text-primary uppercase">
@@ -131,7 +131,7 @@ export function ExerciseWorkbench({
             result === null
               ? "text-muted-foreground"
               : result.passed
-                ? "bg-primary/5"
+                ? "bg-sky-500/10"
                 : "bg-destructive/5",
           )}
         >
@@ -144,7 +144,7 @@ export function ExerciseWorkbench({
               <p
                 className={cn(
                   "flex items-center gap-1.5 text-xs font-semibold tracking-widest uppercase",
-                  result.passed ? "text-primary" : "text-destructive",
+                  result.passed ? "text-sky-400" : "text-destructive",
                 )}
               >
                 {result.passed ? (
