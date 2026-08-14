@@ -6,10 +6,26 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
 
 	"github.com/Mozilla-Campus-Club-of-SLIIT/codenight-n3-GO/fox"
 )
+
+func renderMarkdown(mdContent string, wordWrap int) string {
+	r, err := glamour.NewTermRenderer(
+		glamour.WithAutoStyle(),
+		glamour.WithWordWrap(wordWrap),
+	)
+	if err != nil {
+		return mdContent
+	}
+	out, err := r.Render(mdContent)
+	if err != nil {
+		return mdContent
+	}
+	return strings.TrimSpace(out)
+}
 
 func (m Model) RenderRightDetails(rightWidth int, panelHeight int) string {
 	if len(m.Exercises) == 0 {
@@ -52,7 +68,7 @@ func (m Model) RenderRightDetails(rightWidth int, panelHeight int) string {
 
 	headerBlock := fmt.Sprintf("%s  %s\n%s\n%s\n", title, levelBadge, meta, statusStr)
 
-	// Content area: Fox Animation vs Test Output vs Hint
+	// Content area: Fox Animation vs Test Output vs Markdown Hint
 	var body string
 
 	if m.IsTesting {
@@ -64,10 +80,10 @@ func (m Model) RenderRightDetails(rightWidth int, panelHeight int) string {
 		if err != nil {
 			body = lipgloss.NewStyle().Foreground(ColorFailure).Render("No hint file found.")
 		} else {
-			wrappedHint := wrapStyle.Render(string(data))
+			renderedMd := renderMarkdown(string(data), contentWidth)
 			body = fmt.Sprintf("%s\n%s",
 				lipgloss.NewStyle().Foreground(ColorHighlight).Bold(true).Render("=== TASK EXPLANATION & HINTS ==="),
-				wrappedHint)
+				renderedMd)
 		}
 	} else if m.TestOutput != "" {
 		outputStyle := lipgloss.NewStyle().Foreground(ColorFailure).Width(contentWidth)
