@@ -1,0 +1,349 @@
+{
+  "questions": [
+    {
+      "id": "structs_q1",
+      "prompt": "What is a struct in Go, per this lesson?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "A function type"
+        },
+        {
+          "id": "b",
+          "text": "A custom type that groups related fields together"
+        },
+        {
+          "id": "c",
+          "text": "A built-in error type"
+        },
+        {
+          "id": "d",
+          "text": "A kind of loop"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "structs_q2",
+      "prompt": "How can you create a struct value positionally, matching field order?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "It's not possible; you must always name fields"
+        },
+        {
+          "id": "b",
+          "text": "e.g. `Rectangle{3, 4}`, matching the declared field order"
+        },
+        {
+          "id": "c",
+          "text": "Using the `make()` function"
+        },
+        {
+          "id": "d",
+          "text": "Using `iota`"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "structs_q3",
+      "prompt": "According to this lesson, how is behavior added to a struct?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Structs have built-in behavior automatically"
+        },
+        {
+          "id": "b",
+          "text": "Separately, via methods"
+        },
+        {
+          "id": "c",
+          "text": "Via inheritance from a base class"
+        },
+        {
+          "id": "d",
+          "text": "Via closures only"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "pointers_q1",
+      "prompt": "What does a pointer hold?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "A copy of a variable's value"
+        },
+        {
+          "id": "b",
+          "text": "The memory address of a variable"
+        },
+        {
+          "id": "c",
+          "text": "The type name of a variable"
+        },
+        {
+          "id": "d",
+          "text": "The zero value of a variable"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "pointers_q2",
+      "prompt": "What operator do you use to dereference a pointer and read/write the value it points to?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "&"
+        },
+        {
+          "id": "b",
+          "text": "*"
+        },
+        {
+          "id": "c",
+          "text": "#"
+        },
+        {
+          "id": "d",
+          "text": "~"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "pointers_q3",
+      "prompt": "What's the key difference between a function receiving a pointer vs. a plain value?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "There is no difference \u2014 both can mutate the original"
+        },
+        {
+          "id": "b",
+          "text": "A pointer lets it mutate the caller's variable; a plain value only gets a copy"
+        },
+        {
+          "id": "c",
+          "text": "A plain value is always faster to pass"
+        },
+        {
+          "id": "d",
+          "text": "Pointers can't be passed to functions"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "methods_q1",
+      "prompt": "What is a method's \"receiver\"?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "The return type of the method"
+        },
+        {
+          "id": "b",
+          "text": "What attaches a function to a specific type"
+        },
+        {
+          "id": "c",
+          "text": "The method's parameter list"
+        },
+        {
+          "id": "d",
+          "text": "An interface implementation"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "methods_q2",
+      "prompt": "What's the difference between a value receiver and a pointer receiver?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "A value receiver can mutate the original; a pointer receiver can't"
+        },
+        {
+          "id": "b",
+          "text": "A value receiver gets a copy and can't mutate the original; a pointer receiver gets a reference and can"
+        },
+        {
+          "id": "c",
+          "text": "They behave identically"
+        },
+        {
+          "id": "d",
+          "text": "Pointer receivers are always slower"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "methods_q3",
+      "prompt": "When should you use a pointer receiver, per this lesson?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Only for small structs"
+        },
+        {
+          "id": "b",
+          "text": "When the method needs to modify the receiver's fields, or the struct is large and copying is wasteful"
+        },
+        {
+          "id": "c",
+          "text": "Never \u2014 always use value receivers"
+        },
+        {
+          "id": "d",
+          "text": "Only for methods that just read data"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "struct_embedding_q1",
+      "prompt": "How does Go achieve code reuse instead of class inheritance?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Via generics only"
+        },
+        {
+          "id": "b",
+          "text": "Via composition through struct embedding"
+        },
+        {
+          "id": "c",
+          "text": "Via interfaces exclusively"
+        },
+        {
+          "id": "d",
+          "text": "Via closures"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "struct_embedding_q2",
+      "prompt": "What happens to an embedded struct's fields and methods?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "They must be manually re-declared on the outer struct"
+        },
+        {
+          "id": "b",
+          "text": "They are automatically \"promoted\" to the outer struct"
+        },
+        {
+          "id": "c",
+          "text": "They become private to the embedded struct"
+        },
+        {
+          "id": "d",
+          "text": "They are lost"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "struct_embedding_q3",
+      "prompt": "Per this lesson, is struct embedding \"is-a\" or \"has-a\"?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "\"is-a\" \u2014 true inheritance"
+        },
+        {
+          "id": "b",
+          "text": "\"has-a via promotion\""
+        },
+        {
+          "id": "c",
+          "text": "Neither \u2014 it's unrelated to inheritance concepts"
+        },
+        {
+          "id": "d",
+          "text": "Both, equally"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "interfaces_q1",
+      "prompt": "How does a Go type satisfy an interface?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "By explicitly using an `implements` keyword"
+        },
+        {
+          "id": "b",
+          "text": "Implicitly, just by having the matching methods"
+        },
+        {
+          "id": "c",
+          "text": "By embedding the interface type"
+        },
+        {
+          "id": "d",
+          "text": "By importing the interface's package"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "interfaces_q2",
+      "prompt": "What does an interface define?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "A struct's fields"
+        },
+        {
+          "id": "b",
+          "text": "A set of methods a type must have"
+        },
+        {
+          "id": "c",
+          "text": "A specific concrete data type"
+        },
+        {
+          "id": "d",
+          "text": "A package name"
+        }
+      ],
+      "correct": "b"
+    },
+    {
+      "id": "interfaces_q3",
+      "prompt": "What does this lesson say interfaces let Go achieve without inheritance?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "Faster compilation"
+        },
+        {
+          "id": "b",
+          "text": "Polymorphism"
+        },
+        {
+          "id": "c",
+          "text": "Garbage collection"
+        },
+        {
+          "id": "d",
+          "text": "Concurrency"
+        }
+      ],
+      "correct": "b"
+    }
+  ]
+}

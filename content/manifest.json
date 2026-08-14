@@ -4,6 +4,7 @@
     {
       "id": "fundamentals",
       "title": "Fundamentals",
+      "quiz_path": "content/fundamentals/quiz/quiz.json",
       "topics": [
         {
           "id": "vars",
@@ -320,6 +321,7 @@
     {
       "id": "control_flow",
       "title": "Control Flow",
+      "quiz_path": "content/control_flow/quiz/quiz.json",
       "topics": [
         {
           "id": "if_else_and_init_stmts",
@@ -419,6 +421,7 @@
     {
       "id": "collections",
       "title": "Collections",
+      "quiz_path": "content/collections/quiz/quiz.json",
       "topics": [
         {
           "id": "arrays_and_slices",
@@ -549,6 +552,7 @@
     {
       "id": "functions",
       "title": "Functions",
+      "quiz_path": "content/function/quiz/quiz.json",
       "topics": [
         {
           "id": "func",
@@ -679,6 +683,7 @@
     {
       "id": "structs_and_interfaces",
       "title": "Structs & Interfaces",
+      "quiz_path": "content/struct_and_interfaces/quiz/quiz.json",
       "topics": [
         {
           "id": "structs",
@@ -840,6 +845,7 @@
     {
       "id": "errors_and_concurrency",
       "title": "Errors & Concurrency",
+      "quiz_path": "content/errors_and_concurrency/quiz/quiz.json",
       "topics": [
         {
           "id": "err_as_value",
