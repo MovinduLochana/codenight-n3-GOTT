@@ -28,9 +28,18 @@ export function PublicShell({ children }: { children: React.ReactNode }) {
 
         <Link
           href="/login"
-          className={cn(buttonVariants({ size: "sm" }), "ms-auto")}
+          className={cn(
+            buttonVariants({ variant: "ghost", size: "sm" }),
+            "ms-auto bg-transparent hover:bg-transparent",
+          )}
         >
-          Login
+          <Image
+            src="/assets/login_logo.svg"
+            alt="Login"
+            width={200}
+            height={54}
+            className="h-11 w-auto"
+          />
         </Link>
       </header>
 
