@@ -21,7 +21,8 @@
     },
     {
       "id": "func_q2",
-      "prompt": " Predict the output: `defer fmt.Println(\"A\") fmt.Println(\"B\")`",
+      "prompt": "Predict the output:",
+      "code": "defer fmt.Println(\"A\")\nfmt.Println(\"B\")",
       "choices": [
         {
           "id": "a",

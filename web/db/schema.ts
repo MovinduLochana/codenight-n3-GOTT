@@ -15,6 +15,7 @@ export const todo = pgTable("todo", {
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull().unique(),
+  displayName: text("display_name"),
   accessToken: text("access_token").notNull(),
   refreshToken: text("refresh_token"),
   expiresAt: timestamp("expires_at").notNull(),

@@ -15,13 +15,13 @@ export function LessonNav({
   next: AdjacentTopic | null;
 }) {
   return (
-    <nav className="mt-12 flex items-stretch justify-between gap-3 border-t border-border pt-6">
+    <nav className="mt-12 grid grid-cols-1 items-center gap-3 border-t border-border pt-6 sm:grid-cols-[1fr_auto_1fr]">
       {previous ? (
         <Link
           href={`/learn/${previous.categoryId}/${previous.topicId}`}
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "h-auto flex-col items-start gap-1 px-4 py-3 normal-case",
+            "h-auto flex-col items-start gap-1 px-4 py-3 normal-case sm:justify-self-start",
           )}
         >
           <span className="flex items-center gap-1.5 text-[0.625rem] font-semibold tracking-widest text-muted-foreground uppercase">
@@ -31,28 +31,30 @@ export function LessonNav({
           <span className="text-xs font-medium">{previous.title}</span>
         </Link>
       ) : (
-        <span />
+        <span className="hidden sm:block" />
       )}
 
       {next ? (
         <Link
           href={`/learn/${categoryId}/quiz`}
           className={cn(
-            buttonVariants({ variant: "ghost", size: "sm" }),
-            "shrink-0 self-center normal-case",
+            buttonVariants({ variant: "outline", size: "sm" }),
+            "shrink-0 gap-1.5 normal-case sm:justify-self-center",
           )}
         >
-          <ListChecksIcon />
+          <ListChecksIcon className="size-3.5" />
           Chapter Quiz
         </Link>
-      ) : null}
+      ) : (
+        <span className="hidden sm:block" />
+      )}
 
       {next ? (
         <Link
           href={`/learn/${next.categoryId}/${next.topicId}`}
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "h-auto flex-col items-end gap-1 px-4 py-3 text-end normal-case",
+            "h-auto flex-col items-end gap-1 px-4 py-3 text-end normal-case sm:justify-self-end",
           )}
         >
           <span className="flex items-center gap-1.5 text-[0.625rem] font-semibold tracking-widest text-muted-foreground uppercase">
@@ -66,7 +68,7 @@ export function LessonNav({
           href={`/learn/${categoryId}/quiz`}
           className={cn(
             buttonVariants({ variant: "default" }),
-            "h-auto flex-col items-end gap-1 px-4 py-3 text-end normal-case",
+            "h-auto flex-col items-end gap-1 px-4 py-3 text-end normal-case sm:justify-self-end",
           )}
         >
           <span className="flex items-center gap-1.5 text-[0.625rem] font-semibold tracking-widest uppercase">

@@ -5,6 +5,7 @@ import {
   CodeIcon,
   ListChecksIcon,
   LogOutIcon,
+  TrophyIcon,
   UsersIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -60,6 +61,19 @@ export function ChapterSidebar({
         >
           <CodeIcon className="size-3.5" />
           Editor
+        </Link>
+
+        <Link
+          href="/leaderboard"
+          className={cn(
+            navItemClass,
+            pathname.startsWith("/leaderboard")
+              ? "bg-primary text-primary-foreground"
+              : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+          )}
+        >
+          <TrophyIcon className="size-3.5" />
+          Leaderboard
         </Link>
 
         {comingSoon.map((item) => (

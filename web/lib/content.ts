@@ -37,6 +37,7 @@ export type QuizChoice = {
 export type QuizQuestion = {
   id: string;
   prompt: string;
+  code?: string;
   choices: QuizChoice[];
   correct: string;
 };

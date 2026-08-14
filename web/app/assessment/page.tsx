@@ -1,7 +1,9 @@
 import { eq } from "drizzle-orm";
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
+import { SuspenseLoader } from "@/components/common/suspense-loader";
 import { Badge } from "@/components/ui/badge";
 import { db } from "@/db/drizzle";
 import { assessmentProgress } from "@/db/schema";
@@ -15,7 +17,15 @@ const levelVariant = {
   advanced: "destructive",
 } as const;
 
-export default async function AssessmentPage() {
+export default function AssessmentPage() {
+  return (
+    <Suspense fallback={<SuspenseLoader />}>
+      <AssessmentPageContent />
+    </Suspense>
+  );
+}
+
+async function AssessmentPageContent() {
   const session = await getSession();
 
   const progress = session

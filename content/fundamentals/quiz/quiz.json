@@ -6,15 +6,15 @@
       "choices": [
         {
           "id": "a",
-          "text": "let and :="
+          "text": "`var` and `:=`"
         },
         {
           "id": "b",
-          "text": "let and const"
+          "text": "`let` and `const`"
         },
         {
           "id": "c",
-          "text": "define and :"
+          "text": "`define` and `:`"
         }
       ],
       "correct": "a"
@@ -25,15 +25,15 @@
       "choices": [
         {
           "id": "a",
-          "text": "nil"
+          "text": "`nil`"
         },
         {
           "id": "b",
-          "text": "\"null\""
+          "text": "`\"null\"`"
         },
         {
           "id": "c",
-          "text": "\"\""
+          "text": "`\"\"`"
         }
       ],
       "correct": "c"
@@ -44,15 +44,15 @@
       "choices": [
         {
           "id": "a",
-          "text": "let"
+          "text": "`let`"
         },
         {
           "id": "b",
-          "text": "const"
+          "text": "`const`"
         },
         {
           "id": "c",
-          "text": "static"
+          "text": "`static`"
         }
       ],
       "correct": "b"
@@ -78,15 +78,15 @@
       "choices": [
         {
           "id": "a",
-          "text": "%v"
+          "text": "`%v`"
         },
         {
           "id": "b",
-          "text": "%T"
+          "text": "`%T`"
         },
         {
           "id": "c",
-          "text": "%t"
+          "text": "`%t`"
         }
       ],
       "correct": "b"
