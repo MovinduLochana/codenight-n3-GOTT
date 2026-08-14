@@ -1,4 +1,5 @@
 import { and, eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { db } from "@/db/drizzle";
@@ -67,6 +68,8 @@ export async function POST(
     score,
     total,
   });
+
+  revalidateTag("leaderboard", "max");
 
   return NextResponse.json({ passed, score, total });
 }

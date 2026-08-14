@@ -1,6 +1,7 @@
 import "server-only";
 
 import { eq, sql } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { db } from "@/db/drizzle";
 import { assessmentProgress, quizProgress, sessions } from "@/db/schema";
@@ -19,6 +20,10 @@ function fallbackName(userId: string): string {
 }
 
 export async function getLeaderboard(limit = 100): Promise<LeaderboardEntry[]> {
+  "use cache";
+  cacheTag("leaderboard");
+  cacheLife("minutes");
+
   const [quizTotals, exerciseTotals, allSessions] = await Promise.all([
     db
       .select({
