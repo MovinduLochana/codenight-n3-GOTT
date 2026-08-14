@@ -39,12 +39,13 @@ export async function createSession(
   userId: string,
   accessToken: string,
   refreshToken?: string,
+  displayName?: string,
 ) {
   const now = new Date();
   const expiresAt = new Date(now.getTime() + SESSION_DURATION_MS);
 
   const [existing] = await db
-    .select({ id: sessions.id })
+    .select({ id: sessions.id, displayName: sessions.displayName })
     .from(sessions)
     .where(eq(sessions.userId, userId))
     .limit(1);
@@ -58,6 +59,8 @@ export async function createSession(
       .set({
         accessToken,
         refreshToken: refreshToken ?? null,
+        // Don't blank out a name captured previously if this login doesn't carry one.
+        displayName: displayName ?? existing.displayName,
         expiresAt,
         lastLoginAt: now,
         loggedOutAt: null,
@@ -70,6 +73,7 @@ export async function createSession(
       userId,
       accessToken,
       refreshToken: refreshToken ?? null,
+      displayName: displayName ?? null,
       expiresAt,
       lastLoginAt: now,
     });

@@ -1,12 +1,76 @@
+import { TrophyIcon } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
+import { SuspenseLoader } from "@/components/common/suspense-loader";
 import { categories, courseTitle } from "@/lib/content";
+import { getLeaderboard } from "@/lib/leaderboard";
+import { getSession } from "@/lib/session";
+import { cn } from "@/lib/utils";
 
 export default function CurriculumPage() {
+  return (
+    <Suspense fallback={<SuspenseLoader />}>
+      <CurriculumPageContent />
+    </Suspense>
+  );
+}
+
+async function CurriculumPageContent() {
+  const [topEntries, session] = await Promise.all([
+    getLeaderboard(5),
+    getSession(),
+  ]);
+  const currentUserId = session?.userId ?? null;
+
   return (
     <main className="min-h-0 flex-1 overflow-y-auto">
       <div className="mx-auto max-w-3xl px-6 py-10">
         <h1 className="font-heading text-2xl font-semibold">{courseTitle}</h1>
+
+        {topEntries.length > 0 ? (
+          <div className="mt-6 border border-border bg-card p-5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <TrophyIcon className="size-4 text-primary" />
+                <p className="text-[0.625rem] font-semibold tracking-widest text-primary uppercase">
+                  Leaderboard
+                </p>
+              </div>
+              <Link
+                href="/leaderboard"
+                className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+              >
+                View all →
+              </Link>
+            </div>
+
+            <ul className="mt-4 flex flex-col gap-2">
+              {topEntries.map((entry, index) => (
+                <li
+                  key={entry.userId}
+                  className={cn(
+                    "flex items-center gap-3 text-sm",
+                    entry.userId === currentUserId && "text-primary",
+                  )}
+                >
+                  <span className="font-mono text-xs text-primary">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="truncate font-medium">
+                    {entry.displayName}
+                  </span>
+                  <span className="ms-auto font-heading text-sm font-semibold">
+                    {entry.score}
+                    <span className="ms-1 text-[0.625rem] font-normal tracking-widest text-muted-foreground uppercase">
+                      pts
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
 
         <ul className="mt-8 flex flex-col gap-2">
           {categories.map((category) => (

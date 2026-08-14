@@ -50,8 +50,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${APP_URL}/login?error=network_error`);
   }
 
-  // Fetch user ID from /session
   let userId: string;
+  let displayName: string | undefined;
   try {
     const sessionRes = await fetch(`${AUTH_API_BASE}/session`, {
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -63,18 +63,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const sessionBody = (await sessionRes.json()) as { data?: { id?: string } };
+    const sessionBody = (await sessionRes.json()) as {
+      data?: { id?: string; name?: string; email?: string };
+    };
     const id = sessionBody?.data?.id;
     if (!id) {
       return NextResponse.redirect(`${APP_URL}/login?error=no_user_id`);
     }
 
     userId = id;
+    displayName =
+      sessionBody.data?.name ?? sessionBody.data?.email ?? undefined;
   } catch {
     return NextResponse.redirect(`${APP_URL}/login?error=network_error`);
   }
 
-  await createSession(userId, accessToken, refreshTokenFromServer);
+  await createSession(userId, accessToken, refreshTokenFromServer, displayName);
 
   return NextResponse.redirect(`${APP_URL}/learn`);
 }
