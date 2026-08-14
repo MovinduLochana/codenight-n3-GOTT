@@ -2,7 +2,7 @@ import { marked } from "marked";
 import { cacheLife } from "next/cache";
 import { createHighlighter } from "shiki";
 
-const theme = "github-dark";
+const theme = "ayu-dark";
 
 let configured: Promise<void> | null = null;
 
