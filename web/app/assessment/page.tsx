@@ -11,10 +11,10 @@ import { assessmentExercises } from "@/lib/assessment";
 import { getSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
-const levelVariant = {
-  beginner: "default",
-  intermediate: "secondary",
-  advanced: "destructive",
+const levelColor = {
+  beginner: "text-emerald-400",
+  intermediate: "text-amber-400",
+  advanced: "text-red-400",
 } as const;
 
 export default function AssessmentPage() {
@@ -68,16 +68,18 @@ async function AssessmentPageContent() {
                   <span className="font-mono text-xs text-primary">
                     {String(exercise.number).padStart(2, "0")}
                   </span>
-                  <span className="font-medium">{exercise.title}</span>
+                  <span className="min-w-0 flex-1 truncate font-medium">
+                    {exercise.title}
+                  </span>
                   <Badge
-                    variant={levelVariant[exercise.level]}
-                    className="ms-2"
+                    variant="outline"
+                    className={cn(levelColor[exercise.level])}
                   >
                     {exercise.level}
                   </Badge>
                   <span
                     className={cn(
-                      "ms-auto flex items-center gap-1 text-xs",
+                      "flex w-28 shrink-0 items-center justify-end gap-1 text-xs",
                       passed
                         ? "text-primary"
                         : attempted
