@@ -40,7 +40,7 @@ export function LoginCard() {
           <Button
             type="submit"
             size="lg"
-            className="flex h-12 w-full items-center justify-center gap-3 font-mono text-xs font-semibold tracking-wide uppercase transition-opacity hover:opacity-95"
+            className="flex h-12 w-full items-center bg-white justify-center gap-3 font-mono text-xs font-semibold tracking-wide uppercase transition-opacity hover:opacity-95"
           >
             <Image
               src="/assets/mozilla-logo.png"
