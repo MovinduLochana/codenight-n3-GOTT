@@ -1,0 +1,184 @@
+{
+  "exercises": [
+    {
+      "id": "formatting",
+      "number": 1,
+      "title": "Format & Conversion",
+      "level": "beginner",
+      "dir": "content/final_assessment/01_Beginner_Formatting",
+      "task_path": "content/final_assessment/01_Beginner_Formatting/task.md",
+      "starter_path": "content/final_assessment/01_Beginner_Formatting/main.go",
+      "test_path": "content/final_assessment/01_Beginner_Formatting/main_test.go"
+    },
+    {
+      "id": "fizzbuzz",
+      "number": 2,
+      "title": "FizzBuzz Loop",
+      "level": "beginner",
+      "dir": "content/final_assessment/02_Beginner_FizzBuzz",
+      "task_path": "content/final_assessment/02_Beginner_FizzBuzz/task.md",
+      "starter_path": "content/final_assessment/02_Beginner_FizzBuzz/main.go",
+      "test_path": "content/final_assessment/02_Beginner_FizzBuzz/main_test.go"
+    },
+    {
+      "id": "slices",
+      "number": 3,
+      "title": "Slices & Append",
+      "level": "beginner",
+      "dir": "content/final_assessment/03_Beginner_Slices",
+      "task_path": "content/final_assessment/03_Beginner_Slices/task.md",
+      "starter_path": "content/final_assessment/03_Beginner_Slices/main.go",
+      "test_path": "content/final_assessment/03_Beginner_Slices/main_test.go"
+    },
+    {
+      "id": "functions",
+      "number": 4,
+      "title": "Error Returns",
+      "level": "beginner",
+      "dir": "content/final_assessment/04_Beginner_Functions",
+      "task_path": "content/final_assessment/04_Beginner_Functions/task.md",
+      "starter_path": "content/final_assessment/04_Beginner_Functions/main.go",
+      "test_path": "content/final_assessment/04_Beginner_Functions/main_test.go"
+    },
+    {
+      "id": "enums",
+      "number": 5,
+      "title": "Iota & Switch Enums",
+      "level": "intermediate",
+      "dir": "content/final_assessment/05_Intermediate_Enums",
+      "task_path": "content/final_assessment/05_Intermediate_Enums/task.md",
+      "starter_path": "content/final_assessment/05_Intermediate_Enums/main.go",
+      "test_path": "content/final_assessment/05_Intermediate_Enums/main_test.go"
+    },
+    {
+      "id": "maps",
+      "number": 6,
+      "title": "Map Frequency",
+      "level": "intermediate",
+      "dir": "content/final_assessment/06_Intermediate_Maps",
+      "task_path": "content/final_assessment/06_Intermediate_Maps/task.md",
+      "starter_path": "content/final_assessment/06_Intermediate_Maps/main.go",
+      "test_path": "content/final_assessment/06_Intermediate_Maps/main_test.go"
+    },
+    {
+      "id": "structs",
+      "number": 7,
+      "title": "Structs & Methods",
+      "level": "intermediate",
+      "dir": "content/final_assessment/07_Intermediate_Structs",
+      "task_path": "content/final_assessment/07_Intermediate_Structs/task.md",
+      "starter_path": "content/final_assessment/07_Intermediate_Structs/main.go",
+      "test_path": "content/final_assessment/07_Intermediate_Structs/main_test.go"
+    },
+    {
+      "id": "closures",
+      "number": 8,
+      "title": "Filter Closures",
+      "level": "advanced",
+      "dir": "content/final_assessment/08_Advanced_Closures",
+      "task_path": "content/final_assessment/08_Advanced_Closures/task.md",
+      "starter_path": "content/final_assessment/08_Advanced_Closures/main.go",
+      "test_path": "content/final_assessment/08_Advanced_Closures/main_test.go"
+    },
+    {
+      "id": "interfaces",
+      "number": 9,
+      "title": "Interfaces & Embedding",
+      "level": "advanced",
+      "dir": "content/final_assessment/09_Advanced_Interfaces",
+      "task_path": "content/final_assessment/09_Advanced_Interfaces/task.md",
+      "starter_path": "content/final_assessment/09_Advanced_Interfaces/main.go",
+      "test_path": "content/final_assessment/09_Advanced_Interfaces/main_test.go"
+    },
+    {
+      "id": "defer_stack",
+      "number": 10,
+      "title": "Defer Stack & Pointers",
+      "level": "advanced",
+      "dir": "content/final_assessment/10_Advanced_Defer_Stack",
+      "task_path": "content/final_assessment/10_Advanced_Defer_Stack/task.md",
+      "starter_path": "content/final_assessment/10_Advanced_Defer_Stack/main.go",
+      "test_path": "content/final_assessment/10_Advanced_Defer_Stack/main_test.go"
+    },
+    {
+      "id": "temp_converter",
+      "number": 11,
+      "title": "Temp Conversion",
+      "level": "beginner",
+      "dir": "content/final_assessment/11_Beginner_Temp_Converter",
+      "task_path": "content/final_assessment/11_Beginner_Temp_Converter/task.md",
+      "starter_path": "content/final_assessment/11_Beginner_Temp_Converter/main.go",
+      "test_path": "content/final_assessment/11_Beginner_Temp_Converter/main_test.go"
+    },
+    {
+      "id": "palindrome",
+      "number": 12,
+      "title": "Palindrome Check",
+      "level": "beginner",
+      "dir": "content/final_assessment/12_Beginner_Palindrome",
+      "task_path": "content/final_assessment/12_Beginner_Palindrome/task.md",
+      "starter_path": "content/final_assessment/12_Beginner_Palindrome/main.go",
+      "test_path": "content/final_assessment/12_Beginner_Palindrome/main_test.go"
+    },
+    {
+      "id": "min_max",
+      "number": 13,
+      "title": "Slice Min/Max",
+      "level": "beginner",
+      "dir": "content/final_assessment/13_Beginner_Min_Max",
+      "task_path": "content/final_assessment/13_Beginner_Min_Max/task.md",
+      "starter_path": "content/final_assessment/13_Beginner_Min_Max/main.go",
+      "test_path": "content/final_assessment/13_Beginner_Min_Max/main_test.go"
+    },
+    {
+      "id": "pointer_swap",
+      "number": 14,
+      "title": "Pointer Swap",
+      "level": "beginner",
+      "dir": "content/final_assessment/14_Beginner_Pointer_Swap",
+      "task_path": "content/final_assessment/14_Beginner_Pointer_Swap/task.md",
+      "starter_path": "content/final_assessment/14_Beginner_Pointer_Swap/main.go",
+      "test_path": "content/final_assessment/14_Beginner_Pointer_Swap/main_test.go"
+    },
+    {
+      "id": "json",
+      "number": 15,
+      "title": "JSON Struct Tags",
+      "level": "intermediate",
+      "dir": "content/final_assessment/15_Intermediate_JSON",
+      "task_path": "content/final_assessment/15_Intermediate_JSON/task.md",
+      "starter_path": "content/final_assessment/15_Intermediate_JSON/main.go",
+      "test_path": "content/final_assessment/15_Intermediate_JSON/main_test.go"
+    },
+    {
+      "id": "file_reader",
+      "number": 16,
+      "title": "File Line Reader",
+      "level": "intermediate",
+      "dir": "content/final_assessment/16_Intermediate_File_Reader",
+      "task_path": "content/final_assessment/16_Intermediate_File_Reader/task.md",
+      "starter_path": "content/final_assessment/16_Intermediate_File_Reader/main.go",
+      "test_path": "content/final_assessment/16_Intermediate_File_Reader/main_test.go"
+    },
+    {
+      "id": "custom_errors",
+      "number": 17,
+      "title": "Custom Errors",
+      "level": "intermediate",
+      "dir": "content/final_assessment/17_Intermediate_Custom_Errors",
+      "task_path": "content/final_assessment/17_Intermediate_Custom_Errors/task.md",
+      "starter_path": "content/final_assessment/17_Intermediate_Custom_Errors/main.go",
+      "test_path": "content/final_assessment/17_Intermediate_Custom_Errors/main_test.go"
+    },
+    {
+      "id": "worker_pool",
+      "number": 18,
+      "title": "Worker Pool",
+      "level": "intermediate",
+      "dir": "content/final_assessment/18_Intermediate_Worker_Pool",
+      "task_path": "content/final_assessment/18_Intermediate_Worker_Pool/task.md",
+      "starter_path": "content/final_assessment/18_Intermediate_Worker_Pool/main.go",
+      "test_path": "content/final_assessment/18_Intermediate_Worker_Pool/main_test.go"
+    }
+  ]
+}
