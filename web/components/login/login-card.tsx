@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Suspense } from "react";
-import { initiateOAuthFlow } from "@/app/actions/auth";
+import { initiateOAuthFlow } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,

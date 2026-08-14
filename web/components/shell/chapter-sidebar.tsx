@@ -4,7 +4,7 @@ import { BookOpenIcon, CodeIcon, LogOutIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { logout } from "@/app/actions/auth";
+import { logout } from "@/actions/auth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Category } from "@/lib/content";
@@ -88,7 +88,7 @@ export function ChapterSidebar({ categories }: { categories: Category[] }) {
               </Link>
 
               {open ? (
-                <ul className="ms-[1.375rem] border-s border-border">
+                <ul className="ms-5.5 border-s border-border">
                   {category.topics.map((topic) => {
                     const href = `/learn/${category.id}/${topic.id}`;
 
