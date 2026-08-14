@@ -53,9 +53,14 @@ export async function GET(request: NextRequest) {
   let userId: string;
   let displayName: string | undefined;
   try {
-    const sessionRes = await fetch(`${AUTH_API_BASE}/session`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    const [sessionRes, meRes] = await Promise.all([
+      fetch(`${AUTH_API_BASE}/session`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }),
+      fetch(`${AUTH_API_BASE}/users/me`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }),
+    ]);
 
     if (!sessionRes.ok) {
       return NextResponse.redirect(
@@ -64,7 +69,7 @@ export async function GET(request: NextRequest) {
     }
 
     const sessionBody = (await sessionRes.json()) as {
-      data?: { id?: string; name?: string; email?: string };
+      data?: { id?: string; roles?: string[] };
     };
     const id = sessionBody?.data?.id;
     if (!id) {
@@ -72,8 +77,14 @@ export async function GET(request: NextRequest) {
     }
 
     userId = id;
-    displayName =
-      sessionBody.data?.name ?? sessionBody.data?.email ?? undefined;
+
+    if (meRes.ok) {
+      const meBody = (await meRes.json()) as {
+        data?: { name?: string; email?: string };
+      };
+      displayName =
+        meBody.data?.name ?? meBody.data?.email ?? undefined;
+    }
   } catch {
     return NextResponse.redirect(`${APP_URL}/login?error=network_error`);
   }
@@ -81,6 +92,7 @@ export async function GET(request: NextRequest) {
   await createSession(userId, accessToken, refreshTokenFromServer, displayName);
 
   return NextResponse.redirect(`${APP_URL}/learn`);
+
 }
 
 export async function POST() {
