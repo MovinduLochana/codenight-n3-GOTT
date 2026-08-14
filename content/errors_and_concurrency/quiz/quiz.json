@@ -1,208 +1,96 @@
 {
   "questions": [
     {
-      "id": "err_as_value_q1",
-      "prompt": "Does Go use exceptions for error handling?",
+      "id": "err_and_con_q1",
+      "prompt": "What built-in type does Go use instead of exceptions?",
       "choices": [
         {
           "id": "a",
-          "text": "Yes, try/catch is the standard approach"
+          "text": "panic values"
         },
         {
           "id": "b",
-          "text": "No \u2014 errors are ordinary values that implement the `error` interface"
+          "text": "The error interface"
         },
         {
           "id": "c",
-          "text": "Yes, but only for fatal errors"
-        },
-        {
-          "id": "d",
-          "text": "No, and Go has no way to signal a failure"
+          "text": "nil booleans"
         }
       ],
       "correct": "b"
     },
     {
-      "id": "err_as_value_q2",
-      "prompt": "What does `%w` do inside `fmt.Errorf`?",
+      "id": "err_and_con_q2",
+      "prompt": "Which fmt.Errorf verb wraps an error?",
       "choices": [
         {
           "id": "a",
-          "text": "Formats a float value"
+          "text": "%v"
         },
         {
           "id": "b",
-          "text": "Wraps the original error, preserving it"
+          "text": "%e"
         },
         {
           "id": "c",
-          "text": "Discards the original error"
+          "text": "%w"
+        }
+      ],
+      "correct": "c"
+    },
+    {
+      "id": "err_and_con_q3",
+      "prompt": "What keyword starts a goroutine?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "thread"
         },
         {
-          "id": "d",
-          "text": "Converts the error into a plain string with no error type"
+          "id": "b",
+          "text": "go"
+        },
+        {
+          "id": "c",
+          "text": "async"
         }
       ],
       "correct": "b"
     },
     {
-      "id": "err_as_value_q3",
-      "prompt": "When should callers check an error returned by a function, per this lesson?",
+      "id": "err_and_con_q4",
+      "prompt": "What blocks until all Done()s fire?",
       "choices": [
         {
           "id": "a",
-          "text": "Only if the program crashes"
+          "text": "wg.Wait()"
         },
         {
           "id": "b",
-          "text": "Immediately after the call, before touching the result"
+          "text": "wg.Stop()"
         },
         {
           "id": "c",
-          "text": "At the very end of the program"
-        },
-        {
-          "id": "d",
-          "text": "Never \u2014 errors are checked automatically"
+          "text": "close(wg)"
         }
       ],
-      "correct": "b"
+      "correct": "a"
     },
     {
-      "id": "goroutines_q1",
-      "prompt": "How do you start a goroutine?",
+      "id": "err_and_con_q5",
+      "prompt": "What happens receiving from a closed, empty channel?",
       "choices": [
         {
           "id": "a",
-          "text": "With the `goroutine` keyword"
+          "text": "It panics"
         },
         {
           "id": "b",
-          "text": "By putting `go` before a function call"
+          "text": "It returns the zero value, with ok == false"
         },
         {
           "id": "c",
-          "text": "By calling `go.Start()`"
-        },
-        {
-          "id": "d",
-          "text": "By using `defer`"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "goroutines_q2",
-      "prompt": "What does `sync.WaitGroup`'s `Wait()` do?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Starts new goroutines"
-        },
-        {
-          "id": "b",
-          "text": "Blocks until every goroutine that called `Add` has called `Done()`"
-        },
-        {
-          "id": "c",
-          "text": "Pauses the main goroutine forever"
-        },
-        {
-          "id": "d",
-          "text": "Cancels all running goroutines"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "goroutines_q3",
-      "prompt": "What happens if multiple goroutines write to the same shared variable at the same time, per this lesson?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Go automatically synchronizes the writes"
-        },
-        {
-          "id": "b",
-          "text": "It causes a data race"
-        },
-        {
-          "id": "c",
-          "text": "It causes a compile-time error"
-        },
-        {
-          "id": "d",
-          "text": "It's always perfectly safe"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "channels_q1",
-      "prompt": "What is a channel used for, per this lesson?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "Storing key-value pairs"
-        },
-        {
-          "id": "b",
-          "text": "A typed pipe goroutines use to send values to each other safely"
-        },
-        {
-          "id": "c",
-          "text": "Declaring constants"
-        },
-        {
-          "id": "d",
-          "text": "Formatting strings"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "channels_q2",
-      "prompt": "What does `close(ch)` signal?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "That the channel is currently empty"
-        },
-        {
-          "id": "b",
-          "text": "That no more values are coming"
-        },
-        {
-          "id": "c",
-          "text": "That the program should exit"
-        },
-        {
-          "id": "d",
-          "text": "That the channel needs more buffer space"
-        }
-      ],
-      "correct": "b"
-    },
-    {
-      "id": "channels_q3",
-      "prompt": "What happens when you send on a channel with no receiver and no buffer space, per this lesson?",
-      "choices": [
-        {
-          "id": "a",
-          "text": "The value is silently dropped"
-        },
-        {
-          "id": "b",
-          "text": "It blocks forever \u2014 a common cause of deadlocks"
-        },
-        {
-          "id": "c",
-          "text": "It panics immediately"
-        },
-        {
-          "id": "d",
-          "text": "It queues automatically without blocking"
+          "text": "It blocks forever"
         }
       ],
       "correct": "b"
