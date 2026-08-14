@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, ViewTransition } from "react";
 import { SuspenseLoader } from "@/components/common/suspense-loader";
 import { LessonNav } from "@/components/lesson/lesson-nav";
 import {
@@ -29,9 +29,11 @@ export default function LessonPage({
   return (
     <main className="min-h-0 flex-1 overflow-y-auto">
       <div className="mx-auto max-w-3xl px-6 py-10">
-        <Suspense fallback={<SuspenseLoader />}>
-          <LessonContent paramsPromise={params} />
-        </Suspense>
+        <ViewTransition name="lessonContent" share="auto">
+          <Suspense fallback={<SuspenseLoader />}>
+            <LessonContent paramsPromise={params} />
+          </Suspense>
+        </ViewTransition>
       </div>
     </main>
   );

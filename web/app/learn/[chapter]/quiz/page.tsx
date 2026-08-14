@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, ViewTransition } from "react";
 import { SuspenseLoader } from "@/components/common/suspense-loader";
 import {
   ChapterQuiz,
@@ -45,9 +45,11 @@ export default function ChapterQuizPage({
   params: Promise<{ chapter: string }>;
 }) {
   return (
-    <Suspense fallback={<SuspenseLoader />}>
-      <ChapterQuizPageContent params={params} />
-    </Suspense>
+    <ViewTransition name="chapterQuiz" share="auto">
+      <Suspense fallback={<SuspenseLoader />}>
+        <ChapterQuizPageContent params={params} />
+      </Suspense>
+    </ViewTransition>
   );
 }
 

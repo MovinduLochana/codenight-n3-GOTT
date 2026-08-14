@@ -82,8 +82,7 @@ export async function GET(request: NextRequest) {
       const meBody = (await meRes.json()) as {
         data?: { name?: string; email?: string };
       };
-      displayName =
-        meBody.data?.name ?? meBody.data?.email ?? undefined;
+      displayName = meBody.data?.name ?? meBody.data?.email ?? undefined;
     }
   } catch {
     return NextResponse.redirect(`${APP_URL}/login?error=network_error`);
@@ -92,7 +91,6 @@ export async function GET(request: NextRequest) {
   await createSession(userId, accessToken, refreshTokenFromServer, displayName);
 
   return NextResponse.redirect(`${APP_URL}/learn`);
-
 }
 
 export async function POST() {

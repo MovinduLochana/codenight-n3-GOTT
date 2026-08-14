@@ -8,39 +8,26 @@ import {
   RotateCcwIcon,
   XIcon,
 } from "lucide-react";
+import { Fira_Code } from "next/font/google";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { AyuDark } from "@/lib/monaco-editor-theme";
 import { cn } from "@/lib/utils";
 
 type Result = { passed: boolean; output: string };
 
 const MONACO_THEME = "codenight-dark";
 
+const firaCode = Fira_Code({
+  subsets: ["latin"],
+  weight: ["600"],
+  display: "swap",
+  variable: "--font-fira-code",
+});
+
 function defineMonacoTheme(monaco: Monaco) {
-  monaco.editor.defineTheme(MONACO_THEME, {
-    base: "vs-dark",
-    inherit: true,
-    rules: [],
-    colors: {
-      "editor.background": "#0c0e19",
-      "editor.foreground": "#ededed",
-      "editorCursor.foreground": "#40fd51",
-      "editor.lineHighlightBackground": "#11141f",
-      "editor.selectionBackground": "#40fd5133",
-      "editorLineNumber.foreground": "#4b5468",
-      "editorLineNumber.activeForeground": "#40fd51",
-      "editorIndentGuide.background": "#1a1e2e",
-      "editorIndentGuide.activeBackground": "#2a2f45",
-      "editorWidget.background": "#0c0e19",
-      "editorWidget.border": "#1a1e2e",
-      "editorSuggestWidget.background": "#0c0e19",
-      "editorSuggestWidget.border": "#1a1e2e",
-      "editorSuggestWidget.selectedBackground": "#40fd511a",
-      "scrollbarSlider.background": "#40fd5122",
-      "scrollbarSlider.hoverBackground": "#40fd5140",
-    },
-  });
+  monaco.editor.defineTheme(MONACO_THEME, AyuDark);
 }
 
 export function ExerciseWorkbench({
@@ -137,7 +124,7 @@ export function ExerciseWorkbench({
           </div>
         </div>
 
-        <div className="min-h-[360px] flex-1 lg:min-h-0">
+        <div className={`min-h-90 flex-1 lg:min-h-0 ${firaCode.variable}`}>
           <Editor
             height="100%"
             language="go"
@@ -147,8 +134,12 @@ export function ExerciseWorkbench({
             onChange={(value) => setCode(value ?? "")}
             options={{
               minimap: { enabled: false },
-              fontSize: 13,
+              fontFamily: "var(--font-fira-code), JetBrains Mono",
+              fontLigatures: true,
+              fontSize: 15,
               scrollBeyondLastLine: false,
+              cursorBlinking: "smooth",
+              cursorSmoothCaretAnimation: "on",
               padding: { top: 12 },
             }}
           />

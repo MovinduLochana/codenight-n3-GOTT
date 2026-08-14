@@ -187,8 +187,14 @@ export function ChapterQuiz({
           <QuestionnaireNext />
 
           <QuestionnaireSubmit disabled={submitting}>
-            {submitting && <Spinner className="size-4" />}
-            Submit
+            {submitting ? (
+              <div className="flex items-center gap-2">
+                <Spinner className="size-4" />
+                <span> Submitting... </span>
+              </div>
+            ) : (
+              <span> Submit </span>
+            )}
           </QuestionnaireSubmit>
         </QuestionnaireActions>
       </Questionnaire>
