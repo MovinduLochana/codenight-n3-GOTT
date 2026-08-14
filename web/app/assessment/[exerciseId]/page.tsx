@@ -1,7 +1,9 @@
 import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { ExerciseWorkbench } from "@/components/assessment/exercise-workbench";
+import { SuspenseLoader } from "@/components/common/suspense-loader";
 import { db } from "@/db/drizzle";
 import { assessmentProgress } from "@/db/schema";
 import { assessmentExercises, getAssessmentExercise } from "@/lib/assessment";
@@ -13,7 +15,19 @@ export function generateStaticParams() {
   return assessmentExercises.map((exercise) => ({ exerciseId: exercise.id }));
 }
 
-export default async function AssessmentExercisePage({
+export default function AssessmentExercisePage({
+  params,
+}: {
+  params: Promise<{ exerciseId: string }>;
+}) {
+  return (
+    <Suspense fallback={<SuspenseLoader />}>
+      <AssessmentExercisePageContent params={params} />
+    </Suspense>
+  );
+}
+
+async function AssessmentExercisePageContent({
   params,
 }: {
   params: Promise<{ exerciseId: string }>;

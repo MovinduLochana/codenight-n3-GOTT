@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import {
   Questionnaire,
@@ -15,9 +15,34 @@ import {
   QuestionnaireSubmit,
   QuestionnaireTitle,
 } from "@/components/ui/questionnaire";
-import type { PublicQuiz } from "@/lib/content";
+import type { PublicQuizQuestion } from "@/lib/content";
+import { cn } from "@/lib/utils";
+
+export type RenderedQuizQuestion = PublicQuizQuestion & {
+  codeHtml: string | null;
+};
+export type RenderedQuiz = { questions: RenderedQuizQuestion[] };
 
 type Result = { passed: boolean; score: number; total: number };
+
+function renderInlineCode(text: string): React.ReactNode {
+  const parts = text.split(/(`[^`]+`)/g);
+  if (parts.length === 1) return text;
+
+  return parts.map((part, index) => {
+    const key = `${index}:${part}`;
+    return part.startsWith("`") && part.endsWith("`") ? (
+      <code
+        key={key}
+        className="rounded-none bg-muted px-1 py-0.5 font-mono text-[0.85em] text-foreground"
+      >
+        {part.slice(1, -1)}
+      </code>
+    ) : (
+      <Fragment key={key}>{part}</Fragment>
+    );
+  });
+}
 
 export function ChapterQuiz({
   categoryId,
@@ -25,7 +50,7 @@ export function ChapterQuiz({
   completedResult,
 }: {
   categoryId: string;
-  quiz: PublicQuiz;
+  quiz: RenderedQuiz;
   completedResult: Result | null;
 }) {
   const storageKey = `quiz-answers:${categoryId}`;
@@ -42,12 +67,15 @@ export function ChapterQuiz({
     }
   });
 
-  // Already completed elsewhere (e.g. another tab) — nothing left to resume.
   useEffect(() => {
     if (completedResult) window.sessionStorage.removeItem(storageKey);
   }, [completedResult, storageKey]);
 
   if (quiz.questions.length === 0) return null;
+
+  const resumeQuestionId =
+    quiz.questions.find((question) => !(question.id in savedAnswers))?.id ??
+    quiz.questions[quiz.questions.length - 1]?.id;
 
   function handleChange(event: React.ChangeEvent<HTMLFormElement>) {
     const formData = new FormData(event.currentTarget);
@@ -114,12 +142,30 @@ export function ChapterQuiz({
 
   return (
     <div className="border border-border bg-card p-6">
-      <Questionnaire onSubmit={handleSubmit} onChange={handleChange}>
+      <Questionnaire
+        onSubmit={handleSubmit}
+        onChange={handleChange}
+        defaultItem={resumeQuestionId}
+      >
         <QuestionnaireProgress />
 
         {quiz.questions.map((question) => (
           <QuestionnaireItem key={question.id} name={question.id} required>
-            <QuestionnaireTitle>{question.prompt}</QuestionnaireTitle>
+            <QuestionnaireTitle>
+              {renderInlineCode(question.prompt)}
+            </QuestionnaireTitle>
+
+            {question.codeHtml ? (
+              <div
+                className={cn(
+                  "prose prose-invert prose-sm max-w-none",
+                  "prose-pre:my-0 prose-pre:border prose-pre:border-border prose-pre:bg-background",
+                )}
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: our own rendered markdown
+                dangerouslySetInnerHTML={{ __html: question.codeHtml }}
+              />
+            ) : null}
+
             <QuestionnaireChoices>
               {question.choices.map((choice) => (
                 <QuestionnaireChoice
@@ -127,7 +173,7 @@ export function ChapterQuiz({
                   value={choice.id}
                   defaultChecked={savedAnswers[question.id] === choice.id}
                 >
-                  {choice.text}
+                  {renderInlineCode(choice.text)}
                 </QuestionnaireChoice>
               ))}
             </QuestionnaireChoices>

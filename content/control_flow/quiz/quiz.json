@@ -21,7 +21,8 @@
     },
     {
       "id": "control_flow_q2",
-      "prompt": "Predict the output: `for i := 0; i < 3; i++ { if i == 1 { continue } fmt.Print(i) }`",
+      "prompt": "Predict the output:",
+      "code": "for i := 0; i < 3; i++ {\n    if i == 1 {\n        continue\n    }\n    fmt.Print(i)\n}",
       "choices": [
         {
           "id": "a",

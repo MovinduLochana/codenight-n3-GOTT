@@ -4,7 +4,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SuspenseLoader } from "@/components/common/suspense-loader";
-import { ChapterQuiz } from "@/components/lesson/chapter-quiz";
+import {
+  ChapterQuiz,
+  type RenderedQuiz,
+} from "@/components/lesson/chapter-quiz";
 import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/db/drizzle";
 import { quizProgress } from "@/db/schema";
@@ -13,9 +16,24 @@ import {
   getCategory,
   getChapterQuiz,
   getNextChapterFirstTopic,
+  type PublicQuiz,
   toPublicQuiz,
 } from "@/lib/content";
+import { renderMarkdown } from "@/lib/markdown";
 import { getSession } from "@/lib/session";
+
+async function renderQuizCode(quiz: PublicQuiz): Promise<RenderedQuiz> {
+  return {
+    questions: await Promise.all(
+      quiz.questions.map(async (question) => ({
+        ...question,
+        codeHtml: question.code
+          ? await renderMarkdown(`\`\`\`go\n${question.code}\n\`\`\``)
+          : null,
+      })),
+    ),
+  };
+}
 
 export function generateStaticParams() {
   return categories.map((category) => ({ chapter: category.id }));
@@ -93,7 +111,7 @@ async function ChapterQuizPageContent({
 
         <ChapterQuiz
           categoryId={categoryId}
-          quiz={toPublicQuiz(quiz)}
+          quiz={await renderQuizCode(toPublicQuiz(quiz))}
           completedResult={completed ?? null}
         />
 
