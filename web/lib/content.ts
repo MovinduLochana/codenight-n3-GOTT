@@ -45,6 +45,17 @@ export type Quiz = {
   questions: QuizQuestion[];
 };
 
+export type PublicQuizQuestion = Omit<QuizQuestion, "correct">;
+export type PublicQuiz = { questions: PublicQuizQuestion[] };
+
+export function toPublicQuiz(quiz: Quiz): PublicQuiz {
+  return {
+    questions: quiz.questions.map(
+      ({ correct: _correct, ...question }) => question,
+    ),
+  };
+}
+
 export type AdjacentTopic = {
   categoryId: string;
   topicId: string;
@@ -120,7 +131,7 @@ export function readRepoFile(relativePath: string): string | null {
   }
 }
 
-export function readQuiz(relativePath: string): Quiz | null {
+function readQuiz(relativePath: string): Quiz | null {
   const raw = readRepoFile(relativePath);
   if (raw === null) return null;
   try {

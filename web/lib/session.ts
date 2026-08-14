@@ -1,9 +1,10 @@
 import "server-only";
-import { SignJWT, jwtVerify } from "jose";
+import { and, eq, isNull } from "drizzle-orm";
+import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { db } from "@/db/drizzle";
 import { sessions } from "@/db/schema";
-import { eq, and, isNull } from "drizzle-orm";
 
 const SESSION_COOKIE = "sliit_session";
 const secretKey = process.env.SESSION_SECRET;
@@ -40,7 +41,7 @@ async function decryptSessionId(token: string): Promise<string | null> {
 export async function createSession(
   userId: string,
   accessToken: string,
-  refreshToken?: string
+  refreshToken?: string,
 ) {
   const now = nowSriLanka();
   const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -62,7 +63,7 @@ export async function createSession(
         refreshToken: refreshToken ?? null,
         expiresAt,
         lastLoginAt: now,
-        loggedOutAt: null, 
+        loggedOutAt: null,
       })
       .where(eq(sessions.userId, userId));
   } else {
@@ -77,7 +78,6 @@ export async function createSession(
     });
   }
 
-  // Set encrypted session cookie (holds only the session row id)
   const encrypted = await encryptSessionId(sessionId);
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, encrypted, {
@@ -90,6 +90,8 @@ export async function createSession(
 }
 
 export async function getSession() {
+  await connection();
+
   const cookieStore = await cookies();
   const cookie = cookieStore.get(SESSION_COOKIE)?.value;
   if (!cookie) return null;
@@ -100,12 +102,7 @@ export async function getSession() {
   const [session] = await db
     .select()
     .from(sessions)
-    .where(
-      and(
-        eq(sessions.id, sessionId),
-        isNull(sessions.loggedOutAt) 
-      )
-    )
+    .where(and(eq(sessions.id, sessionId), isNull(sessions.loggedOutAt)))
     .limit(1);
 
   if (!session) return null;

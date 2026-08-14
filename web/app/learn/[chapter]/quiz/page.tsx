@@ -1,15 +1,20 @@
+import { and, eq } from "drizzle-orm";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ChapterQuiz } from "@/components/lesson/chapter-quiz";
 import { buttonVariants } from "@/components/ui/button";
+import { db } from "@/db/drizzle";
+import { quizProgress } from "@/db/schema";
 import {
   categories,
   getCategory,
   getChapterQuiz,
   getNextChapterFirstTopic,
+  toPublicQuiz,
 } from "@/lib/content";
+import { getSession } from "@/lib/session";
 
 export function generateStaticParams() {
   return categories.map((category) => ({ chapter: category.id }));
@@ -30,6 +35,24 @@ export default async function ChapterQuizPage({
 
   const firstTopic = category.topics[0];
   const nextChapterTopic = getNextChapterFirstTopic(categoryId);
+
+  const session = await getSession();
+  const [completed] = session
+    ? await db
+        .select({
+          passed: quizProgress.passed,
+          score: quizProgress.score,
+          total: quizProgress.total,
+        })
+        .from(quizProgress)
+        .where(
+          and(
+            eq(quizProgress.userId, session.userId),
+            eq(quizProgress.categoryId, categoryId),
+          ),
+        )
+        .limit(1)
+    : [];
 
   return (
     <main className="min-h-0 flex-1 overflow-y-auto">
@@ -55,7 +78,11 @@ export default async function ChapterQuizPage({
           chapter.
         </p>
 
-        <ChapterQuiz quiz={quiz} />
+        <ChapterQuiz
+          categoryId={categoryId}
+          quiz={toPublicQuiz(quiz)}
+          completedResult={completed ?? null}
+        />
 
         <div className="mt-8 flex items-center justify-between gap-3">
           {firstTopic ? (
