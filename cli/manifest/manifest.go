@@ -26,15 +26,16 @@ type Topic struct {
 }
 
 type Exercise struct {
-	ID            string `json:"id"`
-	Title         string `json:"title"`
-	Level         string `json:"level"`
-	FilePath      string `json:"file_path"`
-	TestPath      string `json:"test_path"`
-	DocPath       string `json:"doc_path"`
-	CategoryTitle string `json:"-"`
-	TopicTitle    string `json:"-"`
-	Index         int    `json:"-"`
+	ID               string `json:"id"`
+	Title            string `json:"title"`
+	Level            string `json:"level"`
+	FilePath         string `json:"file_path"`
+	TestPath         string `json:"test_path"`
+	DocPath          string `json:"doc_path"`
+	CategoryTitle    string `json:"-"`
+	TopicTitle       string `json:"-"`
+	Index            int    `json:"-"`
+	TopicExerciseNum int    `json:"-"`
 }
 
 type Progress struct {
@@ -78,10 +79,11 @@ func LoadManifest(rootDir string) (*Manifest, []Exercise, error) {
 	idx := 0
 	for _, cat := range m.Categories {
 		for _, top := range cat.Topics {
-			for _, ex := range top.Exercises {
+			for topicExIdx, ex := range top.Exercises {
 				ex.CategoryTitle = cat.Title
 				ex.TopicTitle = top.Title
 				ex.Index = idx
+				ex.TopicExerciseNum = topicExIdx + 1
 				flat = append(flat, ex)
 				idx++
 			}

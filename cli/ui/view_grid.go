@@ -26,17 +26,20 @@ func renderCard(ex manifest.Exercise, isFocused bool, isPassed bool, isFailed bo
 		style = CardFocusedStyle
 	}
 
+	// Shorten Category Title if needed
 	catShort := ex.CategoryTitle
 	if len(catShort) > 13 {
 		catShort = catShort[:12] + "…"
 	}
-	topShort := ex.TopicTitle
-	if len(topShort) > 13 {
-		topShort = topShort[:12] + "…"
-	}
 
-	numStr := fmt.Sprintf("%d", ex.Index+1)
-	content := fmt.Sprintf("%s %s\n%s\n%s", catShort, numStr, topShort, statusSymbol)
+	// Shorten Topic Title and append Question Number (1 to 3)
+	topShort := ex.TopicTitle
+	if len(topShort) > 10 {
+		topShort = topShort[:9] + "…"
+	}
+	topWithNum := fmt.Sprintf("%s %d", topShort, ex.TopicExerciseNum)
+
+	content := fmt.Sprintf("%s\n%s\n%s", catShort, topWithNum, statusSymbol)
 	return style.Render(content)
 }
 

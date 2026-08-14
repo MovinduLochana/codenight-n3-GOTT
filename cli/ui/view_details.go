@@ -42,7 +42,7 @@ func (m Model) RenderRightDetails(rightWidth int, panelHeight int) string {
 	wrapStyle := lipgloss.NewStyle().Width(contentWidth)
 
 	// Header details
-	titleText := fmt.Sprintf("%d. %s", curEx.Index+1, curEx.Title)
+	titleText := fmt.Sprintf("%s (Question %d/3)", curEx.Title, curEx.TopicExerciseNum)
 	title := SectionTitleStyle.Render(titleText)
 	meta := wrapStyle.Render(fmt.Sprintf("Category: %s\nTopic:    %s\nFile:     %s",
 		curEx.CategoryTitle, curEx.TopicTitle, curEx.FilePath))
@@ -99,7 +99,7 @@ func (m Model) RenderRightDetails(rightWidth int, panelHeight int) string {
 	}
 
 	rightContent := lipgloss.JoinVertical(lipgloss.Left, headerBlock, body)
-	
+
 	style := RightPanelStyle.Width(rightWidth)
 	if panelHeight > 0 {
 		style = style.Height(panelHeight)
@@ -146,7 +146,7 @@ func (m Model) View() string {
 	mainPanels := lipgloss.JoinHorizontal(lipgloss.Top, leftGrid, rightDetails)
 
 	// 3. Controls / Footer Bar
-	controlsText := " [←↑↓→/hjkl] Move Focus  |  [r/Enter] Run Test  |  [h] Toggle Hint  |  [n/p] Next/Prev  |  [q] Quit"
+	controlsText := " [←↑↓→] Move Focus  |  [r/Enter] Run Test  |  [h] Toggle Hint  |  [n/p] Next/Prev  |  [q] Quit"
 	footer := FooterStyle.Render(controlsText)
 
 	return lipgloss.JoinVertical(lipgloss.Left, header, mainPanels, footer)
