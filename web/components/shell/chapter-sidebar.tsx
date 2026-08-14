@@ -3,7 +3,6 @@
 import {
   BookOpenIcon,
   CodeIcon,
-  LayoutGridIcon,
   ListChecksIcon,
   LogOutIcon,
   UsersIcon,
@@ -35,17 +34,6 @@ export function ChapterSidebar({
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-e border-border bg-sidebar md:flex">
       <nav className="flex flex-col gap-0.5 p-2">
-        <button
-          type="button"
-          className={cn(
-            navItemClass,
-            "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-          )}
-        >
-          <LayoutGridIcon className="size-3.5" />
-          Overview
-        </button>
-
         <Link
           href="/learn"
           className={cn(
@@ -73,17 +61,24 @@ export function ChapterSidebar({
         </Link>
 
         {comingSoon.map((item) => (
-          <button
+          <div
             key={item.label}
-            type="button"
             className={cn(
               navItemClass,
-              "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+              "text-muted-foreground/60 cursor-not-allowed justify-between",
             )}
           >
-            <item.icon className="size-3.5" />
-            {item.label}
-          </button>
+            <span className="flex items-center gap-2.5">
+              <item.icon className="size-3.5" />
+              {item.label}
+            </span>
+            <Badge
+              variant="outline"
+              className="text-[0.55rem] lowercase opacity-60"
+            >
+              soon
+            </Badge>
+          </div>
         ))}
       </nav>
 
@@ -191,16 +186,14 @@ export function ChapterSidebar({
 
       <div className="border-t border-border p-2">
         <form action={logout}>
-          <button
+          <Button
             type="submit"
-            className={cn(
-              navItemClass,
-              "justify-center bg-red-600 text-white transition-colors hover:bg-red-700",
-            )}
+            variant="destructive"
+            className="w-full justify-center gap-2 font-mono text-xs font-semibold tracking-wider uppercase"
           >
             <LogOutIcon className="size-3.5" />
             Logout
-          </button>
+          </Button>
         </form>
       </div>
     </aside>

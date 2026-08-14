@@ -1,1 +1,0 @@
-ALTER TABLE "sessions" ADD COLUMN "logged_out_at" timestamp;

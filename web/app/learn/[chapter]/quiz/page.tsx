@@ -2,7 +2,8 @@ import { and, eq } from "drizzle-orm";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
+import { Suspense } from "react";
+import { SuspenseLoader } from "@/components/common/suspense-loader";
 import { ChapterQuiz } from "@/components/lesson/chapter-quiz";
 import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/db/drizzle";
@@ -20,7 +21,19 @@ export function generateStaticParams() {
   return categories.map((category) => ({ chapter: category.id }));
 }
 
-export default async function ChapterQuizPage({
+export default function ChapterQuizPage({
+  params,
+}: {
+  params: Promise<{ chapter: string }>;
+}) {
+  return (
+    <Suspense fallback={<SuspenseLoader />}>
+      <ChapterQuizPageContent params={params} />
+    </Suspense>
+  );
+}
+
+async function ChapterQuizPageContent({
   params,
 }: {
   params: Promise<{ chapter: string }>;

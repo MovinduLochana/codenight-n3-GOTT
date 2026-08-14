@@ -10,7 +10,11 @@
     "format": "biome format --write",
     "bun:dev": "bun --bun run dev",
     "bun:build": "bun --bun run build",
-    "bun:start": "bun --bun run start"
+    "bun:start": "bun --bun run start",
+    "db:push": "drizzle-kit push",
+    "db:pull": "drizzle-kit pull",
+    "db:generate": "drizzle-kit generate:pg",
+    "db:reset": "drizzle-kit reset"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
