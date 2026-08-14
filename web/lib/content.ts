@@ -25,7 +25,30 @@ export type Category = {
   id: string;
   number: number;
   title: string;
+  quizPath: string;
   topics: Topic[];
+};
+
+export type QuizChoice = {
+  id: string;
+  text: string;
+};
+
+export type QuizQuestion = {
+  id: string;
+  prompt: string;
+  choices: QuizChoice[];
+  correct: string;
+};
+
+export type Quiz = {
+  questions: QuizQuestion[];
+};
+
+export type AdjacentTopic = {
+  categoryId: string;
+  topicId: string;
+  title: string;
 };
 
 type Manifest = {
@@ -33,6 +56,7 @@ type Manifest = {
   categories: {
     id: string;
     title: string;
+    quiz_path: string;
     topics: {
       id: string;
       title: string;
@@ -60,6 +84,7 @@ export const categories: Category[] = manifest.categories.map(
     id: category.id,
     number: index + 1,
     title: category.title,
+    quizPath: category.quiz_path,
     topics: category.topics.map((topic) => ({
       id: topic.id,
       title: topic.title,
@@ -93,4 +118,64 @@ export function readRepoFile(relativePath: string): string | null {
   } catch {
     return null;
   }
+}
+
+export function readQuiz(relativePath: string): Quiz | null {
+  const raw = readRepoFile(relativePath);
+  if (raw === null) return null;
+  try {
+    return JSON.parse(raw) as Quiz;
+  } catch {
+    return null;
+  }
+}
+
+export function getChapterQuiz(categoryId: string): Quiz | null {
+  const category = getCategory(categoryId);
+  if (!category) return null;
+  return readQuiz(category.quizPath);
+}
+
+const flatTopics: AdjacentTopic[] = categories.flatMap((category) =>
+  category.topics.map((topic) => ({
+    categoryId: category.id,
+    topicId: topic.id,
+    title: topic.title,
+  })),
+);
+
+export function getAdjacentTopics(
+  categoryId: string,
+  topicId: string,
+): { previous: AdjacentTopic | null; next: AdjacentTopic | null } {
+  const category = getCategory(categoryId);
+  const index = flatTopics.findIndex(
+    (entry) => entry.categoryId === categoryId && entry.topicId === topicId,
+  );
+  if (index === -1 || !category) return { previous: null, next: null };
+
+  const isLastInChapter =
+    category.topics[category.topics.length - 1]?.id === topicId;
+
+  return {
+    previous: index > 0 ? flatTopics[index - 1] : null,
+    next: isLastInChapter ? null : flatTopics[index + 1],
+  };
+}
+
+export function getNextChapterFirstTopic(
+  categoryId: string,
+): AdjacentTopic | null {
+  const index = categories.findIndex((category) => category.id === categoryId);
+  if (index === -1) return null;
+
+  const nextCategory = categories[index + 1];
+  const firstTopic = nextCategory?.topics[0];
+  if (!nextCategory || !firstTopic) return null;
+
+  return {
+    categoryId: nextCategory.id,
+    topicId: firstTopic.id,
+    title: firstTopic.title,
+  };
 }

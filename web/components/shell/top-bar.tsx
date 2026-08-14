@@ -6,10 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import type { Category } from "@/lib/content";
-import { cn } from "@/lib/utils";
-
-const linkClass =
-  "border-b-2 px-3 py-1.5 text-xs font-semibold tracking-widest uppercase transition-colors";
 
 export function TopBar({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
@@ -30,40 +26,6 @@ export function TopBar({ categories }: { categories: Category[] }) {
           className="h-11 w-auto"
         />
       </Link>
-
-      <nav className="hidden items-center gap-1 md:flex">
-        <button
-          type="button"
-          className={cn(
-            linkClass,
-            "border-transparent text-muted-foreground hover:text-foreground",
-          )}
-        >
-          Dashboard
-        </button>
-
-        <Link
-          href="/learn"
-          className={cn(
-            linkClass,
-            pathname.startsWith("/learn")
-              ? "border-primary text-foreground"
-              : "border-transparent text-muted-foreground hover:text-foreground",
-          )}
-        >
-          Curriculum
-        </Link>
-
-        <button
-          type="button"
-          className={cn(
-            linkClass,
-            "border-transparent text-muted-foreground hover:text-foreground",
-          )}
-        >
-          Resources
-        </button>
-      </nav>
 
       <div className="ms-auto flex items-center gap-4">
         {active ? (
