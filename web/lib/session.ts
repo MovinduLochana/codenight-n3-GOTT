@@ -1,25 +1,23 @@
 import "server-only";
-import { SignJWT, jwtVerify } from "jose";
+
+import { and, eq, isNull } from "drizzle-orm";
+import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import { db } from "@/db/drizzle";
 import { sessions } from "@/db/schema";
-import { eq, and, isNull } from "drizzle-orm";
 
 const SESSION_COOKIE = "sliit_session";
-const secretKey = process.env.SESSION_SECRET;
+const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 function getEncodedKey() {
+  const secretKey = process.env.SESSION_SECRET;
   if (!secretKey) throw new Error("SESSION_SECRET env var is not set");
   return new TextEncoder().encode(secretKey);
 }
 
-function nowSriLanka(): Date {
-  const offsetMs = 5.5 * 60 * 60 * 1000;
-  return new Date(Date.now() + offsetMs);
-}
-
 async function encryptSessionId(sessionId: string): Promise<string> {
-  const expiresAt = new Date(nowSriLanka().getTime() + 7 * 24 * 60 * 60 * 1000);
+  const expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
   return new SignJWT({ sessionId })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -37,13 +35,14 @@ async function decryptSessionId(token: string): Promise<string | null> {
     return null;
   }
 }
+
 export async function createSession(
   userId: string,
   accessToken: string,
-  refreshToken?: string
+  refreshToken?: string,
 ) {
-  const now = nowSriLanka();
-  const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const now = new Date();
+  const expiresAt = new Date(now.getTime() + SESSION_DURATION_MS);
 
   const [existing] = await db
     .select({ id: sessions.id })
@@ -62,7 +61,7 @@ export async function createSession(
         refreshToken: refreshToken ?? null,
         expiresAt,
         lastLoginAt: now,
-        loggedOutAt: null, 
+        loggedOutAt: null,
       })
       .where(eq(sessions.userId, userId));
   } else {
@@ -77,7 +76,7 @@ export async function createSession(
     });
   }
 
-  // Set encrypted session cookie (holds only the session row id)
+  // Set encrypted session cookie
   const encrypted = await encryptSessionId(sessionId);
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, encrypted, {
@@ -89,7 +88,7 @@ export async function createSession(
   });
 }
 
-export async function getSession() {
+export const getSession = cache(async () => {
   const cookieStore = await cookies();
   const cookie = cookieStore.get(SESSION_COOKIE)?.value;
   if (!cookie) return null;
@@ -100,25 +99,20 @@ export async function getSession() {
   const [session] = await db
     .select()
     .from(sessions)
-    .where(
-      and(
-        eq(sessions.id, sessionId),
-        isNull(sessions.loggedOutAt) 
-      )
-    )
+    .where(and(eq(sessions.id, sessionId), isNull(sessions.loggedOutAt)))
     .limit(1);
 
   if (!session) return null;
-  if (session.expiresAt < nowSriLanka()) {
+  if (session.expiresAt < new Date()) {
     await db
       .update(sessions)
-      .set({ loggedOutAt: nowSriLanka() })
+      .set({ loggedOutAt: new Date() })
       .where(eq(sessions.id, sessionId));
     return null;
   }
 
   return session;
-}
+});
 
 export async function deleteSession() {
   const cookieStore = await cookies();
@@ -129,7 +123,7 @@ export async function deleteSession() {
     if (sessionId) {
       await db
         .update(sessions)
-        .set({ loggedOutAt: nowSriLanka() })
+        .set({ loggedOutAt: new Date() })
         .where(eq(sessions.id, sessionId));
     }
   }

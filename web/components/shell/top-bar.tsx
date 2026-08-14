@@ -5,13 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import type { Category } from "@/lib/content";
 
 export function TopBar({ categories }: { categories: Category[] }) {
   const pathname = usePathname();
-  const active = categories.find(
-    (category) => category.id === pathname.split("/")[2],
-  );
+  const pathParts = pathname.split("/");
+  const activeChapterId = pathParts[1] === "learn" ? pathParts[2] : undefined;
+  const active = categories.find((category) => category.id === activeChapterId);
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4">
@@ -29,16 +31,18 @@ export function TopBar({ categories }: { categories: Category[] }) {
 
       <div className="ms-auto flex items-center gap-4">
         {active ? (
-          <span className="hidden text-xs tracking-wide text-muted-foreground uppercase lg:inline">
+          <Badge variant="secondary" className="hidden lg:inline-flex">
             Chapter {active.number}: {active.title}
-          </span>
+          </Badge>
         ) : null}
 
-        <BellIcon className="size-4 text-muted-foreground" />
+        <BellIcon className="size-4 text-muted-foreground transition-colors hover:text-foreground cursor-pointer" />
 
-        <div className="flex size-8 items-center justify-center border border-border bg-muted text-[0.625rem] font-semibold tracking-wide uppercase">
-          n3
-        </div>
+        <Avatar size="sm">
+          <AvatarFallback className="font-mono text-xs font-bold text-primary">
+            N3
+          </AvatarFallback>
+        </Avatar>
       </div>
     </header>
   );
