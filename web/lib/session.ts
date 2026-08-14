@@ -112,7 +112,7 @@ export async function getSession() {
   }
 
   return session;
-});
+};
 
 export async function deleteSession() {
   const cookieStore = await cookies();
