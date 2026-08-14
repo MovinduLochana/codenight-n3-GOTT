@@ -34,7 +34,7 @@ export default function LessonPage({
 }
 
 async function LessonContent({
-  params,
+  params, 
 }: {
   params: Promise<{ chapter: string; lesson: string }>;
 }) {
