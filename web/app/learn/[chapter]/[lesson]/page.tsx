@@ -1,6 +1,13 @@
 import { notFound } from "next/navigation";
 
-import { categories, getCategory, getTopic, readRepoFile } from "@/lib/content";
+import { LessonNav } from "@/components/lesson/lesson-nav";
+import {
+  categories,
+  getAdjacentTopics,
+  getCategory,
+  getTopic,
+  readRepoFile,
+} from "@/lib/content";
 import { renderMarkdown } from "@/lib/markdown";
 
 export function generateStaticParams() {
@@ -27,6 +34,7 @@ export default async function LessonPage({
   if (markdown === null) notFound();
 
   const html = await renderMarkdown(markdown);
+  const { previous, next } = getAdjacentTopics(categoryId, topicId);
 
   return (
     <main className="min-h-0 flex-1 overflow-y-auto">
@@ -43,6 +51,8 @@ export default async function LessonPage({
           // biome-ignore lint/security/noDangerouslySetInnerHtml: our own markdown
           dangerouslySetInnerHTML={{ __html: html }}
         />
+
+        <LessonNav categoryId={categoryId} previous={previous} next={next} />
       </div>
     </main>
   );
