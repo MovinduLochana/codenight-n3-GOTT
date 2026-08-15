@@ -54,6 +54,7 @@ export function LessonNav({
       {next ? (
         <Link
           href={`/learn/${next.categoryId}/${next.topicId}`}
+          prefetch={true}
           className={cn(
             buttonVariants({ variant: "outline" }),
             "h-auto flex-col items-end gap-1 px-4 py-3 text-end normal-case sm:justify-self-end",
@@ -68,6 +69,7 @@ export function LessonNav({
       ) : (
         <Link
           href={`/learn/${categoryId}/quiz`}
+          prefetch={true}
           className={cn(
             buttonVariants({ variant: "default" }),
             "h-auto flex-col items-end gap-1 px-4 py-3 text-end normal-case sm:justify-self-end",

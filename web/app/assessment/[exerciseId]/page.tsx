@@ -46,7 +46,7 @@ async function AssessmentExerciseContent({
   return (
     <main className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden">
       <div className="flex min-h-0 flex-1 flex-col px-6 py-6">
-        <ViewTransition name={`exId-${exerciseId}`} share="auto">
+        <ViewTransition name="exercise" share="auto">
           <p className="text-[0.625rem] font-semibold tracking-widest text-primary uppercase">
             Final Assessment · {exercise.level}
           </p>
