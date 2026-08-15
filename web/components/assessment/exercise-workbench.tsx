@@ -8,7 +8,6 @@ import {
   RotateCcwIcon,
   XIcon,
 } from "lucide-react";
-import { Fira_Code } from "next/font/google";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -18,13 +17,6 @@ import { cn } from "@/lib/utils";
 type Result = { passed: boolean; output: string };
 
 const MONACO_THEME = "codenight-dark";
-
-const firaCode = Fira_Code({
-  subsets: ["latin"],
-  weight: ["600"],
-  display: "swap",
-  variable: "--font-fira-code",
-});
 
 function defineMonacoTheme(monaco: Monaco) {
   monaco.editor.defineTheme(MONACO_THEME, AyuDark);
@@ -124,7 +116,7 @@ export function ExerciseWorkbench({
           </div>
         </div>
 
-        <div className={`min-h-90 flex-1 lg:min-h-0 ${firaCode.variable}`}>
+        <div className="min-h-90 flex-1 lg:min-h-0">
           <Editor
             height="100%"
             language="go"
@@ -134,7 +126,7 @@ export function ExerciseWorkbench({
             onChange={(value) => setCode(value ?? "")}
             options={{
               minimap: { enabled: false },
-              fontFamily: "var(--font-fira-code), JetBrains Mono",
+              fontFamily: "Fira Code",
               fontLigatures: true,
               fontSize: 15,
               scrollBeyondLastLine: false,
