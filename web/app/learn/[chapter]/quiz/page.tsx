@@ -62,7 +62,7 @@ async function ChapterQuizContent({
   const category = getCategory(categoryId);
   if (!category) notFound();
 
-  const quiz = getChapterQuiz(categoryId);
+  const quiz = await getChapterQuiz(categoryId);
   if (!quiz) notFound();
 
   const firstTopic = category.topics[0];

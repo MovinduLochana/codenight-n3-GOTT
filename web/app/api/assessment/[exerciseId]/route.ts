@@ -41,7 +41,7 @@ export async function POST(
     );
   }
 
-  const testCode = readRepoFile(exercise.testPath);
+  const testCode = await readRepoFile(exercise.testPath);
   if (testCode === null) {
     return NextResponse.json({ error: "Test file missing" }, { status: 500 });
   }

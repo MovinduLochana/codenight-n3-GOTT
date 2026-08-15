@@ -1,6 +1,19 @@
 "use client";
 
-import Editor, { type Monaco } from "@monaco-editor/react";
+import type { Monaco } from "@monaco-editor/react";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(
+  () => import("@monaco-editor/react").then((m) => m.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full items-center justify-center bg-background text-xs text-muted-foreground">
+        Loading editor…
+      </div>
+    ),
+  },
+);
 import {
   CheckIcon,
   FileTextIcon,
