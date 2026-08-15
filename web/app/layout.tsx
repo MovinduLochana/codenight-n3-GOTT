@@ -25,6 +25,7 @@ const poppins = Poppins({
 const firaCode = Fira_Code({
   variable: "--font-fira-code",
   subsets: ["latin"],
+  display: "swap",
   weight: ["400", "500", "600", "700"],
 });
 

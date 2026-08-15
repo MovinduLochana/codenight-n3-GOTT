@@ -126,8 +126,7 @@ export function ExerciseWorkbench({
             onChange={(value) => setCode(value ?? "")}
             options={{
               minimap: { enabled: false },
-              fontFamily:
-                '"Fira Code", "Cascadia Code", "JetBrains Mono", monospace',
+              fontFamily: "Fira Code",
               fontLigatures: true,
               fontSize: 15,
               fontWeight: "600",

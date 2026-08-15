@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import type { LeaderboardEntry } from "@/lib/leaderboard";
 import { cn } from "@/lib/utils";
 
-const POLL_INTERVAL_MS = 3000;
+const POLL_INTERVAL_MS = 30_000; // 30 seconds
 const PAGE_SIZE = 10;
 
 export function LiveLeaderboard({
