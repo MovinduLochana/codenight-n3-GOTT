@@ -40,7 +40,7 @@ Then launch the runner:
 
 | Hotkey | Action |
 | :--- | :--- |
-| **`[← ↑ ↓ →]` / `[h j k l]`** | Navigate across exercise cards in the grid |
+| **`[← ↑ ↓ →]`** | Navigate across exercise cards in the grid |
 | **`[r]` or `[Enter]`** | Run unit tests for selected exercise (with running fox ASCII animation) |
 | **`[h]`** | Toggle formatted Markdown task explanation & hints |
 | **`[n]` / `[p]`** | Jump to Next / Previous exercise |

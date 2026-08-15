@@ -129,6 +129,7 @@ export function ExerciseWorkbench({
               fontFamily: "Fira Code",
               fontLigatures: true,
               fontSize: 15,
+              fontWeight: "600",
               scrollBeyondLastLine: false,
               cursorBlinking: "smooth",
               cursorSmoothCaretAnimation: "on",
