@@ -34,7 +34,7 @@ export default function LessonPage({
 }
 
 async function LessonContent({
-  params, 
+  params,
 }: {
   params: Promise<{ chapter: string; lesson: string }>;
 }) {
@@ -45,7 +45,7 @@ async function LessonContent({
 
   if (!category || !topic) notFound();
 
-  const markdown = readRepoFile(topic.contentPath);
+  const markdown = await readRepoFile(topic.contentPath);
   if (markdown === null) notFound();
 
   const html = await renderMarkdown(markdown);

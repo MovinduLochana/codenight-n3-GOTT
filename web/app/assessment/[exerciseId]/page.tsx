@@ -37,8 +37,8 @@ async function AssessmentExerciseContent({
   const exercise = getAssessmentExercise(exerciseId);
   if (!exercise) notFound();
 
-  const taskMarkdown = readRepoFile(exercise.taskPath);
-  const starterCode = readRepoFile(exercise.starterPath);
+  const taskMarkdown = await readRepoFile(exercise.taskPath);
+  const starterCode = await readRepoFile(exercise.starterPath);
   if (taskMarkdown === null || starterCode === null) notFound();
 
   const taskHtml = await renderMarkdown(taskMarkdown);

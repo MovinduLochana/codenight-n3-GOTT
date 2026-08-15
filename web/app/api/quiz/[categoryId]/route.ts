@@ -22,7 +22,7 @@ export async function POST(
     return NextResponse.json({ error: "Chapter not found" }, { status: 404 });
   }
 
-  const quiz = getChapterQuiz(categoryId);
+  const quiz = await getChapterQuiz(categoryId);
   if (!quiz) {
     return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
   }

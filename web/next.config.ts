@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   experimental: {
     turbopackRustReactCompiler: true,
     useOffline: true,
-    optimizePackageImports: ["@monaco-editor/react", "@codemirror/lang-go"],
+    optimizePackageImports: ["@monaco-editor/react", "lucide-react"],
   },
 };
 
