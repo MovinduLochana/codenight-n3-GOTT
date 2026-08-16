@@ -46,8 +46,7 @@ export default function ChapterQuizPage({
   params: Promise<{ chapter: string }>;
 }) {
   return (
-    //  fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}
-    <Suspense>
+    <Suspense fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}>
       <ViewTransition enter="fade-in" default="none">
         <ChapterQuizContent params={params} />
       </ViewTransition>

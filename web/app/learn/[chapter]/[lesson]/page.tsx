@@ -28,8 +28,9 @@ export default function LessonPage({
 }) {
   return (
     //  fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}
+    // enter="fade-in" default="none"
     <Suspense>
-      <ViewTransition enter="fade-in" default="none">
+      <ViewTransition>
         <LessonContent params={params} />
       </ViewTransition>
     </Suspense>
@@ -55,9 +56,10 @@ async function LessonContent({
 
   const { previous, next } = getAdjacentTopics(categoryId, topicId);
   return (
+    //  key={topicId} name="lessonContent" share="auto" default="none"
     <main className="min-h-0 flex-1 overflow-y-auto">
       <div className="mx-auto max-w-3xl px-6 py-10">
-        <ViewTransition key={topicId} name="lessonContent" share="auto" default="none">
+        <ViewTransition>
           <div>
             <p className="text-[0.625rem] font-semibold tracking-widest text-primary uppercase">
               Chapter {category.number} · {category.title}
