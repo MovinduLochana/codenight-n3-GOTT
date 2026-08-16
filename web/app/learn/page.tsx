@@ -11,13 +11,15 @@ export default function CurriculumPage() {
   return (
     <main className="min-h-0 flex-1 overflow-y-auto">
       <div className="mx-auto max-w-3xl px-6 py-10">
-        <ViewTransition name="curriculumTitle" share="auto">
+        <ViewTransition name="curriculumTitle" share="auto" default="none">
           <h1 className="font-heading text-2xl font-semibold">{courseTitle}</h1>
         </ViewTransition>
 
         {/* Dynamic Leaderboard Widget Streams Asynchronously */}
-        <Suspense fallback={<LeaderboardWidgetSkeleton />}>
-          <TopLeaderboard />
+        <Suspense fallback={<ViewTransition exit="fade-out"><LeaderboardWidgetSkeleton /></ViewTransition>}>
+          <ViewTransition enter="fade-in" default="none">
+            <TopLeaderboard />
+          </ViewTransition>
         </Suspense>
 
         {/* Static Category List Prerendered at Build Time */}
@@ -57,7 +59,7 @@ async function TopLeaderboard() {
   }
 
   return (
-    <ViewTransition name="topLeaderboard" share="auto">
+    <ViewTransition name="topLeaderboard" share="auto" default="none">
       <div className="mt-6 border border-border bg-card p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Suspense, ViewTransition } from "react";
 
-import { SuspenseLoader } from "@/components/common/suspense-loader";
+// import { SuspenseLoader } from "@/components/common/suspense-loader";
 import { LessonNav } from "@/components/lesson/lesson-nav";
 import {
   categories,
@@ -27,8 +27,11 @@ export default function LessonPage({
   params: Promise<{ chapter: string; lesson: string }>;
 }) {
   return (
-    <Suspense fallback={<SuspenseLoader />}>
-      <LessonContent params={params} />
+    //  fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}
+    <Suspense>
+      <ViewTransition enter="fade-in" default="none">
+        <LessonContent params={params} />
+      </ViewTransition>
     </Suspense>
   );
 }
@@ -54,7 +57,7 @@ async function LessonContent({
   return (
     <main className="min-h-0 flex-1 overflow-y-auto">
       <div className="mx-auto max-w-3xl px-6 py-10">
-        <ViewTransition name="lessonContent" share="auto">
+        <ViewTransition key={topicId} name="lessonContent" share="auto" default="none">
           <div>
             <p className="text-[0.625rem] font-semibold tracking-widest text-primary uppercase">
               Chapter {category.number} · {category.title}

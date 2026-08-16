@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export function PublicShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-dvh flex-col overflow-hidden">
-      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4">
+      <header style={{ viewTransitionName: "site-header" }} className="flex h-14 shrink-0 items-center gap-3 border-b border-border bg-sidebar px-4">
         <Link href="/login" className="flex items-center">
           <Image
             src="/assets/logo.svg"

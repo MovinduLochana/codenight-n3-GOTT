@@ -1,15 +1,18 @@
 import { TrophyIcon } from "lucide-react";
-import { Suspense } from "react";
+import { Suspense, ViewTransition } from "react";
 
-import { SuspenseLoader } from "@/components/common/suspense-loader";
+// import { SuspenseLoader } from "@/components/common/suspense-loader";
 import { LiveLeaderboard } from "@/components/leaderboard/live-board";
 import { getLeaderboard } from "@/lib/leaderboard";
 import { getSession } from "@/lib/session";
 
 export default function LeaderboardPage() {
   return (
-    <Suspense fallback={<SuspenseLoader />}>
-      <LeaderboardPageContent />
+    // fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}
+    <Suspense>
+      <ViewTransition enter="fade-in" default="none">
+        <LeaderboardPageContent />
+      </ViewTransition>
     </Suspense>
   );
 }

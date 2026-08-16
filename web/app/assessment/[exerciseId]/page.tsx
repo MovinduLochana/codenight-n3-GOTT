@@ -21,8 +21,11 @@ export default function AssessmentExercisePage({
   params: Promise<{ exerciseId: string }>;
 }) {
   return (
-    <Suspense fallback={<SuspenseLoader />}>
-      <AssessmentExerciseContent params={params} />
+    // fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}
+    <Suspense>
+      <ViewTransition enter="fade-in" default="none">
+        <AssessmentExerciseContent params={params} />
+      </ViewTransition>
     </Suspense>
   );
 }
@@ -46,7 +49,7 @@ async function AssessmentExerciseContent({
   return (
     <main className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden">
       <div className="flex min-h-0 flex-1 flex-col px-6 py-6">
-        <ViewTransition name="exercise" share="auto">
+        <ViewTransition key={exerciseId} name="exercise" share="auto" default="none">
           <p className="text-[0.625rem] font-semibold tracking-widest text-primary uppercase">
             Final Assessment · {exercise.level}
           </p>
@@ -54,12 +57,14 @@ async function AssessmentExerciseContent({
             {String(exercise.number).padStart(2, "0")} · {exercise.title}
           </h1>
 
-          <Suspense fallback={<SuspenseLoader />}>
-            <Editor
-              exerciseId={exercise.id}
-              taskHtml={taskHtml}
-              starterCode={starterCode}
-            />
+          <Suspense fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}>
+            <ViewTransition enter="fade-in" default="none">
+              <Editor
+                exerciseId={exercise.id}
+                taskHtml={taskHtml}
+                starterCode={starterCode}
+              />
+            </ViewTransition>
           </Suspense>
         </ViewTransition>
       </div>
