@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-const repoRoot = path.join(process.cwd(), "..");
+const repoRoot = path.join(process.cwd(), ".data");
 
 export type Level = "beginner" | "intermediate" | "advanced";
 
@@ -129,7 +129,7 @@ export async function readRepoFile(
   relativePath: string,
 ): Promise<string | null> {
   try {
-    return await readFile(path.join(/*turbopackIgnore: true*/ repoRoot, relativePath), "utf-8");
+    return await readFile(path.join(repoRoot, relativePath), "utf-8");
   } catch {
     return null;
   }

@@ -3,7 +3,7 @@ import path from "node:path";
 
 import type { Level } from "@/lib/content";
 
-const repoRoot = path.join(process.cwd(), "..");
+const repoRoot = path.join(process.cwd(), ".data");
 
 export type AssessmentExercise = {
   id: string;
@@ -61,10 +61,10 @@ export function getFixtureFiles(
   exercise: AssessmentExercise,
 ): { name: string; content: string }[] {
   const dir = path.join(repoRoot, exercise.dirPath);
-  return readdirSync(/*turbopackIgnore: true*/ dir, { withFileTypes: true })
+  return readdirSync(dir, { withFileTypes: true })
     .filter((entry) => entry.isFile() && !NON_FIXTURE_FILES.has(entry.name))
     .map((entry) => ({
       name: entry.name,
-      content: readFileSync(/*turbopackIgnore: true*/ path.join(dir, entry.name), "utf-8"),
+      content: readFileSync(path.join(dir, entry.name), "utf-8"),
     }));
 }
