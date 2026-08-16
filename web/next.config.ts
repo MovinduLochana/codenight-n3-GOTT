@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
 
   cacheComponents: true,
-  partialPrefetching: true,
+  // partialPrefetching: true,
 
   experimental: {
     turbopackRustReactCompiler: true,
