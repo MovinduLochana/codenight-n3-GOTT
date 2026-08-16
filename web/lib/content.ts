@@ -129,7 +129,7 @@ export async function readRepoFile(
   relativePath: string,
 ): Promise<string | null> {
   try {
-    return await readFile(path.join(repoRoot, relativePath), "utf-8");
+    return await readFile(path.join(/*turbopackIgnore: true*/ repoRoot, relativePath), "utf-8");
   } catch {
     return null;
   }
