@@ -156,7 +156,7 @@ func (m Model) View() string {
 	mainPanels := lipgloss.JoinHorizontal(lipgloss.Top, sidebar, leftGrid, rightDetails)
 
 	// 3. Controls / Footer Bar
-	controlsText := " [←↑↓→] Move  |  [Tab] Switch Panel  |  [r/Enter] Run Test  |  [h] Hint  |  [o] Open in IDE  |  [n/p] Next/Prev  |  [q] Quit"
+	controlsText := " [←↑↓→] Move  |  [Tab] Switch Panel  |  [r/Enter] Run Test  |  [h] Hint  |  [u/m] Toggle Done  |  [o] Open IDE  |  [s] Switch IDE  |  [n/p] Next/Prev  |  [q] Quit"
 	footer := FooterStyle.Render(controlsText)
 
 	view := lipgloss.JoinVertical(lipgloss.Left, header, mainPanels, footer)

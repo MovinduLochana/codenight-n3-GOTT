@@ -22,9 +22,10 @@ type IDE struct {
 
 // ResultMsg is sent back to the TUI after an open-in-IDE attempt.
 type ResultMsg struct {
-	Dir string
-	IDE string
-	Err error
+	Dir      string
+	IDE      string
+	Finished bool // true when the IDE ran in the terminal and has now exited
+	Err      error
 }
 
 var knownCLIs = []IDE{
@@ -112,32 +113,45 @@ func FindByKey(list []IDE, key string) (IDE, bool) {
 	return IDE{}, false
 }
 
-// Launch opens dir in the given IDE without blocking the caller.
-func Launch(e IDE, dir string) error {
+// IsTerminal reports whether the IDE runs inside the terminal (e.g. vim,
+// nvim) as opposed to opening its own GUI window.
+func (e IDE) IsTerminal() bool {
+	return isTerminalCommand(e.Command) || (e.AppName == "" && isTerminalCommand(e.Name))
+}
+
+// CommandForDir returns the exec.Cmd used to open dir in the given IDE.
+// Callers may either Start() it (GUI IDEs) or run it in the foreground while
+// suspending the TUI (terminal editors).
+func (e IDE) CommandForDir(dir string) (*exec.Cmd, error) {
 	if runtime.GOOS == "darwin" && e.AppName != "" {
-		return exec.Command("open", "-a", e.AppName, dir).Start()
+		return exec.Command("open", "-a", e.AppName, dir), nil
 	}
 
 	cmdLine := e.Command
 	if cmdLine == "" {
-		return fmt.Errorf("no IDE command configured for %q", e.Name)
+		return nil, fmt.Errorf("no IDE command configured for %q", e.Name)
 	}
 
 	args := strings.Fields(cmdLine)
 	if len(args) == 0 {
-		return fmt.Errorf("no IDE command configured for %q", e.Name)
+		return nil, fmt.Errorf("no IDE command configured for %q", e.Name)
 	}
 
-	var cmd *exec.Cmd
 	if _, err := os.Stat(cmdLine); err == nil || len(args) == 1 {
-		cmd = exec.Command(args[0], dir)
-	} else {
-		cmd = exec.Command(args[0], append(args[1:], dir)...)
+		return exec.Command(args[0], dir), nil
+	}
+	return exec.Command(args[0], append(args[1:], dir)...), nil
+}
+
+// Launch opens dir in the given IDE without blocking the caller.
+func Launch(e IDE, dir string) error {
+	cmd, err := e.CommandForDir(dir)
+	if err != nil {
+		return err
 	}
 	detach(cmd)
-
 	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("failed to launch %q: %w", cmdLine, err)
+		return fmt.Errorf("failed to launch %q: %w", e.Command, err)
 	}
 	return nil
 }
@@ -210,6 +224,21 @@ func sanitizeName(s string) string {
 		"?", "-", `"`, "-", "<", "-", ">", "-", "|", "-",
 	)
 	return strings.TrimSpace(replacer.Replace(s))
+}
+
+func isTerminalCommand(cmdLine string) bool {
+	fields := strings.Fields(cmdLine)
+	if len(fields) == 0 {
+		return false
+	}
+	base := strings.ToLower(filepath.Base(fields[0]))
+	base = strings.TrimSuffix(base, ".exe")
+	switch base {
+	case "vim", "vi", "nvim", "nano", "emacs", "micro",
+		"hx", "helix", "kak", "kakoune", "ne", "mg", "jed":
+		return true
+	}
+	return false
 }
 
 func appInstalled(appName string) bool {

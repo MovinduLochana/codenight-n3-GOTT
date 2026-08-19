@@ -39,9 +39,9 @@ type Exercise struct {
 }
 
 type Progress struct {
-	Passed      map[string]bool `json:"passed"`
-	LastID      string          `json:"last_id"`
-	PreferredIDE string         `json:"preferred_ide,omitempty"`
+	Passed       map[string]bool `json:"passed"`
+	LastID       string          `json:"last_id"`
+	PreferredIDE string          `json:"preferred_ide,omitempty"`
 }
 
 func FindRootDir() string {

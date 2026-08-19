@@ -44,7 +44,9 @@ Then launch the runner:
 | **`[Tab]` / `[Shift+Tab]`** | Switch between the sidebar, task grid and details panels |
 | **`[r]` or `[Enter]`** | Run unit tests for selected exercise (with running fox ASCII animation) |
 | **`[h]`** | Toggle formatted Markdown task explanation & hints |
+| **`[u]` / `[m]`** | Mark / unmark the selected task as completed (lessons and chapters show a green tick once complete) |
 | **`[o]`** | Open the selected task in your IDE (asks once on first use, then remembers) |
+| **`[s]`** | Re-open the "Open With" picker to switch the IDE |
 | **`[n]` / `[p]`** | Jump to Next / Previous exercise within the current lesson |
 | **`[q]` / `[Esc]`** | Quit Gostlings |
 

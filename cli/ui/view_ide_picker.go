@@ -28,12 +28,16 @@ func (m Model) RenderIdePicker(width, height int) string {
 			marker = "▶ "
 			style = lipgloss.NewStyle().Foreground(ColorHighlight).Bold(true)
 		}
-		lines = append(lines, style.Render(fmt.Sprintf(" %s%s", marker, e.Name)))
+		name := e.Name
+		if e.Key == m.Progress.PreferredIDE {
+			name += "  (current)"
+		}
+		lines = append(lines, style.Render(fmt.Sprintf(" %s%s", marker, name)))
 	}
 
 	customIdx := len(m.DetectedIDEs)
 	if m.IdeCustom {
-		lines = append(lines, lipgloss.NewStyle().Foreground(ColorHighlight).Bold(true).Render(" ▶ " + m.ideInput.View()))
+		lines = append(lines, lipgloss.NewStyle().Foreground(ColorHighlight).Bold(true).Render(" ▶ "+m.ideInput.View()))
 	} else {
 		marker := "  "
 		if customIdx == m.IdePickerIdx {

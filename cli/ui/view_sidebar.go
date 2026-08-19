@@ -39,12 +39,20 @@ func (m Model) renderChapterColumn() string {
 			}
 		}
 
+		chapterDone := passed == total && total > 0
+		tick := "  "
+		if chapterDone {
+			tick = "✓ "
+		}
+
 		label := fmt.Sprintf("%d. %s", i+1, truncateRunes(cat.Title, 9))
-		row := fmt.Sprintf("%-12s %d/%d", label, passed, total)
+		row := fmt.Sprintf("%-12s %s%d/%d", label, tick, passed, total)
 
 		switch {
 		case i == m.SelectedChapter:
 			lines = append(lines, SidebarSelectedStyle.Width(ChapterColWidth).Render(row))
+		case chapterDone:
+			lines = append(lines, SidebarDoneStyle.Width(ChapterColWidth).Render(row))
 		case m.FocusedPanel == PanelChapters:
 			lines = append(lines, SidebarItemFocusStyle.Width(ChapterColWidth).Render(row))
 		default:
@@ -73,12 +81,20 @@ func (m Model) renderLessonColumn() string {
 			}
 		}
 
-		label := fmt.Sprintf("%d. %s", i+1, truncateRunes(top.Title, 19))
-		row := fmt.Sprintf("%-22s %d/%d", label, passed, total)
+		lessonDone := passed == total && total > 0
+		tick := "  "
+		if lessonDone {
+			tick = "✓ "
+		}
+
+		label := fmt.Sprintf("%d. %s", i+1, truncateRunes(top.Title, 15))
+		row := fmt.Sprintf("%-18s %s%d/%d", label, tick, passed, total)
 
 		switch {
 		case i == m.SelectedLesson:
 			lines = append(lines, SidebarSelectedStyle.Width(LessonColWidth).Render(row))
+		case lessonDone:
+			lines = append(lines, SidebarLessonDoneStyle.Width(LessonColWidth).Render(row))
 		case m.FocusedPanel == PanelLessons:
 			lines = append(lines, SidebarItemFocusStyle.Width(LessonColWidth).Render(row))
 		default:

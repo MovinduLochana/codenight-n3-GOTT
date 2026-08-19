@@ -34,6 +34,105 @@ func TestSmokeRender(t *testing.T) {
 	t.Logf("CHAPTER 2 VIEW\n%s", view2)
 }
 
+func TestCompletionTicks(t *testing.T) {
+	m, err := NewModel()
+	if err != nil {
+		t.Fatalf("NewModel: %v", err)
+	}
+	m.RootDir = t.TempDir()
+
+	press := func(s string) {
+		nm, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(s)})
+		m = nm.(Model)
+	}
+
+	// Mark all tasks of chapter 0, lesson 0 as complete.
+	m.SelectedChapter = 0
+	m.SelectedLesson = 0
+	start, end := m.lessonStartIdx(), m.lessonEndIdx()
+	for i := start; i < end; i++ {
+		m.Progress.Passed[m.Exercises[i].ID] = true
+	}
+
+	if got := m.renderLessonColumn(); !strings.Contains(got, "✓") {
+		t.Fatalf("completed lesson should show green tick:\n%s", got)
+	}
+
+	// Un-marking one task removes the lesson tick.
+	m.Progress.Passed[m.Exercises[start].ID] = false
+	if got := m.renderLessonColumn(); strings.Contains(got, "✓") {
+		t.Fatalf("incomplete lesson should not show tick:\n%s", got)
+	}
+	m.Progress.Passed[m.Exercises[start].ID] = true
+
+	// u/m key toggles the focused task.
+	id := m.Exercises[m.FocusedIdx].ID
+	before := m.Progress.Passed[id]
+	press("u")
+	if m.Progress.Passed[id] == before {
+		t.Fatalf("u should toggle task completion")
+	}
+	press("m")
+	if m.Progress.Passed[id] != before {
+		t.Fatalf("m should toggle task back")
+	}
+
+	// Mark every task in the whole chapter -> chapter gets a tick.
+	for _, ex := range m.Exercises[:m.lessonEndIdx()+100] {
+		if m.chapterNo() == 1 {
+			m.Progress.Passed[ex.ID] = true
+		}
+	}
+	for i, ex := range m.Exercises {
+		if i < m.lessonStartIdx() {
+			m.Progress.Passed[ex.ID] = true
+		}
+	}
+	if got := m.renderChapterColumn(); !strings.Contains(got, "✓") {
+		t.Fatalf("completed chapter should show green tick:\n%s", got)
+	}
+}
+
+func TestSwitchIDEKey(t *testing.T) {
+	m, err := NewModel()
+	if err != nil {
+		t.Fatalf("NewModel: %v", err)
+	}
+	m.RootDir = t.TempDir()
+
+	// Even with a saved IDE, s re-opens the picker.
+	if len(m.DetectedIDEs) == 0 {
+		t.Skip("no IDEs detected on this machine")
+	}
+	m.Progress.PreferredIDE = m.DetectedIDEs[0].Key
+	nm, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("s")})
+	m = nm.(Model)
+	if !m.ShowIdePicker {
+		t.Fatal("s should open the IDE picker")
+	}
+	if m.IdePickerIdx != 0 || m.DetectedIDEs[m.IdePickerIdx].Key != m.Progress.PreferredIDE {
+		t.Fatalf("picker should preselect current IDE, idx=%d", m.IdePickerIdx)
+	}
+
+	// Selecting a different IDE updates and persists the preference.
+	target := 1 % len(m.DetectedIDEs)
+	if target == 0 {
+		target = len(m.DetectedIDEs) - 1
+	}
+	m.IdePickerIdx = target
+	nm, cmd := m.Update(tea.KeyMsg{Type: tea.KeyEnter})
+	m = nm.(Model)
+	if m.ShowIdePicker {
+		t.Fatal("picker should close after selecting")
+	}
+	if m.Progress.PreferredIDE != m.DetectedIDEs[target].Key {
+		t.Fatalf("preferred IDE not updated: %q", m.Progress.PreferredIDE)
+	}
+	if cmd == nil {
+		t.Fatal("expected launch cmd after switching")
+	}
+}
+
 func TestNavigation(t *testing.T) {
 	m, err := NewModel()
 	if err != nil {

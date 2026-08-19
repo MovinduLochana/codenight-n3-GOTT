@@ -15,7 +15,7 @@ import (
 
 // sidebarWidth is the combined width of the chapters + lessons columns
 // including the sidebar border and padding.
-const sidebarWidth = 48
+const sidebarWidth = 50
 
 type Panel int
 
@@ -269,7 +269,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 
 	case ide.ResultMsg:
-		m.StatusMsg = "IDE opened: " + msg.IDE
+		if msg.Finished {
+			m.StatusMsg = "Finished editing in " + msg.IDE
+		} else {
+			m.StatusMsg = "IDE opened: " + msg.IDE
+		}
 		if msg.Dir != "" {
 			m.StatusMsg += " → " + msg.Dir
 		}
@@ -302,8 +306,19 @@ func (m Model) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "o", "O":
 		return m.handleOpenInIDE()
 
+	case "s", "S":
+		return m.openIdePicker()
+
 	case "h", "H":
 		m.ShowHint = !m.ShowHint
+
+	case "u", "m":
+		if len(m.Exercises) > 0 {
+			id := m.Exercises[m.FocusedIdx].ID
+			m.Progress.Passed[id] = !m.Progress.Passed[id]
+			m.Progress.LastID = id
+			manifest.SaveProgress(m.RootDir, m.Progress)
+		}
 
 	case "tab":
 		m.FocusedPanel = (m.FocusedPanel + 1) % 4
@@ -431,19 +446,32 @@ func (m *Model) moveRight() {
 	}
 }
 
-func (m Model) handleOpenInIDE() (tea.Model, tea.Cmd) {
+func (m Model) openIdePicker() (tea.Model, tea.Cmd) {
 	if len(m.DetectedIDEs) == 0 {
 		m.ShowIdePicker = true
 		m.IdeCustom = true
 		m.ideInput.Focus()
 		return m, textinput.Blink
 	}
-	if m.Progress.PreferredIDE != "" {
-		return m, m.openInIDECmd()
-	}
 	m.ShowIdePicker = true
+	m.IdeCustom = false
 	m.IdePickerIdx = 0
+	if m.Progress.PreferredIDE != "" {
+		for i, e := range m.DetectedIDEs {
+			if e.Key == m.Progress.PreferredIDE {
+				m.IdePickerIdx = i
+				break
+			}
+		}
+	}
 	return m, nil
+}
+
+func (m Model) handleOpenInIDE() (tea.Model, tea.Cmd) {
+	if m.Progress.PreferredIDE != "" {
+		return m, m.openInIDE()
+	}
+	return m.openIdePicker()
 }
 
 func (m Model) handleIdePickerKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
@@ -459,7 +487,7 @@ func (m Model) handleIdePickerKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			m.Progress.PreferredIDE = value
 			manifest.SaveProgress(m.RootDir, m.Progress)
 			m.ShowIdePicker = false
-			return m, m.openInIDECmd()
+			return m, m.openInIDE()
 		}
 		if msg.String() == "esc" {
 			m.IdeCustom = false
@@ -490,31 +518,48 @@ func (m Model) handleIdePickerKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.Progress.PreferredIDE = choice.Key
 		manifest.SaveProgress(m.RootDir, m.Progress)
 		m.ShowIdePicker = false
-		return m, m.openInIDECmd()
+		return m, m.openInIDE()
 	case "esc":
 		m.ShowIdePicker = false
 	}
 	return m, nil
 }
 
-func (m Model) openInIDECmd() tea.Cmd {
-	return func() tea.Msg {
-		if len(m.Exercises) == 0 {
-			return ide.ResultMsg{Err: fmt.Errorf("no exercise selected")}
-		}
-		ex := m.Exercises[m.FocusedIdx]
-		dir, err := ide.PrepareWorkspace(m.RootDir, ex, m.chapterNo(), m.currentTopic().Title)
-		if err != nil {
-			return ide.ResultMsg{Err: err}
-		}
+func (m Model) openInIDE() tea.Cmd {
+	if len(m.Exercises) == 0 {
+		return func() tea.Msg { return ide.ResultMsg{Err: fmt.Errorf("no exercise selected")} }
+	}
 
-		key := m.Progress.PreferredIDE
-		choice, ok := ide.FindByKey(m.DetectedIDEs, key)
-		if !ok {
-			choice = ide.IDE{Key: key, Command: key}
+	ex := m.Exercises[m.FocusedIdx]
+	dir, err := ide.PrepareWorkspace(m.RootDir, ex, m.chapterNo(), m.currentTopic().Title)
+	if err != nil {
+		return func() tea.Msg { return ide.ResultMsg{Err: err} }
+	}
+
+	key := m.Progress.PreferredIDE
+	choice, ok := ide.FindByKey(m.DetectedIDEs, key)
+	if !ok {
+		choice = ide.IDE{Key: key, Command: key}
+	}
+
+	// Terminal editors (vim, nvim, ...) must run in the foreground while the
+	// TUI suspends itself; tea.ExecProcess handles that cleanly.
+	if choice.IsTerminal() {
+		c, err := choice.CommandForDir(dir)
+		if err != nil {
+			return func() tea.Msg { return ide.ResultMsg{Err: err} }
 		}
+		return tea.ExecProcess(c, func(err error) tea.Msg {
+			if err != nil {
+				return ide.ResultMsg{Dir: dir, IDE: choice.Name, Err: err}
+			}
+			return ide.ResultMsg{Dir: dir, IDE: choice.Name, Finished: true}
+		})
+	}
+
+	return func() tea.Msg {
 		if err := ide.Launch(choice, dir); err != nil {
-			return ide.ResultMsg{Dir: dir, IDE: key, Err: err}
+			return ide.ResultMsg{Dir: dir, IDE: choice.Name, Err: err}
 		}
 		return ide.ResultMsg{Dir: dir, IDE: choice.Name}
 	}

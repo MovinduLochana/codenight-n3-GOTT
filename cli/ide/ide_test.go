@@ -3,6 +3,7 @@ package ide
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/Mozilla-Campus-Club-of-SLIIT/codenight-n3-GO/manifest"
@@ -95,5 +96,45 @@ func TestLaunch(t *testing.T) {
 	}
 	if err := Launch(IDE{Name: "true", Command: "/bin/true"}, t.TempDir()); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestIsTerminalAndCommandForDir(t *testing.T) {
+	dir := t.TempDir()
+
+	tests := []struct {
+		ide      IDE
+		terminal bool
+	}{
+		{IDE{Name: "VS Code", Key: "code", Command: "code"}, false},
+		{IDE{Name: "Neovim", Key: "nvim", Command: "nvim"}, true},
+		{IDE{Name: "Vim", Key: "vim", Command: "/usr/bin/vim"}, true},
+		{IDE{Name: "VS Code", Key: "app:vscode", AppName: "Visual Studio Code"}, false},
+		{IDE{Name: "GOSTLINGS_IDE (nvim)", Key: "env", Command: "nvim"}, true},
+		{IDE{Name: "GOSTLINGS_IDE (code)", Key: "env", Command: "code"}, false},
+	}
+	for _, tc := range tests {
+		if got := tc.ide.IsTerminal(); got != tc.terminal {
+			t.Errorf("IsTerminal(%+v) = %v, want %v", tc.ide, got, tc.terminal)
+		}
+	}
+
+	c, err := (IDE{Name: "VS Code", Key: "code", Command: "code"}).CommandForDir(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(c.Args) < 2 || c.Args[len(c.Args)-1] != dir {
+		t.Fatalf("args = %v, want dir at end", c.Args)
+	}
+
+	// macOS app style.
+	if runtime.GOOS == "darwin" {
+		mc, err := (IDE{Name: "VS Code", AppName: "Visual Studio Code"}).CommandForDir(dir)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(mc.Args) != 4 || mc.Args[0] != "open" {
+			t.Fatalf("mac app args = %v", mc.Args)
+		}
 	}
 }
