@@ -29,8 +29,8 @@ This directory contains a set of 10 assessment questions designed to evaluate yo
 | **14** | 🟢 Beginner | **Pointer Swap** | Pointer referencing and dereferencing | `[14_Beginner_Pointer_Swap](./14_Beginner_Pointer_Swap)` |
 | **15** | 🟡 Intermediate | **JSON Struct Tags** | Struct layout, struct tags, JSON marshalling | `[15_Intermediate_JSON](./15_Intermediate_JSON)` |
 | **16** | 🟡 Intermediate | **File Line Reader** | File I/O, `bufio.Scanner`, deferred close | `[16_Intermediate_File_Reader](./16_Intermediate_File_Reader)` |
-| **17** | 🟢 Beginner | **User Greeting** | `fmt.Scanln`, reading user input, `fmt.Printf` | `[19_Beginner_User_Greeting](./19_Beginner_User_Greeting)` |
-| **18** | 🟡 Intermediate | **User Average** | `fmt.Scan`, input loops, accumulation | `[20_Intermediate_User_Average](./20_Intermediate_User_Average)` |
+| **17** | 🟢 Beginner | **User Greeting** | `fmt.Scanln`, reading user input, `fmt.Printf` | `[17_Beginner_User_Greeting](./17_Beginner_User_Greeting)` |
+| **18** | 🟡 Intermediate | **User Average** | `fmt.Scan`, input loops, accumulation | `[18_Intermediate_User_Average](./18_Intermediate_User_Average)` |
 
 ---
 

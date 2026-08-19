@@ -165,20 +165,20 @@
       "number": 17,
       "title": "User Greeting",
       "level": "beginner",
-      "dir": "content/final_assessment/19_Beginner_User_Greeting",
-      "task_path": "content/final_assessment/19_Beginner_User_Greeting/task.md",
-      "starter_path": "content/final_assessment/19_Beginner_User_Greeting/main.go",
-      "test_path": "content/final_assessment/19_Beginner_User_Greeting/main_test.go"
+      "dir": "content/final_assessment/17_Beginner_User_Greeting",
+      "task_path": "content/final_assessment/17_Beginner_User_Greeting/task.md",
+      "starter_path": "content/final_assessment/17_Beginner_User_Greeting/main.go",
+      "test_path": "content/final_assessment/17_Beginner_User_Greeting/main_test.go"
     },
     {
       "id": "user_average",
       "number": 18,
       "title": "User Average",
       "level": "intermediate",
-      "dir": "content/final_assessment/20_Intermediate_User_Average",
-      "task_path": "content/final_assessment/20_Intermediate_User_Average/task.md",
-      "starter_path": "content/final_assessment/20_Intermediate_User_Average/main.go",
-      "test_path": "content/final_assessment/20_Intermediate_User_Average/main_test.go"
+      "dir": "content/final_assessment/18_Intermediate_User_Average",
+      "task_path": "content/final_assessment/18_Intermediate_User_Average/task.md",
+      "starter_path": "content/final_assessment/18_Intermediate_User_Average/main.go",
+      "test_path": "content/final_assessment/18_Intermediate_User_Average/main_test.go"
     }
   ]
 }
