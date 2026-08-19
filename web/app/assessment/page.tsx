@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { db } from "@/db/drizzle";
 import { assessmentProgress } from "@/db/schema";
 import { assessmentExercises } from "@/lib/assessment";
+import { POINTS_PER_PASSED_EXERCISE } from "@/lib/leaderboard";
 import { getSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +46,13 @@ async function AssessmentPageContent() {
   );
   const attemptedIds = new Set(progress.map((row) => row.exerciseId));
 
+  let totalPointsEarned = 0;
+  for (const exercise of assessmentExercises) {
+    if (passedIds.has(exercise.id)) {
+      totalPointsEarned += POINTS_PER_PASSED_EXERCISE[exercise.level] || 0;
+    }
+  }
+
   return (
     <main className="min-h-0 flex-1 overflow-y-auto">
       <div className="mx-auto max-w-3xl px-6 py-10">
@@ -52,7 +60,8 @@ async function AssessmentPageContent() {
           Final Assessment
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {passedIds.size} / {assessmentExercises.length} exercises passed. Each
+          {passedIds.size} / {assessmentExercises.length} exercises passed
+          ({totalPointsEarned} pts earned). Each
           one is graded by running its real test file against your code.
         </p>
 
@@ -80,6 +89,9 @@ async function AssessmentPageContent() {
                   >
                     {exercise.level}
                   </Badge>
+                  <span className="w-14 shrink-0 text-right text-xs font-medium text-muted-foreground">
+                    {POINTS_PER_PASSED_EXERCISE[exercise.level]} pts
+                  </span>
                   <span
                     className={cn(
                       "flex w-28 shrink-0 items-center justify-end gap-1 text-xs",
