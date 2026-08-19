@@ -1,9 +1,7 @@
 import { eq } from "drizzle-orm";
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
-import { Suspense, ViewTransition } from "react";
-
-import { SuspenseLoader } from "@/components/common/suspense-loader";
+import { ViewTransition } from "react";
 import { Badge } from "@/components/ui/badge";
 import { db } from "@/db/drizzle";
 import { assessmentProgress } from "@/db/schema";
@@ -17,13 +15,15 @@ const levelColor = {
   advanced: "text-red-400",
 } as const;
 
+export const instant = false;
+
 export default function AssessmentPage() {
   return (
-    <Suspense fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}>
+    // <Suspense fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}>
       <ViewTransition enter="fade-in" default="none">
         <AssessmentPageContent />
       </ViewTransition>
-    </Suspense>
+    // </Suspense>
   );
 }
 
