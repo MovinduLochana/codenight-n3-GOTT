@@ -161,24 +161,24 @@
       "test_path": "content/final_assessment/16_Intermediate_File_Reader/main_test.go"
     },
     {
-      "id": "custom_errors",
+      "id": "user_greeting",
       "number": 17,
-      "title": "Custom Errors",
-      "level": "intermediate",
-      "dir": "content/final_assessment/17_Intermediate_Custom_Errors",
-      "task_path": "content/final_assessment/17_Intermediate_Custom_Errors/task.md",
-      "starter_path": "content/final_assessment/17_Intermediate_Custom_Errors/main.go",
-      "test_path": "content/final_assessment/17_Intermediate_Custom_Errors/main_test.go"
+      "title": "User Greeting",
+      "level": "beginner",
+      "dir": "content/final_assessment/19_Beginner_User_Greeting",
+      "task_path": "content/final_assessment/19_Beginner_User_Greeting/task.md",
+      "starter_path": "content/final_assessment/19_Beginner_User_Greeting/main.go",
+      "test_path": "content/final_assessment/19_Beginner_User_Greeting/main_test.go"
     },
     {
-      "id": "worker_pool",
+      "id": "user_average",
       "number": 18,
-      "title": "Worker Pool",
+      "title": "User Average",
       "level": "intermediate",
-      "dir": "content/final_assessment/18_Intermediate_Worker_Pool",
-      "task_path": "content/final_assessment/18_Intermediate_Worker_Pool/task.md",
-      "starter_path": "content/final_assessment/18_Intermediate_Worker_Pool/main.go",
-      "test_path": "content/final_assessment/18_Intermediate_Worker_Pool/main_test.go"
+      "dir": "content/final_assessment/20_Intermediate_User_Average",
+      "task_path": "content/final_assessment/20_Intermediate_User_Average/task.md",
+      "starter_path": "content/final_assessment/20_Intermediate_User_Average/main.go",
+      "test_path": "content/final_assessment/20_Intermediate_User_Average/main_test.go"
     }
   ]
 }

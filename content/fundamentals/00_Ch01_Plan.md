@@ -14,8 +14,9 @@ Format per lesson: **one concept slide → three tasks** (Beginner → Intermedi
 | 1.8 | Type Conversion | 3 min |
 | 1.9 | `fmt` Print Verbs | 2 min |
 | 1.10 | String Formatting Practice | 2 min |
+| 1.11 | Getting User Input | 3 min |
 | — | Chapter 1 Quiz (5 Qs) | 2 min |
-| | **Total** | **~27 min** |
+| | **Total** | **~30 min** |
 
 ---
 
@@ -149,6 +150,20 @@ Format per lesson: **one concept slide → three tasks** (Beginner → Intermedi
 - Beginner: `Receipt(item, qty, price)` → single-line formatted receipt.
 - Intermediate: `Report(name, orders, revenue)` → multi-line `\n` report.
 - Advanced: `Row(item, price)` → right/left-aligned table row with `%-12s` + `%10.2f`.
+
+---
+
+### Lesson 1.11 — Getting User Input
+
+**Concept slide**
+
+- `fmt.Scanln(&a, &b)` reads space-separated values until a newline; `fmt.Scan(&a, &b)` reads until whitespace.
+- Pointers (`&name`) are required so the function can write values back into variables.
+
+**Tasks**
+- Beginner: `Greet()` → `fmt.Scanln` a name, return `"Hello, <name>!"`.
+- Intermediate: `Sum()` → `fmt.Scan` two ints, return their sum.
+- Advanced: `AverageUntilZero()` → loop `fmt.Scan` ints until `0`, return average.
 
 ---
 
