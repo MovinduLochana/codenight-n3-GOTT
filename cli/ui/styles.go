@@ -116,6 +116,40 @@ var (
 			MarginBottom(1).
 			Align(lipgloss.Center)
 
+	// Sidebar Styles
+	ChapterColWidth = 18
+	LessonColWidth  = 26
+
+	SidebarStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(ColorPending).
+			Padding(0, 1).
+			MarginRight(1)
+
+	SidebarFocusedStyle = lipgloss.NewStyle().
+				Border(lipgloss.DoubleBorder()).
+				BorderForeground(ColorHighlight).
+				Padding(0, 1).
+				MarginRight(1)
+
+	SidebarItemStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("246"))
+
+	SidebarItemFocusStyle = lipgloss.NewStyle().
+				Foreground(ColorHighlight).
+				Background(lipgloss.Color("237"))
+
+	SidebarSelectedStyle = lipgloss.NewStyle().
+				Bold(true).
+				Foreground(lipgloss.Color("255")).
+				Background(ColorPrimary)
+
+	ColumnTitleStyle = lipgloss.NewStyle().
+				Bold(true).
+				Foreground(ColorHighlight).
+				Underline(true).
+				MarginBottom(1)
+
 	// Footer / Controls
 	FooterStyle = lipgloss.NewStyle().
 			Border(lipgloss.RoundedBorder()).

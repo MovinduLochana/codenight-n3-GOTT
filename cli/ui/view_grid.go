@@ -48,26 +48,33 @@ func (m Model) RenderLeftGrid(panelHeight int) string {
 		return LeftPanelStyle.Height(panelHeight).Render("No exercises found.")
 	}
 
+	startIdx := m.lessonStartIdx()
+	endIdx := m.lessonEndIdx()
+	lessonExercises := m.Exercises[startIdx:endIdx]
+	if len(lessonExercises) == 0 {
+		return LeftPanelStyle.Height(panelHeight).Render("Select a lesson.")
+	}
+
 	pageSize := m.GridCols * m.GridRows
 	if pageSize <= 0 {
 		pageSize = 12
 	}
 
-	currentPage := m.FocusedIdx / pageSize
-	totalPages := (len(m.Exercises) + pageSize - 1) / pageSize
-	startIdx := currentPage * pageSize
-	endIdx := startIdx + pageSize
-	if endIdx > len(m.Exercises) {
-		endIdx = len(m.Exercises)
+	currentPage := (m.FocusedIdx - startIdx) / pageSize
+	totalPages := (len(lessonExercises) + pageSize - 1) / pageSize
+	pageStart := startIdx + currentPage*pageSize
+	pageEnd := pageStart + pageSize
+	if pageEnd > endIdx {
+		pageEnd = endIdx
 	}
 
-	pageExercises := m.Exercises[startIdx:endIdx]
+	pageExercises := m.Exercises[pageStart:pageEnd]
 
 	var rows []string
 	var currentRowCards []string
 
 	for i, ex := range pageExercises {
-		actualIdx := startIdx + i
+		actualIdx := pageStart + i
 		isFocused := actualIdx == m.FocusedIdx
 		isPassed := m.Progress.Passed[ex.ID]
 		isFailed := !isPassed && m.TestOutput != "" && isFocused
@@ -89,8 +96,11 @@ func (m Model) RenderLeftGrid(panelHeight int) string {
 	pagStyled := lipgloss.NewStyle().Foreground(lipgloss.Color("244")).Render(pagStr)
 
 	fullLeftContent := lipgloss.JoinVertical(lipgloss.Left, gridStr, pagStyled)
-	
+
 	style := LeftPanelStyle
+	if m.FocusedPanel == PanelTasks {
+		style = style.BorderForeground(ColorHighlight)
+	}
 	if panelHeight > 0 {
 		style = style.Height(panelHeight)
 	}
