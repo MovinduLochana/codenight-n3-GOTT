@@ -90,6 +90,25 @@
         }
       ],
       "correct": "b"
+    },
+    {
+      "id": "vars_q6",
+      "prompt": "Which function reads a single line of user input into a variable?",
+      "choices": [
+        {
+          "id": "a",
+          "text": "`fmt.Scanln(&name)`"
+        },
+        {
+          "id": "b",
+          "text": "`fmt.Println(&name)`"
+        },
+        {
+          "id": "c",
+          "text": "`fmt.Sprintf(&name)`"
+        }
+      ],
+      "correct": "a"
     }
   ]
 }

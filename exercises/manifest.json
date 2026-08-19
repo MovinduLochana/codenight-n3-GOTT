@@ -254,6 +254,37 @@
           ]
         },
         {
+          "id": "user_input",
+          "title": "Getting User Input",
+          "content_path": "content/fundamentals/user_input/content.md",
+          "exercises": [
+            {
+              "id": "fundamentals_user_input_1",
+              "title": "Getting User Input (Beginner)",
+              "level": "beginner",
+              "file_path": "exercises/fundamentals/user_input/1.go",
+              "test_path": "exercises/fundamentals/user_input/1_test.go",
+              "doc_path": "content/fundamentals/user_input/task_beginner.md"
+            },
+            {
+              "id": "fundamentals_user_input_2",
+              "title": "Getting User Input (Intermediate)",
+              "level": "intermediate",
+              "file_path": "exercises/fundamentals/user_input/2.go",
+              "test_path": "exercises/fundamentals/user_input/2_test.go",
+              "doc_path": "content/fundamentals/user_input/task_intermediate.md"
+            },
+            {
+              "id": "fundamentals_user_input_3",
+              "title": "Getting User Input (Advanced)",
+              "level": "advanced",
+              "file_path": "exercises/fundamentals/user_input/3.go",
+              "test_path": "exercises/fundamentals/user_input/3_test.go",
+              "doc_path": "content/fundamentals/user_input/task_advanced.md"
+            }
+          ]
+        },
+        {
           "id": "operators",
           "title": "Operators",
           "content_path": "content/fundamentals/operators/content.md",
