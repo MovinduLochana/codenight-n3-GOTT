@@ -13,8 +13,12 @@ import (
 )
 
 func renderMarkdown(mdContent string, wordWrap int) string {
+	// Use a fixed dark style instead of WithAutoStyle: auto style queries the
+	// terminal's background color (OSC 11) on every renderer construction and
+	// blocks up to 5s waiting for a reply, freezing the TUI. The app UI is
+	// dark-themed, so the dark style matches it regardless of the terminal.
 	r, err := glamour.NewTermRenderer(
-		glamour.WithAutoStyle(),
+		glamour.WithStandardStyle("dark"),
 		glamour.WithWordWrap(wordWrap),
 	)
 	if err != nil {
