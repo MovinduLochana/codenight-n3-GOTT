@@ -3,10 +3,19 @@ package main
 import "testing"
 
 func TestCelsius(t *testing.T) {
-	if got := Celsius(68); got != 20 {
-		t.Errorf("Celsius(68) = %f; want 20", got)
+	tests := []struct {
+		f    float64
+		want float64
+	}{
+		{68, 20},
+		{32, 0},
+		{212, 100},
+		{-40, -40},
+		{0, -17.77777777777778},
 	}
-	if got := Celsius(32); got != 0 {
-		t.Errorf("Celsius(32) = %f; want 0", got)
+	for _, tt := range tests {
+		if got := Celsius(tt.f); got != tt.want {
+			t.Errorf("Celsius(%v) = %v; want %v", tt.f, got, tt.want)
+		}
 	}
 }

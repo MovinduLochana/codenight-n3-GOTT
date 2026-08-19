@@ -1,14 +1,29 @@
 package main
 
-import "testing"
+import (
+	"errors"
+	"strconv"
+	"strings"
+	"testing"
+)
 
 func TestReadAge(t *testing.T) {
-	val, err := ReadAge("25")
-	if err != nil || val != 25 {
-		t.Errorf("ReadAge(25) failed")
+	n, err := ReadAge("25")
+	if err != nil {
+		t.Errorf("ReadAge(\"25\") error = %v; want nil", err)
 	}
-	_, err = ReadAge("abc")
+	if n != 25 {
+		t.Errorf("ReadAge(\"25\") = %d; want 25", n)
+	}
+
+	_, err = ReadAge("xx")
 	if err == nil {
-		t.Errorf("ReadAge(abc) expected error")
+		t.Fatalf("ReadAge(\"xx\") returned nil error; want non-nil")
+	}
+	if !errors.Is(err, strconv.ErrSyntax) {
+		t.Errorf("ReadAge(\"xx\") error must wrap strconv.ErrSyntax, got %v", err)
+	}
+	if !strings.Contains(err.Error(), "invalid age") {
+		t.Errorf("ReadAge(\"xx\") error = %q; want it to contain %q", err.Error(), "invalid age")
 	}
 }

@@ -6,9 +6,8 @@ import (
 )
 
 func TestProcessLog(t *testing.T) {
-	got := ProcessLog()
 	want := []string{"start", "middle", "end"}
-	if !reflect.DeepEqual(got, want) {
-		t.Errorf("ProcessLog = %v; want %v", got, want)
+	if got := ProcessLog(); !reflect.DeepEqual(got, want) {
+		t.Errorf("ProcessLog() = %v; want %v", got, want)
 	}
 }

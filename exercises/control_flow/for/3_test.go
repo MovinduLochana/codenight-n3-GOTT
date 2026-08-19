@@ -4,8 +4,8 @@ import "testing"
 
 func TestIsPrime(t *testing.T) {
 	tests := []struct {
-		n        int
-		expected bool
+		n    int
+		want bool
 	}{
 		{2, true},
 		{7, true},
@@ -14,11 +14,15 @@ func TestIsPrime(t *testing.T) {
 		{0, false},
 		{13, true},
 		{25, false},
+		{3, true},
+		{9, false},
+		{17, true},
+		{-1, false},
+		{2, true},
 	}
 	for _, tt := range tests {
-		got := IsPrime(tt.n)
-		if got != tt.expected {
-			t.Errorf("IsPrime(%d) = %t; want %t", tt.n, got, tt.expected)
+		if got := IsPrime(tt.n); got != tt.want {
+			t.Errorf("IsPrime(%d) = %t; want %t", tt.n, got, tt.want)
 		}
 	}
 }
