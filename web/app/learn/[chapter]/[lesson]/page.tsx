@@ -20,7 +20,7 @@ export function generateStaticParams() {
   );
 }
 
-export default function LessonPage({
+export default async function LessonPage({
   params,
 }: {
   params: Promise<{ chapter: string; lesson: string }>;

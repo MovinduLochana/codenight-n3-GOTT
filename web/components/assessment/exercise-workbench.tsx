@@ -1,19 +1,6 @@
 "use client";
 
-import type { Monaco } from "@monaco-editor/react";
-import dynamic from "next/dynamic";
-
-const Editor = dynamic(
-  () => import("@monaco-editor/react").then((m) => m.default),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex h-full items-center justify-center bg-background text-xs text-muted-foreground">
-        Loading editor…
-      </div>
-    ),
-  },
-);
+import { go } from "@codemirror/lang-go";
 import {
   CheckIcon,
   FileTextIcon,
@@ -21,19 +8,23 @@ import {
   RotateCcwIcon,
   XIcon,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { AyuDark } from "@/lib/monaco-editor-theme";
+import { ayuDarkTheme } from "@/lib/codemirror-theme";
 import { cn } from "@/lib/utils";
 
+const CodeEditor = dynamic(() => import("@uiw/react-codemirror"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full items-center justify-center bg-background text-xs text-muted-foreground">
+      Loading editor…
+    </div>
+  ),
+});
+
 type Result = { passed: boolean; output: string };
-
-const MONACO_THEME = "codenight-dark";
-
-function defineMonacoTheme(monaco: Monaco) {
-  monaco.editor.defineTheme(MONACO_THEME, AyuDark);
-}
 
 export function ExerciseWorkbench({
   exerciseId,
@@ -129,24 +120,23 @@ export function ExerciseWorkbench({
           </div>
         </div>
 
-        <div className="min-h-90 flex-1 lg:min-h-0">
-          <Editor
-            height="100%"
-            language="go"
-            theme={MONACO_THEME}
-            beforeMount={defineMonacoTheme}
+        <div className="min-h-90 flex-1 overflow-hidden lg:min-h-0">
+          <CodeEditor
             value={code}
-            onChange={(value) => setCode(value ?? "")}
-            options={{
-              minimap: { enabled: false },
-              fontFamily: "Fira Code",
-              fontLigatures: true,
-              fontSize: 15,
-              fontWeight: "600",
-              scrollBeyondLastLine: false,
-              cursorBlinking: "smooth",
-              cursorSmoothCaretAnimation: "on",
-              padding: { top: 12 },
+            height="100%"
+            className="h-full"
+            extensions={[go()]}
+            theme={ayuDarkTheme}
+            onChange={(value) => setCode(value)}
+            basicSetup={{
+              lineNumbers: true,
+              highlightActiveLineGutter: true,
+              highlightActiveLine: true,
+              foldGutter: false,
+              dropCursor: false,
+              allowMultipleSelections: false,
+              indentOnInput: true,
+              tabSize: 4,
             }}
           />
         </div>
