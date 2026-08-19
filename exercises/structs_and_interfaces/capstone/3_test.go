@@ -1,13 +1,26 @@
 package main
 
-import "testing"
+import (
+	"math"
+	"testing"
+)
 
 func TestDealPrice(t *testing.T) {
-	items := []Pricer{
-		Product{Name: "Coffee", BasePrice: 10.0},
-		Deal{Product: Product{Name: "Tea", BasePrice: 10.0}, Discount: 0.2},
+	d := Deal{Product: Product{Name: "Cake", BasePrice: 10.00}, Discount: 0.20}
+	if got := d.Price(); math.Abs(got-8.00) > 1e-9 {
+		t.Errorf("Deal.Price() = %v; want 8.00 (10.00 * (1 - 0.20))", got)
 	}
-	if got := TotalPrice(items); got != 18.0 {
-		t.Errorf("TotalPrice = %f; want 18.0", got)
+
+	items := []Pricer{
+		Product{Name: "Coffee", BasePrice: 4.00},
+		Deal{Product: Product{Name: "Cake", BasePrice: 10.00}, Discount: 0.20},
+	}
+	if got := TotalPrice(items); math.Abs(got-12.00) > 1e-9 {
+		t.Errorf("TotalPrice(items) = %v; want 12.00", got)
+	}
+
+	fullPrice := Deal{Product: Product{Name: "X", BasePrice: 5.00}, Discount: 0}
+	if got := fullPrice.Price(); got != 5.00 {
+		t.Errorf("Deal with 0 discount = %v; want 5.00", got)
 	}
 }

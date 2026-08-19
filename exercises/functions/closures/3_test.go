@@ -4,13 +4,19 @@ import "testing"
 
 func TestMakeBank(t *testing.T) {
 	bank := MakeBank(100)
-	if got := bank(50); got != 150 {
-		t.Errorf("bank(50) = %f; want 150", got)
+	steps := []struct {
+		amount float64
+		want   float64
+	}{
+		{50, 150},
+		{-20, 150},
+		{0, 150},
+		{25, 175},
+		{-100, 175},
 	}
-	if got := bank(-20); got != 150 {
-		t.Errorf("bank(-20) = %f; want 150", got)
-	}
-	if got := bank(25); got != 175 {
-		t.Errorf("bank(25) = %f; want 175", got)
+	for _, s := range steps {
+		if got := bank(s.amount); got != s.want {
+			t.Errorf("bank(%v) = %v; want %v", s.amount, got, s.want)
+		}
 	}
 }

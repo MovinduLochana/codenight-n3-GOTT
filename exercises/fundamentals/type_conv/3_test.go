@@ -3,10 +3,19 @@ package main
 import "testing"
 
 func TestToPixels(t *testing.T) {
-	if got := ToPixels(1.5, 300); got != 450 {
-		t.Errorf("ToPixels(1.5, 300) = %d; want 450", got)
+	tests := []struct {
+		inches, dpi float64
+		want        int
+	}{
+		{1.5, 300, 450},
+		{0.5, 72, 36},
+		{2, 96, 192},
+		{1, 72, 72},
+		{0, 100, 0},
 	}
-	if got := ToPixels(0.5, 72); got != 36 {
-		t.Errorf("ToPixels(0.5, 72) = %d; want 36", got)
+	for _, tt := range tests {
+		if got := ToPixels(tt.inches, tt.dpi); got != tt.want {
+			t.Errorf("ToPixels(%v, %v) = %d; want %d", tt.inches, tt.dpi, got, tt.want)
+		}
 	}
 }

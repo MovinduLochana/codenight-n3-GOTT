@@ -3,12 +3,15 @@ package main
 import "testing"
 
 func TestDivide(t *testing.T) {
-	res, err := Divide(10, 2)
-	if err != nil || res != 5 {
-		t.Errorf("Divide(10, 2) = %d, %v; want 5, nil", res, err)
+	q, err := Divide(10, 2)
+	if err != nil {
+		t.Errorf("Divide(10, 2) returned error %v; want nil", err)
 	}
-	_, err = Divide(5, 0)
-	if err == nil {
-		t.Errorf("Divide(5, 0) expected error")
+	if q != 5 {
+		t.Errorf("Divide(10, 2) = %d; want 5", q)
+	}
+
+	if _, err := Divide(5, 0); err == nil {
+		t.Errorf("Divide(5, 0) returned nil error; want a non-nil error")
 	}
 }

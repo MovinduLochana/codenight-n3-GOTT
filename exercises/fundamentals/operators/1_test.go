@@ -3,10 +3,21 @@ package main
 import "testing"
 
 func TestIsEven(t *testing.T) {
-	if !IsEven(4) {
-		t.Errorf("IsEven(4) = false; want true")
+	tests := []struct {
+		n    int
+		want bool
+	}{
+		{4, true},
+		{7, false},
+		{0, true},
+		{-2, true},
+		{-1, false},
+		{1, false},
+		{100, true},
 	}
-	if IsEven(7) {
-		t.Errorf("IsEven(7) = true; want false")
+	for _, tt := range tests {
+		if got := IsEven(tt.n); got != tt.want {
+			t.Errorf("IsEven(%d) = %t; want %t", tt.n, got, tt.want)
+		}
 	}
 }

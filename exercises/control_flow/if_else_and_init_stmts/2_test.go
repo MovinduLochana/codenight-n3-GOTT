@@ -8,7 +8,9 @@ func TestSign(t *testing.T) {
 		want string
 	}{
 		{42, "positive"},
+		{1, "positive"},
 		{-3, "negative"},
+		{-1, "negative"},
 		{0, "zero"},
 	}
 	for _, tt := range tests {

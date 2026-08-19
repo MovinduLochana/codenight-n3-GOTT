@@ -7,39 +7,45 @@ import (
 
 func TestMergeCounts(t *testing.T) {
 	tests := []struct {
-		name     string
-		a        map[string]int
-		b        map[string]int
-		expected map[string]int
+		name string
+		a, b map[string]int
+		want map[string]int
 	}{
 		{
-			name:     "overlapping keys",
-			a:        map[string]int{"go": 2, "is": 1},
-			b:        map[string]int{"go": 1, "fun": 3},
-			expected: map[string]int{"go": 3, "is": 1, "fun": 3},
+			"example",
+			map[string]int{"go": 2, "is": 1},
+			map[string]int{"go": 1, "fun": 3},
+			map[string]int{"go": 3, "is": 1, "fun": 3},
 		},
 		{
-			name:     "empty maps",
-			a:        map[string]int{},
-			b:        map[string]int{},
-			expected: map[string]int{},
+			"disjoint",
+			map[string]int{"a": 1},
+			map[string]int{"b": 2},
+			map[string]int{"a": 1, "b": 2},
 		},
 		{
-			name:     "disjoint keys",
-			a:        map[string]int{"a": 1},
-			b:        map[string]int{"b": 2},
-			expected: map[string]int{"a": 1, "b": 2},
+			"empty a",
+			map[string]int{},
+			map[string]int{"x": 5},
+			map[string]int{"x": 5},
+		},
+		{
+			"empty b",
+			map[string]int{"x": 5},
+			map[string]int{},
+			map[string]int{"x": 5},
+		},
+		{
+			"both empty",
+			map[string]int{},
+			map[string]int{},
+			map[string]int{},
 		},
 	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := MergeCounts(tt.a, tt.b)
-			if got == nil && len(tt.expected) == 0 {
-				return
-			}
-			if !reflect.DeepEqual(got, tt.expected) {
-				t.Errorf("MergeCounts(%v, %v) = %v; want %v", tt.a, tt.b, got, tt.expected)
+			if got := MergeCounts(tt.a, tt.b); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("MergeCounts(%v, %v) = %v; want %v", tt.a, tt.b, got, tt.want)
 			}
 		})
 	}

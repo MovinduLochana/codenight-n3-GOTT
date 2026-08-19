@@ -7,16 +7,19 @@ import (
 
 func TestAppendThree(t *testing.T) {
 	tests := []struct {
-		input    []int
-		expected []int
+		name string
+		s    []int
+		want []int
 	}{
-		{[]int{}, []int{1, 2, 3}},
-		{[]int{9}, []int{9, 1, 2, 3}},
+		{"empty", []int{}, []int{1, 2, 3}},
+		{"single", []int{9}, []int{9, 1, 2, 3}},
+		{"existing", []int{1, 2}, []int{1, 2, 1, 2, 3}},
 	}
 	for _, tt := range tests {
-		got := AppendThree(tt.input)
-		if !reflect.DeepEqual(got, tt.expected) {
-			t.Errorf("AppendThree(%v) = %v; want %v", tt.input, got, tt.expected)
-		}
+		t.Run(tt.name, func(t *testing.T) {
+			if got := AppendThree(tt.s); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("AppendThree(%v) = %v; want %v", tt.s, got, tt.want)
+			}
+		})
 	}
 }
