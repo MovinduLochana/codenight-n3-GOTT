@@ -42,10 +42,14 @@ func (m Model) RenderRightDetails(rightWidth int, panelHeight int) string {
 	wrapStyle := lipgloss.NewStyle().Width(contentWidth)
 
 	// Header details
-	titleText := fmt.Sprintf("%s (Question %d/3)", curEx.Title, curEx.TopicExerciseNum)
+	totalTasks := len(m.currentTopic().Exercises)
+	if totalTasks < 1 {
+		totalTasks = 1
+	}
+	titleText := fmt.Sprintf("%s (Question %d/%d)", curEx.Title, curEx.TopicExerciseNum, totalTasks)
 	title := SectionTitleStyle.Render(titleText)
-	meta := wrapStyle.Render(fmt.Sprintf("Category: %s\nTopic:    %s\nFile:     %s",
-		curEx.CategoryTitle, curEx.TopicTitle, curEx.FilePath))
+	meta := wrapStyle.Render(fmt.Sprintf("Chapter:  %s (%d)\nLesson:   %s\nFile:     %s",
+		curEx.CategoryTitle, m.chapterNo(), curEx.TopicTitle, curEx.FilePath))
 
 	// Level badge
 	var levelBadge string
@@ -93,14 +97,19 @@ func (m Model) RenderRightDetails(rightWidth int, panelHeight int) string {
 		body = fmt.Sprintf("%s\n%s",
 			lipgloss.NewStyle().Foreground(ColorHighlight).Bold(true).Render("=== LATEST TEST OUTPUT ==="),
 			outputStyle.Render(m.TestOutput))
+	} else if m.StatusMsg != "" {
+		body = lipgloss.NewStyle().Foreground(ColorHighlight).Width(contentWidth).Render(m.StatusMsg)
 	} else {
 		body = wrapStyle.Foreground(lipgloss.Color("244")).Render(
-			"Press [r] or [Enter] to run tests for this exercise.\nPress [h] to view task instructions and hints.")
+			"Press [r] or [Enter] to run tests for this exercise.\nPress [h] to view task instructions and hints.\nPress [o] to open this task in your IDE.")
 	}
 
 	rightContent := lipgloss.JoinVertical(lipgloss.Left, headerBlock, body)
 
 	style := RightPanelStyle.Width(rightWidth)
+	if m.FocusedPanel == PanelDetails {
+		style = style.BorderForeground(ColorHighlight)
+	}
 	if panelHeight > 0 {
 		style = style.Height(panelHeight)
 	}
@@ -117,8 +126,8 @@ func (m Model) View() string {
 
 	rightWidth := 52
 	if m.WindowWidth > 0 {
-		leftWidth := (m.GridCols * 18) + 4
-		availW := m.WindowWidth - leftWidth - 4
+		leftWidth := sidebarWidth + (m.GridCols * 18) + 4
+		availW := m.WindowWidth - leftWidth - 6
 		if availW > 35 {
 			rightWidth = availW
 		}
@@ -140,14 +149,20 @@ func (m Model) View() string {
 	headerText := fmt.Sprintf(" GOSTLINGS — Mozilla Campus Club of SLIIT  |  Progress: %d/%d Passed (%d%%) ", passedCount, total, pct)
 	header := TitleStyle.Render(headerText)
 
-	// 2. Main Panels (Left Grid Matrix + Right Details)
+	// 2. Main Panels (Sidebar + Task Grid + Details)
+	sidebar := m.RenderSidebar(panelHeight)
 	leftGrid := m.RenderLeftGrid(panelHeight)
 	rightDetails := m.RenderRightDetails(rightWidth, panelHeight)
-	mainPanels := lipgloss.JoinHorizontal(lipgloss.Top, leftGrid, rightDetails)
+	mainPanels := lipgloss.JoinHorizontal(lipgloss.Top, sidebar, leftGrid, rightDetails)
 
 	// 3. Controls / Footer Bar
-	controlsText := " [←↑↓→] Move Focus  |  [r/Enter] Run Test  |  [h] Toggle Hint  |  [n/p] Next/Prev  |  [q] Quit"
-	footer := FooterStyle.Render(controlsText)
+	footer := renderFooter()
 
-	return lipgloss.JoinVertical(lipgloss.Left, header, mainPanels, footer)
+	view := lipgloss.JoinVertical(lipgloss.Left, header, mainPanels, footer)
+
+	if m.ShowIdePicker {
+		return m.RenderIdePicker(m.WindowWidth, m.WindowHeight)
+	}
+
+	return view
 }
