@@ -1,134 +1,322 @@
 import "server-only";
 
-import { execFile } from "node:child_process";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
-import os from "node:os";
-import path from "node:path";
-import { promisify } from "node:util";
+const JUDGE0_DEFAULT_URL = "https://judge0.hefttech.com";
+const JUDGE0_GO_LANGUAGE_ID = 60; // Go 1.13.5
+const RUN_TIMEOUT_MS = 15_000;
 
-const execFileAsync = promisify(execFile);
+export type FixtureFile = { name: string; content: string };
 
-const RUN_TIMEOUT_MS = 10_000;
-const MAX_OUTPUT_BYTES = 1_000_000;
-
-const MAX_CONCURRENT_RUNS = 16;
-
-class Semaphore {
-  private available: number;
-  private readonly queue: (() => void)[] = [];
-
-  constructor(max: number) {
-    this.available = max;
-  }
-
-  async acquire(): Promise<void> {
-    if (this.available > 0) {
-      this.available -= 1;
-      return;
-    }
-    await new Promise<void>((resolve) => this.queue.push(resolve));
-  }
-
-  release(): void {
-    const next = this.queue.shift();
-    if (next) {
-      next();
-    } else {
-      this.available += 1;
-    }
-  }
-}
-
-const runSlots = new Semaphore(MAX_CONCURRENT_RUNS);
-
-const SHARED_GO_DIR = path.join(os.tmpdir(), "assessment-go-shared");
-const sharedGoHome = path.join(SHARED_GO_DIR, "home");
-const sharedGoCache = path.join(SHARED_GO_DIR, "gocache");
-const sharedGoPath = path.join(SHARED_GO_DIR, "gopath");
-let sharedGoDirReady: Promise<void> | null = null;
-
-function ensureSharedGoDir(): Promise<void> {
-  if (!sharedGoDirReady) {
-    sharedGoDirReady = Promise.all([
-      mkdir(sharedGoHome, { recursive: true }),
-      mkdir(sharedGoCache, { recursive: true }),
-      mkdir(sharedGoPath, { recursive: true }),
-    ]).then(() => undefined);
-  }
-  return sharedGoDirReady;
-}
-
-type FixtureFile = { name: string; content: string };
-
+/**
+ * Executes Go code and test suite via the Judge0 sandbox API.
+ */
 export async function runGoTest(
-  code: string,
+  userCode: string,
   testCode: string,
   fixtures: FixtureFile[] = [],
 ): Promise<{ passed: boolean; output: string }> {
-  await runSlots.acquire();
   try {
-    return await runInIsolatedTempDir(code, testCode, fixtures);
-  } finally {
-    runSlots.release();
-  }
-}
+    const mergedCode = mergeGoFiles(userCode, testCode);
 
-async function runInIsolatedTempDir(
-  code: string,
-  testCode: string,
-  fixtures: FixtureFile[],
-): Promise<{ passed: boolean; output: string }> {
-  const [tmpDir] = await Promise.all([
-    mkdtemp(path.join(os.tmpdir(), "assessment-")),
-    ensureSharedGoDir(),
-  ]);
+    const judge0Url = (
+      process.env.JUDGE0_URL || JUDGE0_DEFAULT_URL
+    ).replace(/\/+$/, "");
+    const authToken = process.env.JUDGE0_AUTH_TOKEN;
 
-  try {
-    await Promise.all([
-      writeFile(path.join(tmpDir, "main.go"), code, "utf-8"),
-      writeFile(path.join(tmpDir, "main_test.go"), testCode, "utf-8"),
-      ...fixtures.map((fixture) =>
-        writeFile(path.join(tmpDir, fixture.name), fixture.content, "utf-8"),
-      ),
-    ]);
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+    if (authToken) {
+      headers["X-Auth-Token"] = authToken;
+    }
 
-    const { stdout, stderr } = await execFileAsync(
-      "go",
-      ["test", "-v", "main.go", "main_test.go"],
+    const payload: {
+      language_id: number;
+      source_code: string;
+      cpu_time_limit: number;
+      additional_files?: string;
+    } = {
+      language_id: JUDGE0_GO_LANGUAGE_ID,
+      source_code: Buffer.from(mergedCode, "utf-8").toString("base64"),
+      cpu_time_limit: 10,
+    };
+
+    if (fixtures.length > 0) {
+      const zipBuffer = createZip(fixtures);
+      payload.additional_files = zipBuffer.toString("base64");
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), RUN_TIMEOUT_MS);
+
+    const response = await fetch(
+      `${judge0Url}/submissions?wait=true&base64_encoded=true`,
       {
-        cwd: tmpDir,
-        timeout: RUN_TIMEOUT_MS,
-        maxBuffer: MAX_OUTPUT_BYTES,
-        env: {
-          NODE_ENV: process.env.NODE_ENV ?? "production",
-          PATH: process.env.PATH ?? "",
-          HOME: sharedGoHome,
-          GOCACHE: sharedGoCache,
-          GOPATH: sharedGoPath,
-        },
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+        signal: controller.signal,
       },
     );
 
-    return { passed: true, output: `${stdout}${stderr}`.trim() };
-  } catch (error) {
-    const execError = error as {
-      stdout?: string;
-      stderr?: string;
-      killed?: boolean;
-      signal?: string | null;
-      message: string;
-    };
+    clearTimeout(timeoutId);
 
-    if (execError.killed || execError.signal) {
-      return { passed: false, output: "Test run timed out after 10 seconds." };
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      return {
+        passed: false,
+        output: `Judge0 execution request failed (${response.status}): ${errorText || response.statusText}`,
+      };
     }
 
-    const output = `${execError.stdout ?? ""}${execError.stderr ?? ""}`.trim();
+    const data = (await response.json()) as {
+      status?: { id: number; description: string };
+      stdout?: string | null;
+      stderr?: string | null;
+      compile_output?: string | null;
+      message?: string | null;
+    };
+
+    const decode = (str?: string | null): string =>
+      str ? Buffer.from(str, "base64").toString("utf-8").trim() : "";
+
+    const stdout = decode(data.stdout);
+    const stderr = decode(data.stderr);
+    const compileOutput = decode(data.compile_output);
+    const message = decode(data.message);
+    const statusId = data.status?.id;
+
+    // Status 3: Accepted (Code ran and exited with 0)
+    if (statusId === 3) {
+      return {
+        passed: true,
+        output: stdout || "PASS",
+      };
+    }
+
+    // Status 6: Compilation Error
+    if (statusId === 6) {
+      return {
+        passed: false,
+        output: compileOutput || stderr || "Compilation error occurred.",
+      };
+    }
+
+    // Status 5: Time Limit Exceeded
+    if (statusId === 5) {
+      return {
+        passed: false,
+        output: "Test execution timed out (10s limit exceeded).",
+      };
+    }
+
+    // Status 11: Runtime Error (NZEC - Non-Zero Exit Code, e.g. failed assertions in tests)
+    if (statusId === 11) {
+      const failureOutput = stdout || stderr || message || compileOutput;
+      return {
+        passed: false,
+        output: failureOutput || "Tests failed.",
+      };
+    }
+
+    // Other failure states
+    const output =
+      stderr || stdout || compileOutput || message || data.status?.description || "Execution error.";
+
     return {
       passed: false,
-      output: output.length > 0 ? output : execError.message,
+      output,
     };
-  } finally {
-    await rm(tmpDir, { recursive: true, force: true });
+  } catch (error) {
+    const err = error as Error;
+    if (err.name === "AbortError") {
+      return {
+        passed: false,
+        output: "Test execution timed out while communicating with sandbox.",
+      };
+    }
+    return {
+      passed: false,
+      output: `Failed to execute tests: ${err.message || "Unknown error"}`,
+    };
   }
+}
+
+/**
+ * Merges user Go code with test definitions and creates a testing.Main runner.
+ */
+function mergeGoFiles(userCode: string, testCode: string): string {
+  const importRegex = /import\s*\(([\s\S]*?)\)|import\s+([^\n;]+)/g;
+  const imports = new Set<string>();
+
+  function collectImports(code: string) {
+    let match: RegExpExecArray | null;
+    while ((match = importRegex.exec(code)) !== null) {
+      if (match[1]) {
+        const lines = match[1]
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean);
+        for (const line of lines) imports.add(line);
+      } else if (match[2]) {
+        imports.add(match[2].trim());
+      }
+    }
+  }
+
+  collectImports(userCode);
+  collectImports(testCode);
+  imports.add('"testing"');
+
+  function cleanCode(code: string): string {
+    return code
+      .replace(/^\s*package\s+\w+[\s;]*/m, "")
+      .replace(/import\s*\(([\s\S]*?)\)|import\s+([^\n;]+)/g, "")
+      .trim();
+  }
+
+  let cleanedUserCode = cleanCode(userCode);
+  let cleanedTestCode = cleanCode(testCode);
+
+  // Extract all test functions: func Test*(t *testing.T)
+  const testFuncRegex = /func\s+(Test\w+)\s*\(\s*\w+\s+\*testing\.T\s*\)/g;
+  const testNames: string[] = [];
+  let tMatch: RegExpExecArray | null;
+  while ((tMatch = testFuncRegex.exec(cleanedTestCode)) !== null) {
+    testNames.push(tMatch[1]);
+  }
+
+  // If user code defines `main()`, rename it to `userMain()` to avoid `main redeclared`
+  const hasUserMain = /\bfunc\s+main\s*\(\s*\)/.test(cleanedUserCode);
+  if (hasUserMain) {
+    cleanedUserCode = cleanedUserCode.replace(
+      /\bfunc\s+main\s*\(\s*\)/g,
+      "func userMain()",
+    );
+    cleanedTestCode = cleanedTestCode.replace(/\bmain\s*\(\s*\)/g, "userMain()");
+  }
+
+  const runnerMain = `
+func main() {
+    matchAll := func(pat, str string) (bool, error) { return true, nil }
+    tests := []testing.InternalTest{
+        ${testNames.map((name) => `{"${name}", ${name}},`).join("\n        ")}
+    }
+    benchmarks := []testing.InternalBenchmark{}
+    examples := []testing.InternalExample{}
+
+    testing.Main(matchAll, tests, benchmarks, examples)
+}
+`;
+
+  return `package main
+
+import (
+    ${Array.from(imports).join("\n    ")}
+)
+
+// --- USER CODE ---
+${cleanedUserCode}
+
+// --- TEST SUITE ---
+${cleanedTestCode}
+
+// --- TEST RUNNER ---
+${runnerMain}
+`;
+}
+
+/**
+ * Creates an uncompressed in-memory ZIP buffer for Judge0 additional_files.
+ */
+function createZip(files: FixtureFile[]): Buffer {
+  let offset = 0;
+  const encoder = new TextEncoder();
+  const localHeaders: Uint8Array[] = [];
+  const centralHeaders: Uint8Array[] = [];
+
+  const crc32Table = getCrc32Table();
+
+  for (const file of files) {
+    const data = encoder.encode(file.content);
+    const nameBytes = encoder.encode(file.name);
+
+    let crc = 0 ^ -1;
+    for (let i = 0; i < data.length; i++) {
+      crc = (crc >>> 8) ^ crc32Table[(crc ^ data[i]) & 0xff];
+    }
+    crc = (crc ^ -1) >>> 0;
+
+    // Local file header (30 bytes + name + data)
+    const localHeader = new Uint8Array(30 + nameBytes.length + data.length);
+    const view = new DataView(localHeader.buffer);
+    view.setUint32(0, 0x04034b50, true);
+    view.setUint16(4, 20, true);
+    view.setUint16(6, 0, true);
+    view.setUint16(8, 0, true); // Stored (no compression)
+    view.setUint32(14, crc, true);
+    view.setUint32(18, data.length, true);
+    view.setUint32(22, data.length, true);
+    view.setUint16(26, nameBytes.length, true);
+    view.setUint16(28, 0, true);
+    localHeader.set(nameBytes, 30);
+    localHeader.set(data, 30 + nameBytes.length);
+    localHeaders.push(localHeader);
+
+    // Central directory header (46 bytes + name)
+    const centralHeader = new Uint8Array(46 + nameBytes.length);
+    const cView = new DataView(centralHeader.buffer);
+    cView.setUint32(0, 0x02014b50, true);
+    cView.setUint16(4, 20, true);
+    cView.setUint16(6, 20, true);
+    cView.setUint16(8, 0, true);
+    cView.setUint16(10, 0, true);
+    cView.setUint32(16, crc, true);
+    cView.setUint32(20, data.length, true);
+    cView.setUint32(24, data.length, true);
+    cView.setUint16(28, nameBytes.length, true);
+    cView.setUint32(42, offset, true);
+    centralHeader.set(nameBytes, 46);
+    centralHeaders.push(centralHeader);
+
+    offset += localHeader.length;
+  }
+
+  const centralDirSize = centralHeaders.reduce((acc, h) => acc + h.length, 0);
+  const eocd = new Uint8Array(22);
+  const eocdView = new DataView(eocd.buffer);
+  eocdView.setUint32(0, 0x06054b50, true);
+  eocdView.setUint16(8, files.length, true);
+  eocdView.setUint16(10, files.length, true);
+  eocdView.setUint32(12, centralDirSize, true);
+  eocdView.setUint32(16, offset, true);
+
+  const totalLength = offset + centralDirSize + 22;
+  const result = new Uint8Array(totalLength);
+  let pos = 0;
+  for (const h of localHeaders) {
+    result.set(h, pos);
+    pos += h.length;
+  }
+  for (const h of centralHeaders) {
+    result.set(h, pos);
+    pos += h.length;
+  }
+  result.set(eocd, pos);
+
+  return Buffer.from(result);
+}
+
+let cachedCrc32Table: Uint32Array | null = null;
+function getCrc32Table(): Uint32Array {
+  if (!cachedCrc32Table) {
+    cachedCrc32Table = new Uint32Array(256);
+    for (let i = 0; i < 256; i++) {
+      let c = i;
+      for (let j = 0; j < 8; j++) {
+        c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+      }
+      cachedCrc32Table[i] = c;
+    }
+  }
+  return cachedCrc32Table;
 }

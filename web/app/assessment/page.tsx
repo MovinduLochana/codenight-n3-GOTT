@@ -1,7 +1,9 @@
 import { eq } from "drizzle-orm";
 import { CheckIcon } from "lucide-react";
+import { cacheLife } from "next/cache";
 import Link from "next/link";
-import { ViewTransition } from "react";
+import { Suspense, ViewTransition } from "react";
+import { SuspenseLoader } from "@/components/common/suspense-loader";
 import { Badge } from "@/components/ui/badge";
 import { db } from "@/db/drizzle";
 import { assessmentProgress } from "@/db/schema";
@@ -15,30 +17,26 @@ const levelColor = {
   advanced: "text-red-400",
 } as const;
 
-export const instant = false;
-
 export default function AssessmentPage() {
   return (
-    // <Suspense fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}>
+    <Suspense
+      fallback={
+        <ViewTransition exit="fade-out">
+          <SuspenseLoader />
+        </ViewTransition>
+      }
+    >
       <ViewTransition enter="fade-in" default="none">
         <AssessmentPageContent />
       </ViewTransition>
-    // </Suspense>
+    </Suspense>
   );
 }
 
 async function AssessmentPageContent() {
   const session = await getSession();
 
-  const progress = session
-    ? await db
-        .select({
-          exerciseId: assessmentProgress.exerciseId,
-          passed: assessmentProgress.passed,
-        })
-        .from(assessmentProgress)
-        .where(eq(assessmentProgress.userId, session.userId))
-    : [];
+  const progress = session ? await getAssessmentProgress(session.userId) : [];
 
   const passedIds = new Set(
     progress.filter((row) => row.passed).map((row) => row.exerciseId),
@@ -65,7 +63,7 @@ async function AssessmentPageContent() {
               <li key={exercise.id}>
                 <Link
                   href={`/assessment/${exercise.id}`}
-                  // prefetch={true}
+                  prefetch={true}
                   className="flex items-center gap-3 border border-border bg-card p-4 transition-colors hover:border-primary/40"
                 >
                   <span className="font-mono text-xs text-primary">
@@ -109,4 +107,17 @@ async function AssessmentPageContent() {
       </div>
     </main>
   );
+}
+
+async function getAssessmentProgress(userId: string) {
+  "use cache";
+  cacheLife("seconds");
+
+  return await db
+    .select({
+      exerciseId: assessmentProgress.exerciseId,
+      passed: assessmentProgress.passed,
+    })
+    .from(assessmentProgress)
+    .where(eq(assessmentProgress.userId, userId));
 }
