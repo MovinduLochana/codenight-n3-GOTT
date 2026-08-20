@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { jwtVerify, SignJWT } from "jose";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
@@ -46,40 +46,36 @@ export async function createSession(
   const now = new Date();
   const expiresAt = new Date(now.getTime() + SESSION_DURATION_MS);
 
-  const [existing] = await db
-    .select({ id: sessions.id, displayName: sessions.displayName })
-    .from(sessions)
-    .where(eq(sessions.userId, userId))
-    .limit(1);
-
-  let sessionId: string;
-
-  if (existing) {
-    sessionId = existing.id;
-    await db
-      .update(sessions)
-      .set({
-        accessToken,
-        refreshToken: refreshToken ?? null,
-        // Don't blank out a name captured previously if this login doesn't carry one.
-        displayName: displayName ?? existing.displayName,
-        expiresAt,
-        lastLoginAt: now,
-        loggedOutAt: null,
-      })
-      .where(eq(sessions.userId, userId));
-  } else {
-    sessionId = crypto.randomUUID();
-    await db.insert(sessions).values({
-      id: sessionId,
+  // A plain select-then-insert/update here would race: two concurrent
+  // callback requests for the same user can both miss the existing row and
+  // both try to INSERT, tripping the sessions_user_id_unique constraint.
+  // Upsert instead so the read-and-write is a single atomic statement.
+  const [row] = await db
+    .insert(sessions)
+    .values({
+      id: crypto.randomUUID(),
       userId,
       accessToken,
       refreshToken: refreshToken ?? null,
       displayName: displayName ?? null,
       expiresAt,
       lastLoginAt: now,
-    });
-  }
+    })
+    .onConflictDoUpdate({
+      target: sessions.userId,
+      set: {
+        accessToken,
+        refreshToken: refreshToken ?? null,
+        // Don't blank out a name captured previously if this login doesn't carry one.
+        displayName: displayName ?? sql`${sessions.displayName}`,
+        expiresAt,
+        lastLoginAt: now,
+        loggedOutAt: null,
+      },
+    })
+    .returning({ id: sessions.id });
+
+  const sessionId = row.id;
 
   const encrypted = await encryptSessionId(sessionId);
   const cookieStore = await cookies();

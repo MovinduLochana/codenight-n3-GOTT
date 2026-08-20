@@ -28,12 +28,17 @@ export default function AssessmentExercisePage({
   params: Promise<{ exerciseId: string }>;
 }) {
   return (
-    // fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}
-    // <Suspense>
-    <ViewTransition enter="fade-in" default="none">
-      <AssessmentExerciseContent params={params} />
-    </ViewTransition>
-    // </Suspense>
+    <Suspense
+      fallback={
+        <ViewTransition exit="fade-out">
+          <SuspenseLoader />
+        </ViewTransition>
+      }
+    >
+      <ViewTransition enter="fade-in" default="none">
+        <AssessmentExerciseContent params={params} />
+      </ViewTransition>
+    </Suspense>
   );
 }
 
