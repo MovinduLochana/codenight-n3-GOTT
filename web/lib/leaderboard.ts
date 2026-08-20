@@ -48,19 +48,32 @@ export async function getLeaderboard(limit = 100): Promise<LeaderboardEntry[]> {
     }
   }
 
+  const quizScores = await db
+    .select({
+      userId: quizProgress.userId,
+      totalScore: sql<number>`coalesce(sum(${quizProgress.score}), 0)`,
+    })
+    .from(quizProgress)
+    .groupBy(quizProgress.userId);
+
+  const quizScoreByUser = new Map<string, number>();
+  for (const row of quizScores) {
+    quizScoreByUser.set(row.userId, Number(row.totalScore));
+  }
+
   const rows = await db
     .select({
       userId: sessions.userId,
       displayName: sessions.displayName,
-      quizScore: sql<number>`coalesce((select sum(${quizProgress.score}) from ${quizProgress} where ${quizProgress.userId} = ${sessions.userId}), 0)`,
     })
     .from(sessions);
 
   return rows
     .map((row) => {
+      const quizScore = quizScoreByUser.get(row.userId) || 0;
+      const assessmentScore = passedScoreByUser.get(row.userId) || 0;
       const score =
-        Number(row.quizScore) * POINTS_PER_QUIZ_QUESTION +
-        (passedScoreByUser.get(row.userId) || 0);
+        quizScore * POINTS_PER_QUIZ_QUESTION + assessmentScore;
       return {
         userId: row.userId,
         displayName: row.displayName || fallbackName(row.userId),
