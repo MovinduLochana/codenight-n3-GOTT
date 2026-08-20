@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
-import { Suspense, ViewTransition } from "react";
 
+import { notFound } from "next/navigation";
+import { ViewTransition } from "react";
 import { LessonNav } from "@/components/lesson/lesson-nav";
 import {
   categories,
@@ -30,9 +30,9 @@ export default async function LessonPage({
     //  fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}
     // enter="fade-in" default="none"
     //<Suspense>
-      <ViewTransition>
-        <LessonContent params={params} />
-      </ViewTransition>
+    <ViewTransition>
+      <LessonContent params={params} />
+    </ViewTransition>
     //</Suspense>
   );
 }

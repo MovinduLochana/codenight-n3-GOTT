@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
@@ -10,7 +11,7 @@ import (
 
 func TestCountLines(t *testing.T) {
 	// Create a temp file for testing
-	tmpFile, err := os.CreateTemp("", "test_count_lines_*.txt")
+	tmpFile, err := ioutil.TempFile("", "test_count_lines_*.txt")
 	if err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)
 	}
