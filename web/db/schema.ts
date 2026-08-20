@@ -1,6 +1,5 @@
 import {
   boolean,
-  index,
   integer,
   pgTable,
   text,
@@ -59,7 +58,7 @@ export const quizProgress = pgTable(
     submittedAt: timestamp("submitted_at").defaultNow().notNull(),
   },
   (table) => [
-    index("quiz_progress_user_category_index").on(
+    uniqueIndex("quiz_progress_user_category_unique").on(
       table.userId,
       table.categoryId,
     ),

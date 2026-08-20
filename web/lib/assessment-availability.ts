@@ -1,6 +1,7 @@
 import "server-only";
 
 import { eq } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
 
 import { db } from "@/db/drizzle";
 import { assessmentAvailability } from "@/db/schema";
@@ -15,6 +16,10 @@ import { assessmentAvailability } from "@/db/schema";
 export async function isExerciseAvailable(
   exerciseId: string,
 ): Promise<boolean> {
+  "use cache";
+  cacheTag("assessment-availability");
+  cacheLife("minutes");
+
   try {
     const [row] = await db
       .select({ available: assessmentAvailability.available })
@@ -29,6 +34,10 @@ export async function isExerciseAvailable(
 }
 
 export async function getUnavailableExerciseIds(): Promise<Set<string>> {
+  "use cache";
+  cacheTag("assessment-availability");
+  cacheLife("minutes");
+
   try {
     const rows = await db
       .select({ exerciseId: assessmentAvailability.exerciseId })

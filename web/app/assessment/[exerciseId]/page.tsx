@@ -1,11 +1,15 @@
 import { and, eq } from "drizzle-orm";
 import { LockIcon } from "lucide-react";
+import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense, ViewTransition } from "react";
 
 import { ExerciseWorkbench } from "@/components/assessment/exercise-workbench";
-import { SuspenseLoader } from "@/components/common/suspense-loader";
+import {
+  ExerciseHeaderSkeleton,
+  ExerciseWorkbenchSkeleton,
+} from "@/components/common/page-skeletons";
 import { db } from "@/db/drizzle";
 import { assessmentProgress } from "@/db/schema";
 import {
@@ -31,7 +35,12 @@ export default function AssessmentExercisePage({
     <Suspense
       fallback={
         <ViewTransition exit="fade-out">
-          <SuspenseLoader />
+          <main className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:overflow-hidden">
+            <div className="flex min-h-0 flex-1 flex-col px-6 py-6">
+              <ExerciseHeaderSkeleton />
+              <ExerciseWorkbenchSkeleton />
+            </div>
+          </main>
         </ViewTransition>
       }
     >
@@ -80,7 +89,7 @@ async function AssessmentExerciseContent({
           <Suspense
             fallback={
               <ViewTransition exit="fade-out">
-                <SuspenseLoader />
+                <ExerciseWorkbenchSkeleton />
               </ViewTransition>
             }
           >
@@ -98,6 +107,28 @@ async function AssessmentExerciseContent({
   );
 }
 
+async function getSavedProgress(userId: string, exerciseId: string) {
+  "use cache";
+  cacheLife("seconds");
+
+  const [saved] = await db
+    .select({
+      code: assessmentProgress.code,
+      passed: assessmentProgress.passed,
+      output: assessmentProgress.output,
+    })
+    .from(assessmentProgress)
+    .where(
+      and(
+        eq(assessmentProgress.userId, userId),
+        eq(assessmentProgress.exerciseId, exerciseId),
+      ),
+    )
+    .limit(1);
+
+  return saved ?? null;
+}
+
 async function Editor({
   exerciseId,
   taskHtml,
@@ -108,22 +139,9 @@ async function Editor({
   starterCode: string;
 }) {
   const session = await getSession();
-  const [saved] = session
-    ? await db
-        .select({
-          code: assessmentProgress.code,
-          passed: assessmentProgress.passed,
-          output: assessmentProgress.output,
-        })
-        .from(assessmentProgress)
-        .where(
-          and(
-            eq(assessmentProgress.userId, session.userId),
-            eq(assessmentProgress.exerciseId, exerciseId),
-          ),
-        )
-        .limit(1)
-    : [];
+  const saved = session
+    ? await getSavedProgress(session.userId, exerciseId)
+    : null;
 
   return (
     <ExerciseWorkbench

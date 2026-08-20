@@ -3,7 +3,7 @@ import { CheckIcon, LockIcon } from "lucide-react";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Suspense, ViewTransition } from "react";
-import { SuspenseLoader } from "@/components/common/suspense-loader";
+import { AssessmentListSkeleton } from "@/components/common/page-skeletons";
 import { Badge } from "@/components/ui/badge";
 import { db } from "@/db/drizzle";
 import { assessmentProgress } from "@/db/schema";
@@ -24,7 +24,7 @@ export default function AssessmentPage() {
     <Suspense
       fallback={
         <ViewTransition exit="fade-out">
-          <SuspenseLoader />
+          <AssessmentListSkeleton />
         </ViewTransition>
       }
     >

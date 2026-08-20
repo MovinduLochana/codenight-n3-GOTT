@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense, ViewTransition } from "react";
 
-import { SuspenseLoader } from "@/components/common/suspense-loader";
+import { ChapterQuizSkeleton } from "@/components/common/page-skeletons";
 import {
   ChapterQuiz,
   type RenderedQuiz,
@@ -46,7 +46,13 @@ export default function ChapterQuizPage({
   params: Promise<{ chapter: string }>;
 }) {
   return (
-    <Suspense fallback={<ViewTransition exit="fade-out"><SuspenseLoader /></ViewTransition>}>
+    <Suspense
+      fallback={
+        <ViewTransition exit="fade-out">
+          <ChapterQuizSkeleton />
+        </ViewTransition>
+      }
+    >
       <ViewTransition enter="fade-in" default="none">
         <ChapterQuizContent params={params} />
       </ViewTransition>
@@ -72,7 +78,12 @@ async function ChapterQuizContent({
   const renderedQuiz = await renderQuizCode(toPublicQuiz(quiz));
 
   return (
-    <ViewTransition key={categoryId} name="chapterQuiz" share="auto" default="none">
+    <ViewTransition
+      key={categoryId}
+      name="chapterQuiz"
+      share="auto"
+      default="none"
+    >
       <main className="min-h-0 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-3xl px-6 py-10">
           {firstTopic ? (
