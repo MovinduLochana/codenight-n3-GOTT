@@ -1,4 +1,6 @@
 import { and, eq } from "drizzle-orm";
+import { LockIcon } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense, ViewTransition } from "react";
 
@@ -6,7 +8,11 @@ import { ExerciseWorkbench } from "@/components/assessment/exercise-workbench";
 import { SuspenseLoader } from "@/components/common/suspense-loader";
 import { db } from "@/db/drizzle";
 import { assessmentProgress } from "@/db/schema";
-import { assessmentExercises, getAssessmentExercise } from "@/lib/assessment";
+import {
+  type AssessmentExercise,
+  assessmentExercises,
+  getAssessmentExercise,
+} from "@/lib/assessment";
 import { isExerciseAvailable } from "@/lib/assessment-availability";
 import { readRepoFile } from "@/lib/content";
 import { renderMarkdown } from "@/lib/markdown";
@@ -40,7 +46,9 @@ async function AssessmentExerciseContent({
 
   const exercise = getAssessmentExercise(exerciseId);
   if (!exercise) notFound();
-  if (!(await isExerciseAvailable(exerciseId))) notFound();
+  if (!(await isExerciseAvailable(exerciseId))) {
+    return <LockedExercise exercise={exercise} />;
+  }
 
   const taskMarkdown = await readRepoFile(exercise.taskPath);
   const starterCode = await readRepoFile(exercise.starterPath);
@@ -122,5 +130,35 @@ async function Editor({
         saved ? { passed: saved.passed, output: saved.output } : null
       }
     />
+  );
+}
+
+function LockedExercise({ exercise }: { exercise: AssessmentExercise }) {
+  return (
+    <main className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto px-6 py-6">
+      <div className="flex max-w-sm flex-col items-center gap-4 text-center">
+        <div className="flex size-14 items-center justify-center rounded-full border border-dashed border-border bg-card">
+          <LockIcon className="size-6 text-muted-foreground" />
+        </div>
+        <div className="space-y-1.5">
+          <p className="text-[0.625rem] font-semibold tracking-widest text-muted-foreground uppercase">
+            Final Assessment · {exercise.level}
+          </p>
+          <h1 className="font-heading text-xl font-semibold">
+            {String(exercise.number).padStart(2, "0")} · {exercise.title}
+          </h1>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          This exercise isn't open yet. Check back once it's unlocked, or head
+          back to see what's available now.
+        </p>
+        <Link
+          href="/assessment"
+          className="mt-2 inline-flex items-center justify-center border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:border-primary/40"
+        >
+          Back to Final Assessment
+        </Link>
+      </div>
+    </main>
   );
 }
