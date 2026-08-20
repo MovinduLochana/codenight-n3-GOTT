@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { db } from "@/db/drizzle";
 import { assessmentProgress } from "@/db/schema";
 import { assessmentExercises } from "@/lib/assessment";
+import { getUnavailableExerciseIds } from "@/lib/assessment-availability";
 import { getSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 
@@ -36,12 +37,18 @@ export default function AssessmentPage() {
 async function AssessmentPageContent() {
   const session = await getSession();
 
-  const progress = session ? await getAssessmentProgress(session.userId) : [];
+  const [progress, unavailableIds] = await Promise.all([
+    session ? getAssessmentProgress(session.userId) : Promise.resolve([]),
+    getUnavailableExerciseIds(),
+  ]);
 
   const passedIds = new Set(
     progress.filter((row) => row.passed).map((row) => row.exerciseId),
   );
   const attemptedIds = new Set(progress.map((row) => row.exerciseId));
+  const visibleExercises = assessmentExercises.filter(
+    (exercise) => !unavailableIds.has(exercise.id),
+  );
 
   return (
     <main className="min-h-0 flex-1 overflow-y-auto">
@@ -50,12 +57,12 @@ async function AssessmentPageContent() {
           Final Assessment
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {passedIds.size} / {assessmentExercises.length} exercises passed. Each
+          {passedIds.size} / {visibleExercises.length} exercises passed. Each
           one is graded by running its real test file against your code.
         </p>
 
         <ul className="mt-8 flex flex-col gap-2">
-          {assessmentExercises.map((exercise) => {
+          {visibleExercises.map((exercise) => {
             const passed = passedIds.has(exercise.id);
             const attempted = attemptedIds.has(exercise.id);
 

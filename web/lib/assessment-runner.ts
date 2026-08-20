@@ -17,9 +17,10 @@ export async function runGoTest(
   try {
     const mergedCode = mergeGoFiles(userCode, testCode);
 
-    const judge0Url = (
-      process.env.JUDGE0_URL || JUDGE0_DEFAULT_URL
-    ).replace(/\/+$/, "");
+    const judge0Url = (process.env.JUDGE0_URL || JUDGE0_DEFAULT_URL).replace(
+      /\/+$/,
+      "",
+    );
     const authToken = process.env.JUDGE0_AUTH_TOKEN;
 
     const headers: Record<string, string> = {
@@ -120,7 +121,12 @@ export async function runGoTest(
 
     // Other failure states
     const output =
-      stderr || stdout || compileOutput || message || data.status?.description || "Execution error.";
+      stderr ||
+      stdout ||
+      compileOutput ||
+      message ||
+      data.status?.description ||
+      "Execution error.";
 
     return {
       passed: false,
@@ -149,8 +155,7 @@ function mergeGoFiles(userCode: string, testCode: string): string {
   const imports = new Set<string>();
 
   function collectImports(code: string) {
-    let match: RegExpExecArray | null;
-    while ((match = importRegex.exec(code)) !== null) {
+    for (const match of code.matchAll(importRegex)) {
       if (match[1]) {
         const lines = match[1]
           .split("\n")
@@ -180,9 +185,8 @@ function mergeGoFiles(userCode: string, testCode: string): string {
   // Extract all test functions: func Test*(t *testing.T)
   const testFuncRegex = /func\s+(Test\w+)\s*\(\s*\w+\s+\*testing\.T\s*\)/g;
   const testNames: string[] = [];
-  let tMatch: RegExpExecArray | null;
-  while ((tMatch = testFuncRegex.exec(cleanedTestCode)) !== null) {
-    testNames.push(tMatch[1]);
+  for (const match of cleanedTestCode.matchAll(testFuncRegex)) {
+    testNames.push(match[1]);
   }
 
   // If user code defines `main()`, rename it to `userMain()` to avoid `main redeclared`
@@ -192,7 +196,10 @@ function mergeGoFiles(userCode: string, testCode: string): string {
       /\bfunc\s+main\s*\(\s*\)/g,
       "func userMain()",
     );
-    cleanedTestCode = cleanedTestCode.replace(/\bmain\s*\(\s*\)/g, "userMain()");
+    cleanedTestCode = cleanedTestCode.replace(
+      /\bmain\s*\(\s*\)/g,
+      "userMain()",
+    );
   }
 
   const runnerMain = `

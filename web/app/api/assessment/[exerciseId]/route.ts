@@ -5,6 +5,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
 import { assessmentProgress } from "@/db/schema";
 import { getAssessmentExercise, getFixtureFiles } from "@/lib/assessment";
+import { isExerciseAvailable } from "@/lib/assessment-availability";
 import { runGoTest } from "@/lib/assessment-runner";
 import { readRepoFile } from "@/lib/content";
 import { getSession } from "@/lib/session";
@@ -23,6 +24,9 @@ export async function POST(
   const { exerciseId } = await params;
   const exercise = getAssessmentExercise(exerciseId);
   if (!exercise) {
+    return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
+  }
+  if (!(await isExerciseAvailable(exerciseId))) {
     return NextResponse.json({ error: "Exercise not found" }, { status: 404 });
   }
 

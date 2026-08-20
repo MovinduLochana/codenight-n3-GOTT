@@ -41,6 +41,12 @@ export const assessmentProgress = pgTable(
   ],
 );
 
+export const assessmentAvailability = pgTable("assessment_availability", {
+  exerciseId: text("exercise_id").primaryKey(),
+  available: boolean("available").default(true).notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const quizProgress = pgTable(
   "quiz_progress",
   {
