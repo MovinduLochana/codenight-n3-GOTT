@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, CrownIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import type { LeaderboardEntry } from "@/lib/leaderboard";
@@ -8,6 +8,12 @@ import { cn } from "@/lib/utils";
 
 const POLL_INTERVAL_MS = 30_000; // 30 seconds
 const PAGE_SIZE = 10;
+
+const PODIUM_HEIGHT: Record<1 | 2 | 3, string> = {
+  1: "min-h-[232px] pt-10",
+  2: "min-h-[192px] pt-7",
+  3: "min-h-[160px] pt-6",
+};
 
 export function LiveLeaderboard({
   initialEntries,
@@ -85,7 +91,7 @@ export function LiveLeaderboard({
 
   return (
     <>
-      <div className="mt-10 grid grid-cols-3 items-end gap-3">
+      <div className="mt-10 grid grid-cols-3 items-end gap-3 sm:gap-4">
         {podiumSlots.map((slot) => (
           <PodiumCard
             key={slot.rank}
@@ -98,17 +104,16 @@ export function LiveLeaderboard({
 
       {rest.length > 0 ? (
         <>
-          <ul className="mt-8 flex flex-col gap-2">
+          <div className="mt-8 divide-y divide-border border border-border bg-card">
             {pageEntries.map((entry, index) => (
-              <li key={entry.userId}>
-                <RankRow
-                  rank={pageStart + index + 4}
-                  entry={entry}
-                  isCurrentUser={entry.userId === currentUserId}
-                />
-              </li>
+              <RankRow
+                key={entry.userId}
+                rank={pageStart + index + 4}
+                entry={entry}
+                isCurrentUser={entry.userId === currentUserId}
+              />
             ))}
-          </ul>
+          </div>
 
           {totalPages > 1 ? (
             <Pagination
@@ -135,31 +140,43 @@ function PodiumCard({
   return (
     <div
       className={cn(
-        "flex flex-col items-center border bg-card px-3 pb-5 text-center",
-        rank === 1 ? "min-h-[220px] pt-10" : "min-h-[176px] pt-6",
-        rank === 1 ? "border-primary/50" : "border-border",
-        !entry && "border-dashed opacity-60",
-        isCurrentUser &&
-          "ring-2 ring-primary/40 ring-offset-2 ring-offset-background",
+        "relative flex flex-col items-center overflow-hidden border bg-card px-3 pb-5 text-center",
+        PODIUM_HEIGHT[rank],
+        entry
+          ? isCurrentUser
+            ? "border-primary bg-primary/5"
+            : "border-primary/50"
+          : "border-dashed border-border opacity-50",
       )}
     >
+      {rank === 1 && entry ? (
+        <>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent" />
+          <CrownIcon
+            className="relative mb-1.5 size-4 text-primary"
+            fill="currentColor"
+          />
+        </>
+      ) : null}
+
       <div
         className={cn(
-          "flex shrink-0 items-center justify-center border font-heading font-semibold",
-          rank === 1
-            ? "size-10 border-primary text-lg text-primary"
-            : "size-8 border-border text-sm text-muted-foreground",
+          "relative flex shrink-0 items-center justify-center border font-heading font-semibold",
+          rank === 1 ? "size-10 text-lg" : "size-8 text-sm",
+          entry
+            ? "border-primary text-primary"
+            : "border-border text-muted-foreground",
         )}
       >
         {rank}
       </div>
-      <p className="mt-3 w-full truncate text-sm font-medium">
-        {entry ? entry.displayName : "--"}
+      <p className="relative mt-3 w-full truncate text-sm font-medium">
+        {entry ? entry.displayName : "—"}
       </p>
-      <p className="mt-1 font-heading text-xl font-semibold text-primary">
-        {entry ? entry.score : "--"}
+      <p className="relative mt-1 font-heading text-xl font-semibold text-primary">
+        {entry ? entry.score : "—"}
       </p>
-      <p className="text-[0.625rem] tracking-widest text-muted-foreground uppercase">
+      <p className="relative text-[0.625rem] tracking-widest text-muted-foreground uppercase">
         points
       </p>
     </div>
@@ -178,15 +195,17 @@ function RankRow({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 border border-border bg-card p-4 transition-colors",
-        isCurrentUser && "border-primary/40 bg-primary/5",
+        "flex items-center gap-4 px-4 py-3 transition-colors",
+        isCurrentUser && "border-l-2 border-l-primary bg-primary/5",
       )}
     >
-      <span className="font-mono text-xs text-primary">
+      <span className="w-6 shrink-0 font-mono text-xs text-muted-foreground tabular-nums">
         {String(rank).padStart(2, "0")}
       </span>
-      <span className="truncate font-medium">{entry.displayName}</span>
-      <span className="ms-auto font-heading text-sm font-semibold">
+      <span className="min-w-0 flex-1 truncate text-sm font-medium">
+        {entry.displayName}
+      </span>
+      <span className="shrink-0 font-heading text-sm font-semibold tabular-nums">
         {entry.score}
         <span className="ms-1 text-[0.625rem] font-normal tracking-widest text-muted-foreground uppercase">
           pts
@@ -213,7 +232,7 @@ function Pagination({
         type="button"
         onClick={() => onPageChange(Math.max(1, page - 1))}
         disabled={page === 1}
-        className="flex size-7 items-center justify-center border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+        className="flex size-7 items-center justify-center border border-border text-muted-foreground transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground disabled:pointer-events-none disabled:opacity-30"
       >
         <ChevronLeftIcon className="size-3.5" />
       </button>
@@ -224,10 +243,10 @@ function Pagination({
           type="button"
           onClick={() => onPageChange(p)}
           className={cn(
-            "flex size-7 items-center justify-center text-xs font-semibold transition-colors",
+            "flex size-7 items-center justify-center border text-xs font-semibold transition-colors",
             p === page
-              ? "bg-primary text-primary-foreground"
-              : "border border-border text-muted-foreground hover:border-primary/40 hover:text-foreground",
+              ? "border-primary bg-primary text-primary-foreground"
+              : "border-border text-muted-foreground hover:border-primary hover:bg-primary hover:text-primary-foreground",
           )}
         >
           {p}
@@ -238,7 +257,7 @@ function Pagination({
         type="button"
         onClick={() => onPageChange(Math.min(totalPages, page + 1))}
         disabled={page === totalPages}
-        className="flex size-7 items-center justify-center border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground disabled:pointer-events-none disabled:opacity-30"
+        className="flex size-7 items-center justify-center border border-border text-muted-foreground transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground disabled:pointer-events-none disabled:opacity-30"
       >
         <ChevronRightIcon className="size-3.5" />
       </button>

@@ -42,22 +42,28 @@ export function LeaderboardSkeleton() {
         <Skeleton className="mt-3 h-4 w-full max-w-lg rounded" />
         <Skeleton className="mt-1.5 h-4 w-2/3 max-w-md rounded" />
 
-        <ul className="mt-8 flex flex-col gap-1.5">
-          {Array.from({ length: 10 }, (_, index) => (
-            <li
+        <div className="mt-10 grid grid-cols-3 items-end gap-3 sm:gap-4">
+          <Skeleton className="min-h-[180px] w-full rounded" />
+          <Skeleton className="min-h-[228px] w-full rounded" />
+          <Skeleton className="min-h-[180px] w-full rounded" />
+        </div>
+
+        <div className="mt-8 divide-y divide-border border border-border bg-card">
+          {Array.from({ length: 7 }, (_, index) => (
+            <div
               // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder count, never reordered
               key={index}
-              className="flex items-center gap-3 border border-border bg-card p-4"
+              className="flex items-center gap-4 px-4 py-3"
             >
-              <Skeleton className="h-3 w-4 shrink-0 rounded" />
+              <Skeleton className="h-3 w-6 shrink-0 rounded" />
               <Skeleton
                 className="h-4 rounded"
                 style={{ width: `${45 - index}%` }}
               />
               <Skeleton className="ms-auto h-4 w-10 shrink-0 rounded" />
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       </div>
     </main>
   );

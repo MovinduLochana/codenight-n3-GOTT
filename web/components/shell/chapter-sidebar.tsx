@@ -35,7 +35,7 @@ export function ChapterSidebar({
   const editorOpen = pathname.startsWith("/assessment");
 
   return (
-    <aside className="hidden w-64 shrink-0 flex-col border-e border-border bg-sidebar md:flex">
+    <aside className="hidden h-full w-64 shrink-0 flex-col border-e border-border bg-sidebar md:flex">
       <nav className="flex flex-col gap-0.5 p-2">
         <Link
           href="/learn"
