@@ -1,3 +1,4 @@
+import { and, eq } from "drizzle-orm";
 import { revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -26,6 +27,24 @@ export async function POST(
     return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
   }
 
+  const [existing] = await db
+    .select({ id: quizProgress.id })
+    .from(quizProgress)
+    .where(
+      and(
+        eq(quizProgress.userId, session.userId),
+        eq(quizProgress.categoryId, categoryId),
+      ),
+    )
+    .limit(1);
+
+  if (existing) {
+    return NextResponse.json(
+      { error: "You've already completed this quiz." },
+      { status: 409 },
+    );
+  }
+
   const body = (await request.json().catch(() => null)) as {
     answers?: unknown;
   } | null;
@@ -41,31 +60,14 @@ export async function POST(
   ).length;
   const passed = score === total;
 
-  // Atomic insert-if-absent: a plain check-then-insert would race if the
-  // same user double-submits (double click, retry), tripping the
-  // quiz_progress_user_category_unique constraint. onConflictDoNothing
-  // makes the check and the write a single statement.
-  const [inserted] = await db
-    .insert(quizProgress)
-    .values({
-      id: crypto.randomUUID(),
-      userId: session.userId,
-      categoryId,
-      passed,
-      score,
-      total,
-    })
-    .onConflictDoNothing({
-      target: [quizProgress.userId, quizProgress.categoryId],
-    })
-    .returning({ id: quizProgress.id });
-
-  if (!inserted) {
-    return NextResponse.json(
-      { error: "You've already completed this quiz." },
-      { status: 409 },
-    );
-  }
+  await db.insert(quizProgress).values({
+    id: crypto.randomUUID(),
+    userId: session.userId,
+    categoryId,
+    passed,
+    score,
+    total,
+  });
 
   revalidateTag("leaderboard", "max");
 
